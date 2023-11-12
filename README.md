@@ -1,3 +1,3 @@
-# expenses_managment_app_provider
+# Expenses Managment App 
 
-A new Flutter project.
+Using Provider 
