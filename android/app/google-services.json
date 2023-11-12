@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "296448364006",
+    "project_id": "providerrest",
+    "storage_bucket": "providerrest.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:296448364006:android:3236308341b98d02beda27",
+        "android_client_info": {
+          "package_name": "com.example.expenses_managment_app_provider"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAzCwL7Ey0VCKFqnWHyiJP8tUa6Un5rzvw",
+          "addExpense": "/addExpense"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
