@@ -30,8 +30,10 @@ class _ManageExpensesState extends State<ManageExpenses> {
           final result = await Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => const AddEditExpensesScreen(processName: 'Add',)));
-                  if(result != null) await exProvider.addExpense(result);
+                  builder: (context) => const AddEditExpensesScreen(
+                        processName: 'Add',
+                      )));
+          if (result != null) await exProvider.addExpense(result);
         },
         child: const Icon(
           Icons.add,

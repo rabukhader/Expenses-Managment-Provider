@@ -52,4 +52,16 @@ class EndpointFirebaseProvider implements EndPoint {
       rethrow;
     }
   }
+
+  Future<Map<String, dynamic>> searchExpense(query) async {
+    try {
+      final response = await client.get(
+          '/expenses.json?orderBy="name"&startAt="$query"&endAt="$query\uf8ff"');
+
+      return json.decode(response.toString());
+    } catch (ex) {
+      print(ex);
+      rethrow;
+    }
+  }
 }

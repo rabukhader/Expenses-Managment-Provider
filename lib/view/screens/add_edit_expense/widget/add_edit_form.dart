@@ -99,7 +99,6 @@ class _AddEditFormState extends State<AddEditForm> {
                 'dueDate': widget.form.dateController.text
               };
 
-              print(data);
               if (widget.form.formKey.currentState!.validate()) {
                 Navigator.pop(context, data);
               } else {

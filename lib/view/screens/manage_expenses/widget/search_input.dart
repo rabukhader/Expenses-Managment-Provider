@@ -1,7 +1,32 @@
+import 'package:expenses_managment_app_provider/view_model/expense_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-class SearchInput extends StatelessWidget {
+class SearchInput extends StatefulWidget {
   const SearchInput({super.key});
+
+  @override
+  State<SearchInput> createState() => _SearchInputState();
+}
+
+class _SearchInputState extends State<SearchInput> {
+  final textController = TextEditingController();
+  late ExpensesViewModel expensesViewModel;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    expensesViewModel = Provider.of<ExpensesViewModel>(context, listen: false);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    textController.addListener(() {
+      expensesViewModel.textStream.add(textController.text);
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -12,14 +37,20 @@ class SearchInput extends StatelessWidget {
         color: Colors.grey[200],
       ),
       child: TextField(
+        controller: textController,
         style: const TextStyle(color: Colors.black),
-        // controller: Provider.of<ExpensesProvider>(context).searchController,
-        onChanged: (value){
+        onChanged: (text) {
+          Provider.of<ExpensesViewModel>(context, listen: false)
+              .textStream
+              .add(text);
         },
         decoration: const InputDecoration(
           hintText: 'Search',
           hintStyle: TextStyle(color: Colors.black),
-          prefixIcon: Icon(Icons.search, color: Colors.black,),
+          prefixIcon: Icon(
+            Icons.search,
+            color: Colors.black,
+          ),
           border: InputBorder.none,
           contentPadding:
               EdgeInsets.symmetric(horizontal: 16.0, vertical: 14.0),
