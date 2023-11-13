@@ -14,6 +14,13 @@ class ManageExpenses extends StatefulWidget {
 }
 
 class _ManageExpensesState extends State<ManageExpenses> {
+
+  @override
+  void initState() {
+    super.initState();
+    Provider.of<ExpensesViewModel>(context, listen: false).fetchExpenses();
+  }
+
   @override
   Widget build(BuildContext context) {
     final exProvider = Provider.of<ExpensesViewModel>(context, listen: false);

@@ -10,6 +10,7 @@ EndpointFirebaseProvider api = EndpointFirebaseProvider(client);
 
 class ExpensesViewModel with ChangeNotifier {
   StreamController<String> textStream = StreamController.broadcast();
+  StreamController dataStream = StreamController.broadcast();
   Map<String, Expense> searchResults = {};
   Map<String, Expense> allExpenses = {};
 
@@ -19,6 +20,8 @@ class ExpensesViewModel with ChangeNotifier {
       return MapEntry(key, Expense.fromJson(value));
     });
     allExpenses = data;
+    searchResults = data;
+    dataStream.add(searchResults);
     return data;
   }
 
@@ -39,13 +42,12 @@ class ExpensesViewModel with ChangeNotifier {
 
   Future searchExpense(String query) async {
     final response = await api.searchExpense(query);
-    print(response);
     if (query.isNotEmpty) {
       searchResults = response.map((key, value) {
         return MapEntry(key, Expense.fromJson(value));
       });
     } else {
-      searchResults.clear();
+      searchResults= allExpenses;
     }
     notifyListeners();
   }

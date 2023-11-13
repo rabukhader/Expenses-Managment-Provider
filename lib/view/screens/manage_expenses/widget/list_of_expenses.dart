@@ -23,8 +23,8 @@ class _ListOfExpensesState extends State<ListOfExpenses> {
     subscription = Provider.of<ExpensesViewModel>(context, listen: false)
         .textStream
         .stream
+        .debounceTime(const Duration(milliseconds: 300))
         .distinct()
-        .debounceTime(const Duration(milliseconds: 900))
         .listen((searchQuery) {
       Provider.of<ExpensesViewModel>(context, listen: false)
           .searchExpense(searchQuery);
@@ -33,20 +33,19 @@ class _ListOfExpensesState extends State<ListOfExpenses> {
 
   @override
   Widget build(BuildContext context) {
-    final ex = Provider.of<ExpensesViewModel>(context, listen: false);
     return Consumer<ExpensesViewModel>(
-      builder: (context, exProvider, child) {
-        return FutureBuilder(
-          future: exProvider.fetchExpenses(),
+      builder: (context, ex, child) {
+        return StreamBuilder(
+          stream: ex.dataStream.stream,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const CircularProgressIndicator();
             } else if (snapshot.hasError) {
               return Text('Error: ${snapshot.error}');
+            } else if (ex.searchResults.isEmpty) {
+              return const Text('Not Found');
             } else {
-              final displayedExpense = ex.searchResults.isNotEmpty
-                  ? ex.searchResults
-                  : ex.allExpenses;
+              final displayedExpense = ex.searchResults;
               return ListView.builder(
                 itemCount: displayedExpense.length,
                 itemBuilder: (context, index) {
