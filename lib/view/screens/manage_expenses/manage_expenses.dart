@@ -14,7 +14,6 @@ class ManageExpenses extends StatefulWidget {
 }
 
 class _ManageExpensesState extends State<ManageExpenses> {
-
   @override
   void initState() {
     super.initState();
@@ -25,12 +24,14 @@ class _ManageExpensesState extends State<ManageExpenses> {
   Widget build(BuildContext context) {
     final exProvider = Provider.of<ExpensesViewModel>(context, listen: false);
     return Scaffold(
-      body: const Column(
-        children: [
-          CustomHeading(title: 'Expenses List'),
-          SearchInput(),
-          Expanded(child: ListOfExpenses()),
-        ],
+      body: Consumer<ExpensesViewModel>(
+        builder: (context, child, value) => const Column(
+          children: [
+            CustomHeading(title: 'Expenses List'),
+            SearchInput(),
+            Expanded(child: ListOfExpenses()),
+          ],
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {

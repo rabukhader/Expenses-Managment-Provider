@@ -15,7 +15,7 @@ class AddEditExpenseValidator
   @override
   String? validate(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Please enter a value.';
+      return 'This Field is Required.';
     }
     return null;
   }

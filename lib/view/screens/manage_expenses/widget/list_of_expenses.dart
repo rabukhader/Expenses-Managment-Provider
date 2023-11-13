@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:expenses_managment_app_provider/model/expense.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:rxdart/rxdart.dart';
 import '../../../../view_model/expense_view_model.dart';
 import 'custom_card.dart';
 
@@ -23,7 +22,7 @@ class _ListOfExpensesState extends State<ListOfExpenses> {
     subscription = Provider.of<ExpensesViewModel>(context, listen: false)
         .textStream
         .stream
-        .debounceTime(const Duration(milliseconds: 300))
+        // .debounceTime(const Duration(milliseconds: 300))
         .distinct()
         .listen((searchQuery) {
       Provider.of<ExpensesViewModel>(context, listen: false)

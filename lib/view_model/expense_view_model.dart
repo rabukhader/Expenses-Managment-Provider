@@ -13,6 +13,8 @@ class ExpensesViewModel with ChangeNotifier {
   StreamController dataStream = StreamController.broadcast();
   Map<String, Expense> searchResults = {};
   Map<String, Expense> allExpenses = {};
+  Completer<void>? searchCompleter;
+  CancelToken? cancelToken; // To manage request cancellation
 
   Future fetchExpenses() async {
     final response = await api.fetchExpenses();
@@ -41,14 +43,20 @@ class ExpensesViewModel with ChangeNotifier {
   }
 
   Future searchExpense(String query) async {
-    final response = await api.searchExpense(query);
+    if (cancelToken != null && !cancelToken!.isCancelled) {
+      cancelToken!.cancel("Cancelled");
+    }
+    cancelToken = CancelToken();
+
+    final response = await api.searchExpense(query, cancelToken: cancelToken);
     if (query.isNotEmpty) {
       searchResults = response.map((key, value) {
         return MapEntry(key, Expense.fromJson(value));
       });
     } else {
-      searchResults= allExpenses;
+      searchResults = allExpenses;
     }
     notifyListeners();
   }
+
 }

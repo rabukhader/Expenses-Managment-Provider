@@ -27,7 +27,6 @@ class _SearchInputState extends State<SearchInput> {
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Container(

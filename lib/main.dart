@@ -3,11 +3,13 @@ import 'package:expenses_managment_app_provider/view/screens/home/home_screen.da
 import 'package:expenses_managment_app_provider/view_model/navigation_view_model.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 
 import 'view_model/expense_view_model.dart';
 
 void main() async {
+  GeolocatorPlatform.instance;
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(MultiProvider(providers: [

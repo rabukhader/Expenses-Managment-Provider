@@ -62,13 +62,16 @@ class CustomCard extends StatelessWidget {
                     'name': data.name,
                     'total': data.total,
                     'dueDate': data.dueDate,
+                    'imageUrl': data.imageUrl,
+                    'address': data.address
                   };
                   final result = await Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) => AddEditExpensesScreen(
-                            processName: 'Edit',
-                              expenseId: id, data: editData)));
+                              processName: 'Edit',
+                              expenseId: id,
+                              data: editData)));
                   if (result != null) await exProvider.editExpense(result, id);
                 },
               ),
@@ -82,13 +85,16 @@ class CustomCard extends StatelessWidget {
                     'name': data.name,
                     'total': data.total,
                     'dueDate': data.dueDate,
+                    'imageUrl': data.imageUrl,
+                    'address': data.address
                   };
                   final result = await Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) => AddEditExpensesScreen(
-                            processName: 'Clone',
-                              expenseId: id, data: clonedData)));
+                              processName: 'Clone',
+                              expenseId: id,
+                              data: clonedData)));
                   if (result != null) await exProvider.addExpense(result);
                 },
               ),
