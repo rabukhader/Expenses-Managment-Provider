@@ -15,18 +15,20 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Expense Management App', style: GoogleFonts.openSans(fontSize: 16, fontWeight: FontWeight.bold)),
-        backgroundColor: Colors.grey[900],
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('Expense Management App', style: GoogleFonts.openSans(fontSize: 16, fontWeight: FontWeight.bold)),
+          backgroundColor: Colors.grey[900],
+        ),
+        body: Selector<NavigatorViewModel, Widget>(
+          selector: (_,navProvider) => navProvider.currentPage,
+          builder:(context, page, child) {
+          return page;
+        } ,), 
+        
+        bottomNavigationBar: const CustomBottomNavigationBar()
       ),
-      body: Selector<NavigatorViewModel, Widget>(
-        selector: (_,navProvider) => navProvider.currentPage,
-        builder:(context, page, child) {
-        return page;
-      } ,), 
-      
-      bottomNavigationBar: const CustomBottomNavigationBar()
     );
   }
 }

@@ -1,13 +1,14 @@
-import 'package:expenses_managment_app_provider/model/services/image_picker/image_picker.dart';
+import 'package:expenses_managment_app_provider/model/services/image_service/image_service.dart';
 import 'package:expenses_managment_app_provider/model/services/location/location_service.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../../../model/services/form/expense_form.dart';
 import '../../../../model/services/form/expense_validator.dart';
+import 'camera_section.dart';
 
 class AddEditForm extends StatefulWidget {
-  final CustomImagePicker? imagePicker;
+  final ImageService? imageService;
   final LocationService? locationService;
   final Map? data;
   final String? expenseId;
@@ -16,7 +17,7 @@ class AddEditForm extends StatefulWidget {
   final String processName;
   const AddEditForm(
       {super.key,
-      this.imagePicker,
+      this.imageService,
       this.locationService,
       this.data,
       this.expenseId,
@@ -37,7 +38,7 @@ class _AddEditFormState extends State<AddEditForm> {
     if (widget.expenseId != null) {
       widget.form.loadData(widget.data);
       widget.locationService!.loadData(widget.data!['address']);
-      widget.imagePicker!.loadData(widget.data!['imageUrl']);
+      widget.imageService!.loadData(widget.data!['imageUrl']);
       isUploaded = true;
       isLocated = true;
     }
@@ -98,6 +99,7 @@ class _AddEditFormState extends State<AddEditForm> {
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SizedBox(
                 width: MediaQuery.of(context).size.width * 0.5,
@@ -122,9 +124,15 @@ class _AddEditFormState extends State<AddEditForm> {
                                 TextButton(
                                   onPressed: () async {
                                     Navigator.pop(context);
-                                    await widget.imagePicker!
-                                        .openCamera(ImageSource.camera);
-                                    if (widget.imagePicker!.imageController
+                                    var result = await Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => CameraSection(
+                                                imagePicker:
+                                                    widget.imageService!)));
+                                                    print(result);
+                                    
+                                    if (widget.imageService!.imageController
                                             .text !=
                                         '') {
                                       setState(() {
@@ -137,9 +145,9 @@ class _AddEditFormState extends State<AddEditForm> {
                                 TextButton(
                                   onPressed: () async {
                                     Navigator.pop(context);
-                                    await widget.imagePicker!
-                                        .openCamera(ImageSource.gallery);
-                                    if (widget.imagePicker!.imageController
+                                    await widget.imageService!
+                                        .open(ImageSource.gallery);
+                                    if (widget.imageService!.imageController
                                             .text !=
                                         '') {
                                       setState(() {
@@ -160,7 +168,7 @@ class _AddEditFormState extends State<AddEditForm> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(
-                              isUploaded ? 'Change' : 'Upload',
+                              isUploaded ? 'Change' : 'Add Photo',
                               style: GoogleFonts.openSans(
                                   fontSize: 20, fontWeight: FontWeight.bold),
                             ),
@@ -177,7 +185,7 @@ class _AddEditFormState extends State<AddEditForm> {
                       height: MediaQuery.of(context).size.height * 0.2,
                       padding: const EdgeInsets.all(12.0),
                       child: Image.network(
-                          widget.imagePicker!.imageController.text),
+                          widget.imageService!.imageController.text),
                     )
                   : const Text('Choose Your Image')
             ],
@@ -232,7 +240,7 @@ class _AddEditFormState extends State<AddEditForm> {
                 'name': widget.form.nameController.text,
                 'total': int.tryParse(widget.form.totalController.text),
                 'dueDate': widget.form.dateController.text,
-                'imageUrl': widget.imagePicker!.imageController.text,
+                'imageUrl': widget.imageService!.imageController.text,
                 'address': widget.locationService!.address
               };
               if (widget.form.formKey.currentState!.validate()) {

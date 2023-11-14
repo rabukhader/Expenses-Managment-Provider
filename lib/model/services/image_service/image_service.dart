@@ -3,15 +3,16 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:photo_manager/photo_manager.dart';
 
-class CustomImagePicker {
+class ImageService {
   TextEditingController imageController = TextEditingController();
 
   loadData(prevImage) {
     imageController.text = prevImage;
   }
 
-  Future openCamera(ImageSource source) async {
+  Future open(ImageSource source) async {
     try {
       if (source == ImageSource.camera) {
         await Permission.camera.request();
@@ -61,5 +62,27 @@ class CustomImagePicker {
     } catch (e) {
       print(e);
     }
+  }
+
+  Future<List<AssetEntity>> getGalleryPhotos() async {
+    // Request permission if not granted
+    var result = await PhotoManager.requestPermissionExtend();
+    if (result != PermissionState.authorized) {
+      // Handle permission denied
+      return [];
+    }
+
+    // Fetch photos from the gallery
+    List<AssetEntity> assets = await PhotoManager.getAssetPathList(
+      type: RequestType.image,
+    ).then((pathList) async {
+      if (pathList.isEmpty) return [];
+
+      return (await pathList[0].getAssetListRange(
+              start: 0, end: await pathList[0].assetCountAsync))
+          .toList();
+    });
+
+    return assets;
   }
 }
