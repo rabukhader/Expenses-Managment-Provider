@@ -1,3 +1,4 @@
+import 'package:expenses_managment_app_provider/model/services/location/location_service.dart';
 import 'package:expenses_managment_app_provider/view/screens/add_edit_expense/widget/add_edit_form.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -18,6 +19,7 @@ class AddEditExpensesScreen extends StatefulWidget {
 
 class _AddEditExpensesScreenState extends State<AddEditExpensesScreen> {
   AddEditExpenseValidator validator = AddEditExpenseValidator();
+  LocationService locationService = LocationService();
   ExpenseForm form = ExpenseForm();
 
   @override
@@ -41,10 +43,12 @@ class _AddEditExpensesScreenState extends State<AddEditExpensesScreen> {
             CustomHeading(title: '${widget.processName} Expense'),
             widget.expenseId == null
                 ? AddEditForm(
+                    locationService: locationService,
                     form: form,
                     validator: validator,
                     processName: widget.processName)
                 : AddEditForm(
+                    locationService: locationService,
                     form: form,
                     validator: validator,
                     processName: widget.processName,

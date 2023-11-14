@@ -2,8 +2,6 @@ import 'dart:io';
 
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:geocoding/geocoding.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
@@ -18,9 +16,6 @@ class ExpenseForm implements EForm {
   TextEditingController totalController = TextEditingController();
   TextEditingController dateController = TextEditingController();
   TextEditingController imageController = TextEditingController();
-  String? address;
-
-  Position? currentPosition;
   DateTime selectedDate = DateTime.now();
 
   @override
@@ -29,7 +24,6 @@ class ExpenseForm implements EForm {
     totalController.text = (data['total']).toString();
     dateController.text = data['dueDate'];
     imageController.text = data['imageUrl'];
-    address = data['address'];
   }
 
   @override
@@ -53,6 +47,7 @@ class ExpenseForm implements EForm {
       uploadImageToStorage(expenseImage);
     } else {
       print('not used correctly');
+      print(imageController.text);
     }
   }
 
@@ -70,48 +65,4 @@ class ExpenseForm implements EForm {
     }
   }
 
-  Future<bool> handleLocationPermission() async {
-    bool serviceEnabled;
-    LocationPermission permission;
-
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      return false;
-    }
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        return false;
-      }
-    }
-    if (permission == LocationPermission.deniedForever) {
-      return false;
-    }
-    return true;
-  }
-
-  Future getCurrentPosition() async {
-    final hasPermission = await handleLocationPermission();
-
-    if (!hasPermission) return null;
-    currentPosition = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
-  }
-
-  Future getAddressFromPosition() async {
-    List<Placemark> placemarks = await placemarkFromCoordinates(
-        currentPosition!.latitude, currentPosition!.longitude);
-    if (placemarks.isNotEmpty) {
-      Placemark place = placemarks[0];
-      address = "${place.street}, ${place.locality}, ${place.country}";
-    }
-    return null;
-  }
-
-  Future fetchLocation() async {
-    await getCurrentPosition();
-    await getAddressFromPosition();
-    print(address);
-  }
 }

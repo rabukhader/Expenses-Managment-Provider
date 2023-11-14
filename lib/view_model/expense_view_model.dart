@@ -10,11 +10,12 @@ EndpointFirebaseProvider api = EndpointFirebaseProvider(client);
 
 class ExpensesViewModel with ChangeNotifier {
   StreamController<String> textStream = StreamController.broadcast();
-  StreamController dataStream = StreamController.broadcast();
+  StreamController<Map<String, Expense>> dataStream =
+      StreamController<Map<String, Expense>>.broadcast();
   Map<String, Expense> searchResults = {};
   Map<String, Expense> allExpenses = {};
   Completer<void>? searchCompleter;
-  CancelToken? cancelToken; // To manage request cancellation
+  CancelToken? cancelToken;
 
   Future fetchExpenses() async {
     final response = await api.fetchExpenses();
@@ -29,16 +30,21 @@ class ExpensesViewModel with ChangeNotifier {
 
   Future<void> deleteExpense(id) async {
     await api.deleteExpense(id);
+    await fetchExpenses();
     notifyListeners();
   }
 
   Future<void> editExpense(updatedData, id) async {
     await api.updateExpense(id, updatedData);
+    await fetchExpenses();
+
     notifyListeners();
   }
 
   Future<void> addExpense(newExpense) async {
     await api.postExpense(newExpense);
+    await fetchExpenses();
+
     notifyListeners();
   }
 
@@ -58,5 +64,4 @@ class ExpensesViewModel with ChangeNotifier {
     }
     notifyListeners();
   }
-
 }
