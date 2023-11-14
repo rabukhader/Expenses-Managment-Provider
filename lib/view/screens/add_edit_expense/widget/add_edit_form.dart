@@ -1,3 +1,4 @@
+import 'package:expenses_managment_app_provider/model/services/image_picker/image_picker.dart';
 import 'package:expenses_managment_app_provider/model/services/location/location_service.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -6,6 +7,7 @@ import '../../../../model/services/form/expense_form.dart';
 import '../../../../model/services/form/expense_validator.dart';
 
 class AddEditForm extends StatefulWidget {
+  final CustomImagePicker? imagePicker;
   final LocationService? locationService;
   final Map? data;
   final String? expenseId;
@@ -14,6 +16,7 @@ class AddEditForm extends StatefulWidget {
   final String processName;
   const AddEditForm(
       {super.key,
+      this.imagePicker,
       this.locationService,
       this.data,
       this.expenseId,
@@ -34,6 +37,7 @@ class _AddEditFormState extends State<AddEditForm> {
     if (widget.expenseId != null) {
       widget.form.loadData(widget.data);
       widget.locationService!.loadData(widget.data!['address']);
+      widget.imagePicker!.loadData(widget.data!['imageUrl']);
       isUploaded = true;
       isLocated = true;
     }
@@ -92,72 +96,91 @@ class _AddEditFormState extends State<AddEditForm> {
                       })),
             ),
           ),
-          SizedBox(
-            width: MediaQuery.of(context).size.width * 0.8,
-            height: 100,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const SizedBox(height: 16),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.greenAccent,
-                      foregroundColor: Colors.black,
-                      elevation: 25,
-                      shadowColor: Colors.blueGrey),
-                  onPressed: () {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: const Text("Choose an image source"),
-                          actions: [
-                            TextButton(
-                              onPressed: () async {
-                                Navigator.pop(context);
-                                await widget.form.pickImage(ImageSource.camera);
-                                if (widget.form.imageController.text != '') {
-                                  setState(() {
-                                    isUploaded = true;
-                                  });
-                                }
-                              },
-                              child: const Text("Camera"),
-                            ),
-                            TextButton(
-                              onPressed: () async {
-                                Navigator.pop(context);
-                                await widget.form
-                                    .pickImage(ImageSource.gallery);
-                                if (widget.form.imageController.text != '') {
-                                  setState(() {
-                                    isUploaded = true;
-                                  });
-                                }
-                              },
-                              child: const Text("Gallery"),
-                            ),
-                          ],
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.5,
+                height: 100,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const SizedBox(height: 16),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.greenAccent,
+                          foregroundColor: Colors.black,
+                          elevation: 25,
+                          shadowColor: Colors.blueGrey),
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: const Text("Choose an image source"),
+                              actions: [
+                                TextButton(
+                                  onPressed: () async {
+                                    Navigator.pop(context);
+                                    await widget.imagePicker!
+                                        .openCamera(ImageSource.camera);
+                                    if (widget.imagePicker!.imageController
+                                            .text !=
+                                        '') {
+                                      setState(() {
+                                        isUploaded = true;
+                                      });
+                                    }
+                                  },
+                                  child: const Text("Camera"),
+                                ),
+                                TextButton(
+                                  onPressed: () async {
+                                    Navigator.pop(context);
+                                    await widget.imagePicker!
+                                        .openCamera(ImageSource.gallery);
+                                    if (widget.imagePicker!.imageController
+                                            .text !=
+                                        '') {
+                                      setState(() {
+                                        isUploaded = true;
+                                      });
+                                    }
+                                  },
+                                  child: const Text("Gallery"),
+                                ),
+                              ],
+                            );
+                          },
                         );
                       },
-                    );
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          isUploaded ? 'Change' : 'Upload',
-                          style: GoogleFonts.openSans(
-                              fontSize: 20, fontWeight: FontWeight.bold),
+                      child: Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              isUploaded ? 'Change' : 'Upload',
+                              style: GoogleFonts.openSans(
+                                  fontSize: 20, fontWeight: FontWeight.bold),
+                            ),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
-                  ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+              isUploaded
+                  ? Container(
+                      width: MediaQuery.of(context).size.width * 0.5,
+                      height: MediaQuery.of(context).size.height * 0.2,
+                      padding: const EdgeInsets.all(12.0),
+                      child: Image.network(
+                          widget.imagePicker!.imageController.text),
+                    )
+                  : const Text('Choose Your Image')
+            ],
           ),
           SizedBox(
               width: MediaQuery.of(context).size.width * 0.8,
@@ -209,7 +232,7 @@ class _AddEditFormState extends State<AddEditForm> {
                 'name': widget.form.nameController.text,
                 'total': int.tryParse(widget.form.totalController.text),
                 'dueDate': widget.form.dateController.text,
-                'imageUrl': widget.form.imageController.text,
+                'imageUrl': widget.imagePicker!.imageController.text,
                 'address': widget.locationService!.address
               };
               if (widget.form.formKey.currentState!.validate()) {

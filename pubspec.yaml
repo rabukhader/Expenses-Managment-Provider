@@ -21,6 +21,7 @@ dependencies:
   http_interceptor: ^2.0.0-beta.7
   image_picker: ^1.0.4
   intl: ^0.18.1
+  permission_handler: ^11.0.1
   provider: ^6.0.5
   rxdart: ^0.27.7
 

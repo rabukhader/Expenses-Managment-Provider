@@ -1,3 +1,4 @@
+import 'package:expenses_managment_app_provider/model/services/image_picker/image_picker.dart';
 import 'package:expenses_managment_app_provider/model/services/location/location_service.dart';
 import 'package:expenses_managment_app_provider/view/screens/add_edit_expense/widget/add_edit_form.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +21,7 @@ class AddEditExpensesScreen extends StatefulWidget {
 class _AddEditExpensesScreenState extends State<AddEditExpensesScreen> {
   AddEditExpenseValidator validator = AddEditExpenseValidator();
   LocationService locationService = LocationService();
+  CustomImagePicker imagePicker = CustomImagePicker();
   ExpenseForm form = ExpenseForm();
 
   @override
@@ -43,11 +45,13 @@ class _AddEditExpensesScreenState extends State<AddEditExpensesScreen> {
             CustomHeading(title: '${widget.processName} Expense'),
             widget.expenseId == null
                 ? AddEditForm(
+                    imagePicker: imagePicker,
                     locationService: locationService,
                     form: form,
                     validator: validator,
                     processName: widget.processName)
                 : AddEditForm(
+                    imagePicker: imagePicker,
                     locationService: locationService,
                     form: form,
                     validator: validator,
