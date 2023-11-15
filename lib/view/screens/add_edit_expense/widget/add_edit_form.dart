@@ -3,8 +3,8 @@ import 'package:expenses_managment_app_provider/model/services/location/location
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
-import '../../../../model/services/form/expense_form.dart';
-import '../../../../model/services/form/expense_validator.dart';
+import '../../../../model/services/expense_form/expense_form.dart';
+import '../../../../model/services/expense_form/expense_validator.dart';
 import 'camera_section.dart';
 
 class AddEditForm extends StatefulWidget {
@@ -128,7 +128,7 @@ class _AddEditFormState extends State<AddEditForm> {
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) => CameraSection(
-                                                imagePicker:
+                                                imageService:
                                                     widget.imageService!)));
                                                     print(result);
                                     

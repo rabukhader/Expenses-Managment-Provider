@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "296448364006",
+    "firebase_url": "https://providerrest-default-rtdb.firebaseio.com",
     "project_id": "providerrest",
     "storage_bucket": "providerrest.appspot.com"
   },
@@ -12,16 +13,40 @@
           "package_name": "com.example.expenses_managment_app_provider"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "296448364006-ked98giprblrnnhovr0c06sat4j7trs6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.expenses_managment_app_provider",
+            "certificate_hash": "ab9848d64de940224b9eeeeaabf3f5a7fad615cc"
+          }
+        },
+        {
+          "client_id": "296448364006-inb695rjlogc4s370tij4snl4v9pi7n6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyAzCwL7Ey0VCKFqnWHyiJP8tUa6Un5rzvw",
-          "addExpense": "/addExpense"
+          "current_key": "AIzaSyAzCwL7Ey0VCKFqnWHyiJP8tUa6Un5rzvw"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "296448364006-inb695rjlogc4s370tij4snl4v9pi7n6.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "296448364006-3r8tn0967u6ved27vl69a8ikedknu8v6.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.expensesManagmentAppProvider"
+              }
+            }
+          ]
         }
       }
     }

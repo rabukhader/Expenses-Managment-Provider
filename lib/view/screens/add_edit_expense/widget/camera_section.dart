@@ -7,8 +7,8 @@ import '../../../../main.dart';
 import 'camera_view_photo.dart';
 
 class CameraSection extends StatefulWidget {
-  final ImageService imagePicker;
-  const CameraSection({super.key, required this.imagePicker});
+  final ImageService imageService;
+  const CameraSection({super.key, required this.imageService});
 
   @override
   State<CameraSection> createState() => _CameraSectionState();
@@ -19,6 +19,7 @@ class _CameraSectionState extends State<CameraSection> {
   late Future<void> cameraValue;
   List<AssetEntity> galleryPhotos = [];
   bool isCaptureInProgress = false;
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -33,7 +34,7 @@ class _CameraSectionState extends State<CameraSection> {
   }
 
   Future<void> fetchGalleryPhotos() async {
-    List<AssetEntity> photos = await widget.imagePicker.getGalleryPhotos();
+    List<AssetEntity> photos = await widget.imageService.getGalleryThumbnails();
     setState(() {
       galleryPhotos = photos;
     });
@@ -87,7 +88,7 @@ class _CameraSectionState extends State<CameraSection> {
                   bottom: 100.0,
                   child: Container(
                     padding: const EdgeInsets.only(top: 5, bottom: 5),
-                    color: const Color.fromRGBO(255, 255, 255, 0.4),
+                    color: Colors.transparent,
                     width: MediaQuery.of(context).size.width,
                     child: SizedBox(
                       height: 80,
@@ -95,14 +96,34 @@ class _CameraSectionState extends State<CameraSection> {
                         scrollDirection: Axis.horizontal,
                         itemCount: galleryPhotos.length,
                         itemBuilder: (context, index) {
-                          return Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Image(
-                              image: AssetEntityImageProvider(
-                                  galleryPhotos[index]),
-                              width: 60,
-                              height: 60,
-                              fit: BoxFit.cover,
+                          return InkWell(
+                            onTap: () async {
+                              final file = await galleryPhotos[index].file;
+                              await widget.imageService
+                                  .uploadImageToStorage(file!);
+                              var result = await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => CameraViewPhoto(
+                                    url:
+                                        widget.imageService.imageController.text,
+                                  ),
+                                ),
+                              );
+                              if (result == false) {
+                                widget.imageService.imageController.clear();
+                              }
+                            },
+                            child: Container(
+                              color: const Color.fromRGBO(255, 255, 255, 0.4),
+                              margin: const EdgeInsets.all(8.0),
+                              child: Image(
+                                image: AssetEntityImageProvider(
+                                    galleryPhotos[index]),
+                                width: 60,
+                                height: 60,
+                                fit: BoxFit.cover,
+                              ),
                             ),
                           );
                         },
@@ -167,6 +188,8 @@ class _CameraSectionState extends State<CameraSection> {
 
   Future<void> captureAndUpload() async {
     if (isCaptureInProgress) {
+      setState(() {
+      });
       return;
     }
 
@@ -177,17 +200,17 @@ class _CameraSectionState extends State<CameraSection> {
     try {
       var re = await camController.takePicture();
       final expenseImage = File(re.path);
-      await widget.imagePicker.uploadImageToStorage(expenseImage);
+      await widget.imageService.uploadImageToStorage(expenseImage);
       var result = await Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => CamerVewPhoto(
-            url: widget.imagePicker.imageController.text,
+          builder: (context) => CameraViewPhoto(
+            url: widget.imageService.imageController.text,
           ),
         ),
       );
       if (result == false) {
-        widget.imagePicker.imageController.clear();
+        widget.imageService.imageController.clear();
       }
     } catch (e) {
       print("Error during capture and upload: $e");

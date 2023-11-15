@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-class CamerVewPhoto extends StatelessWidget {
+class CameraViewPhoto extends StatelessWidget {
   final String url;
-  const CamerVewPhoto({super.key, required this.url});
+  const CameraViewPhoto({super.key, required this.url});
 
   @override
   Widget build(BuildContext context) {
@@ -10,7 +10,7 @@ class CamerVewPhoto extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.black,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             var result = false;
             Navigator.pop(context, result);

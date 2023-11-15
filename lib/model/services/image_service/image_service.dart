@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -26,8 +27,8 @@ class ImageService {
           print('Camera permission not granted');
         }
       } else if (source == ImageSource.gallery) {
-        await Permission.photos.request();
-        var status = await Permission.photos.status;
+        await Permission.storage.request();
+        var status = await Permission.storage.status;
         if (status.isGranted) {
           await pickImage(ImageSource.gallery);
         } else {
@@ -64,23 +65,30 @@ class ImageService {
     }
   }
 
-  Future<List<AssetEntity>> getGalleryPhotos() async {
-    // Request permission if not granted
+  Future<List<AssetEntity>> getGalleryThumbnails() async {
     var result = await PhotoManager.requestPermissionExtend();
     if (result != PermissionState.authorized) {
-      // Handle permission denied
       return [];
     }
 
-    // Fetch photos from the gallery
     List<AssetEntity> assets = await PhotoManager.getAssetPathList(
       type: RequestType.image,
     ).then((pathList) async {
       if (pathList.isEmpty) return [];
 
-      return (await pathList[0].getAssetListRange(
-              start: 0, end: await pathList[0].assetCountAsync))
-          .toList();
+      List<AssetEntity> thumbnails = [];
+
+      List<AssetEntity> partialAssets =
+          await pathList[0].getAssetListRange(start: 0, end: 100);
+
+      for (var asset in partialAssets) {
+        Uint8List? thumbData = await asset.thumbnailData;
+        if (thumbData != null) {
+          thumbnails.add(asset);
+        }
+      }
+
+      return thumbnails;
     });
 
     return assets;
