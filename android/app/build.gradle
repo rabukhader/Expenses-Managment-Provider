@@ -46,7 +46,7 @@ android {
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
         minSdkVersion 21
-        targetSdkVersion flutter.targetSdkVersion
+        targetSdkVersion 33
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }
@@ -65,5 +65,10 @@ flutter {
 }
 
 dependencies {
+    implementation 'com.facebook.android:facebook-login:latest.release'
+    implementation 'com.facebook.android:facebook-core:latest.release'
+    implementation 'com.facebook.android:facebook-common:latest.release'
+    implementation 'com.facebook.android:facebook-applinks:latest.release'
+    implementation 'com.facebook.android:facebook-share:latest.release'
 
 }

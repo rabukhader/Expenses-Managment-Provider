@@ -9,11 +9,18 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 import 'view_model/expense_view_model.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 
 late List<CameraDescription> cameras;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  FacebookAuth.instance.webAndDesktopInitialize(
+    appId: '257911473923789',
+    cookie: true,
+    xfbml: true,
+    version: 'v10.0',
+  );
   cameras = await availableCameras();
   GeolocatorPlatform.instance;
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
@@ -29,7 +36,7 @@ class ExpensesApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: const ChooseLoginRegister(),
       theme: AppTheme.lightTheme(context),

@@ -47,6 +47,7 @@ class LoginRegisterViewModel with ChangeNotifier {
   Future<bool> signInWithFacebook() async {
     try {
       final LoginResult loginResult = await FacebookAuth.instance.login();
+      print(loginResult);
       final OAuthCredential facebookAuthCredential =
           FacebookAuthProvider.credential(loginResult.accessToken!.token);
       await auth.signInWithCredential(facebookAuthCredential);
