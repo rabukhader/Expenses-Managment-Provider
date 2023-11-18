@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">MEA</string>
+    <string name="app_name">com.example.expenses_managment_app_provider</string>
     <string name="facebook_app_id">257911473923789</string>
     <string name="fb_login_protocol_scheme">fb257911473923789</string>
     <string name="facebook_client_token">a52a732d89f6b6d9bf6fd3bded2b338a</string>

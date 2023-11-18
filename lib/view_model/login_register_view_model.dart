@@ -12,7 +12,6 @@ class LoginRegisterViewModel with ChangeNotifier {
       notifyListeners();
     } catch (e) {
       rethrow;
-      
     }
   }
 
@@ -20,7 +19,7 @@ class LoginRegisterViewModel with ChangeNotifier {
     try {
       await auth.createUserWithEmailAndPassword(
           email: email, password: password);
-          notifyListeners();
+      notifyListeners();
     } catch (e) {
       rethrow;
     }
@@ -28,16 +27,18 @@ class LoginRegisterViewModel with ChangeNotifier {
 
   Future<bool> signInWithGoogle() async {
     final GoogleSignIn googleSignIn = GoogleSignIn();
-    try {      
+    googleSignIn.disconnect();
+    try {
       GoogleSignInAccount? account = await googleSignIn.signIn();
       if (account != null) {
         final authAccount = await account.authentication;
         final credential = GoogleAuthProvider.credential(
             idToken: authAccount.idToken, accessToken: authAccount.accessToken);
         await auth.signInWithCredential(credential);
+        notifyListeners();
+        return true;
       }
-      notifyListeners();
-      return true;
+      return false;
     } on Exception catch (error) {
       print('error1111$error');
       return false;
