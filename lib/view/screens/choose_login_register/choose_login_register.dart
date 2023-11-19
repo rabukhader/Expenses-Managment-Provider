@@ -1,7 +1,7 @@
 import 'package:expenses_managment_app_provider/model/services/login_register_form/login_register_form.dart';
-import 'package:expenses_managment_app_provider/view/screens/home/home_screen.dart';
 import 'package:expenses_managment_app_provider/view_model/login_register_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
@@ -86,8 +86,7 @@ class _ChooseLoginRegisterState extends State<ChooseLoginRegister> {
                                         TextSpan(
                                             text: 'EMA !\n',
                                             style: GoogleFonts.poppins(
-                                                color: Theme.of(context)
-                                                    .primaryColor,
+                                                color: const Color(0xff177DFF),
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 40)),
                                         TextSpan(
@@ -188,7 +187,7 @@ class _ChooseLoginRegisterState extends State<ChooseLoginRegister> {
                                               color: Theme.of(context)
                                                   .colorScheme
                                                   .onBackground),
-                                          color: Theme.of(context).primaryColor,
+                                          color: const Color(0xff177DFF),
                                           borderRadius:
                                               BorderRadius.circular(10),
                                           boxShadow: [
@@ -261,12 +260,8 @@ class _ChooseLoginRegisterState extends State<ChooseLoginRegister> {
                                                 listen: false)
                                             .signInWithGoogle();
                                         if (result) {
-                                          Navigator.pushAndRemoveUntil(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      HomeScreen()),
-                                              (route) => false);
+                                          GoRouter.of(context).go('/home',
+                                              extra: (state) => state.isRoot);
                                         }
                                       },
                                       child: Column(
@@ -294,12 +289,8 @@ class _ChooseLoginRegisterState extends State<ChooseLoginRegister> {
                                                 listen: false)
                                             .signInWithFacebook();
                                         if (result) {
-                                          Navigator.pushAndRemoveUntil(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      HomeScreen()),
-                                              (route) => false);
+                                          GoRouter.of(context).go('/home',
+                                              extra: (state) => state.isRoot);
                                         }
                                       },
                                       style: ButtonStyle(

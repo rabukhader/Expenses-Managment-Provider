@@ -1,10 +1,11 @@
 import 'dart:async';
+import 'package:expenses_managment_app_provider/view/screens/expense_details/expense_details.dart';
+import 'package:expenses_managment_app_provider/view/screens/manage_expenses/widget/custom_card2.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:expenses_managment_app_provider/model/expense.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../view_model/expense_view_model.dart';
-import 'custom_card.dart';
 
 class ListOfExpenses extends StatefulWidget {
   const ListOfExpenses({super.key});
@@ -51,7 +52,22 @@ class _ListOfExpensesState extends State<ListOfExpenses> {
                   final entry = displayedExpense.entries.toList()[index];
                   final id = entry.key;
                   final Expense expenseDetails = entry.value;
-                  return CustomCard(data: expenseDetails, id: id);
+                  return InkWell(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ExpenseDetails(
+                                  data: expenseDetails, id: id)));
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: CustomCard2(
+                        data: expenseDetails,
+                        id: id,
+                      ),
+                    ),
+                  );
                 },
               );
             }

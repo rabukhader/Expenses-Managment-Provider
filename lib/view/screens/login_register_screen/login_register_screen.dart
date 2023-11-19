@@ -30,22 +30,19 @@ class _LoginRegisterScreenState extends State<LoginRegisterScreen> {
               top: -height * .15,
               right: -MediaQuery.of(context).size.width * .4,
               child: const BezierContainer()),
+          Positioned(
+            top: 30,
+            left: 10,
+            child: IconButton(
+                onPressed: () {
+                  widget.loginRegisterForm.clear();
+                  Navigator.pop(context);
+                },
+                icon: const Icon(Icons.arrow_back)),
+          ),
           Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    IconButton(
-                        onPressed: () {
-                          widget.loginRegisterForm.clear();
-                          Navigator.pop(context);
-                        },
-                        icon: const Icon(Icons.arrow_back)),
-                  ],
-                ),
-              ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
