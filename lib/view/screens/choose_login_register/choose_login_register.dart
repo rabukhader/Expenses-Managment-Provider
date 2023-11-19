@@ -254,14 +254,39 @@ class _ChooseLoginRegisterState extends State<ChooseLoginRegister> {
                                                       .colorScheme
                                                       .background)),
                                       onPressed: () async {
-                                        var result = await Provider.of<
-                                                    LoginRegisterViewModel>(
-                                                context,
-                                                listen: false)
-                                            .signInWithGoogle();
-                                        if (result) {
-                                          GoRouter.of(context).go('/home',
-                                              extra: (state) => state.isRoot);
+                                        showDialog(
+                                          context: context,
+                                          builder: (context) =>
+                                              const AlertDialog(
+                                            content:
+                                                SizedBox(
+                                                  width: 30,
+                                                  height: 150,
+                                                  child: CircularProgressIndicator(value: null,)),
+                                          ),
+                                        );
+
+                                        try {
+                                          var result = await Provider.of<
+                                              LoginRegisterViewModel>(
+                                            context,
+                                            listen: false,
+                                          ).signInWithGoogle();
+
+                                          Navigator.pop(context);
+
+                                          if (result) {
+                                            GoRouter.of(context).go('/home',
+                                                extra: (state) => state.isRoot);
+                                          }
+                                        } catch (error) {
+                                          // Handle errors if the sign-in fails
+                                          // Dismiss the loading indicator
+                                          Navigator.pop(context);
+
+                                          // Show an error message or handle the error as needed
+                                          print(
+                                              "Error signing in with Google: $error");
                                         }
                                       },
                                       child: Column(
