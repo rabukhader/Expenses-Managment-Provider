@@ -15,7 +15,10 @@ class LocationService {
 
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      return false;
+      serviceEnabled = await Geolocator.openLocationSettings();
+      if (!serviceEnabled) {
+        return false;
+      }
     }
     permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {

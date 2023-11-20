@@ -70,5 +70,7 @@ dependencies {
     implementation 'com.facebook.android:facebook-common:latest.release'
     implementation 'com.facebook.android:facebook-applinks:latest.release'
     implementation 'com.facebook.android:facebook-share:latest.release'
+    implementation(platform("com.google.firebase:firebase-bom:32.6.0"))
+    implementation("com.google.firebase:firebase-perf")
 
 }

@@ -1,5 +1,5 @@
-import 'package:expenses_managment_app_provider/model/expense.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../../../view_model/expense_view_model.dart';
@@ -8,7 +8,7 @@ import '../manage_expenses/widget/dialogs/delete_dialog.dart';
 
 class ExpenseDetails extends StatelessWidget {
   final String id;
-  final Expense data;
+  final  data;
   const ExpenseDetails({super.key, required this.id, required this.data});
 
   @override
@@ -24,7 +24,7 @@ class ExpenseDetails extends StatelessWidget {
                 Icons.arrow_back,
               ),
               onPressed: () {
-                Navigator.pop(context);
+                GoRouter.of(context).go('/home');
               },
             ),
           ),
@@ -32,26 +32,26 @@ class ExpenseDetails extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Container(
-                padding: const EdgeInsets.all(8.0),
-                height: MediaQuery.of(context).size.height *0.6,
-                width: MediaQuery.of(context).size.width ,
-                child: Image.network(data.imageUrl)),
+                  padding: const EdgeInsets.all(8.0),
+                  height: MediaQuery.of(context).size.height * 0.6,
+                  width: MediaQuery.of(context).size.width,
+                  child: Image.network(data['imageUrl'])),
               Text(
-                data.name,
+                data['name'],
                 style: const TextStyle(fontSize: 36),
               ),
               Text(
-                data.address,
+                data['address'],
                 textAlign: TextAlign.start,
                 style:
                     const TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
               ),
               Text(
-                'Total : ${data.total.toString()}\$',
+                'Total : ${data['total'].toString()}\$',
                 style: const TextStyle(fontSize: 20),
               ),
               Text(
-                'Due Date : ${data.dueDate}',
+                'Due Date : ${data['dueDate']}',
                 style: const TextStyle(fontSize: 20),
               ),
               Row(

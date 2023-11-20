@@ -1,6 +1,6 @@
 import 'dart:async';
-import 'package:expenses_managment_app_provider/view/screens/expense_details/expense_details.dart';
 import 'package:expenses_managment_app_provider/view/screens/manage_expenses/widget/custom_card2.dart';
+import 'package:go_router/go_router.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:expenses_managment_app_provider/model/expense.dart';
 import 'package:flutter/material.dart';
@@ -54,11 +54,8 @@ class _ListOfExpensesState extends State<ListOfExpenses> {
                   final Expense expenseDetails = entry.value;
                   return InkWell(
                     onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ExpenseDetails(
-                                  data: expenseDetails, id: id)));
+                      GoRouter.of(context).go('/expenseDetails/$id',
+                          extra: {'id': id, 'data': expenseDetails});
                     },
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
