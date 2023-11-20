@@ -49,6 +49,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '296448364006',
     projectId: 'providerrest',
     authDomain: 'providerrest.firebaseapp.com',
+    databaseURL: 'https://providerrest-default-rtdb.firebaseio.com',
     storageBucket: 'providerrest.appspot.com',
     measurementId: 'G-YNX16BDZVD',
   );
@@ -58,6 +59,7 @@ class DefaultFirebaseOptions {
     appId: '1:296448364006:android:3236308341b98d02beda27',
     messagingSenderId: '296448364006',
     projectId: 'providerrest',
+    databaseURL: 'https://providerrest-default-rtdb.firebaseio.com',
     storageBucket: 'providerrest.appspot.com',
   );
 
@@ -66,7 +68,10 @@ class DefaultFirebaseOptions {
     appId: '1:296448364006:ios:19367ce8916e0b58beda27',
     messagingSenderId: '296448364006',
     projectId: 'providerrest',
+    databaseURL: 'https://providerrest-default-rtdb.firebaseio.com',
     storageBucket: 'providerrest.appspot.com',
+    androidClientId: '296448364006-ked98giprblrnnhovr0c06sat4j7trs6.apps.googleusercontent.com',
+    iosClientId: '296448364006-3r8tn0967u6ved27vl69a8ikedknu8v6.apps.googleusercontent.com',
     iosBundleId: 'com.example.expensesManagmentAppProvider',
   );
 
@@ -75,7 +80,10 @@ class DefaultFirebaseOptions {
     appId: '1:296448364006:ios:767b2f62164a7db7beda27',
     messagingSenderId: '296448364006',
     projectId: 'providerrest',
+    databaseURL: 'https://providerrest-default-rtdb.firebaseio.com',
     storageBucket: 'providerrest.appspot.com',
+    androidClientId: '296448364006-ked98giprblrnnhovr0c06sat4j7trs6.apps.googleusercontent.com',
+    iosClientId: '296448364006-5p85g96f4j2jm962vj116ap6hfsj4fn2.apps.googleusercontent.com',
     iosBundleId: 'com.example.expensesManagmentAppProvider.RunnerTests',
   );
 }

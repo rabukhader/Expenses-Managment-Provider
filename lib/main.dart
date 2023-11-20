@@ -18,6 +18,7 @@ import 'package:expenses_managment_app_provider/view/screens/expense_details/exp
 import 'package:expenses_managment_app_provider/view/screens/home/home_screen.dart';
 import 'package:expenses_managment_app_provider/view_model/login_register_view_model.dart';
 import 'package:expenses_managment_app_provider/view_model/navigation_view_model.dart';
+import 'package:firebase_performance/firebase_performance.dart';
 
 import 'view_model/expense_view_model.dart';
 
@@ -52,6 +53,7 @@ void main() async {
   cameras = await availableCameras();
   GeolocatorPlatform.instance;
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await FirebasePerformance.instance.setPerformanceCollectionEnabled(true);
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (_) => ExpensesViewModel()),
     ChangeNotifierProvider(create: (_) => NavigatorViewModel()),
@@ -67,9 +69,14 @@ class ExpensesApp extends StatefulWidget {
 }
 
 class _ExpensesAppState extends State<ExpensesApp> {
+  final performance = FirebasePerformance.instance;
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
+    final Trace buildTrace = performance.newTrace('build_method');
+    buildTrace.start();
+
+    final MaterialApp app = MaterialApp.router(
       routerConfig: GoRouter(routes: [
         GoRoute(
           path: '/',
@@ -106,9 +113,16 @@ class _ExpensesAppState extends State<ExpensesApp> {
       theme: AppTheme.lightTheme(context),
       darkTheme: AppTheme.darkTheme(context),
     );
+    buildTrace.stop();
+
+    return app;
   }
 
   Future<Map<String, dynamic>> fetchDataById(String id) async {
+    final Trace fetchDataTrace = performance.newTrace('fetchDataById');
+
+    fetchDataTrace.start();
+
     final url =
         'https://providerrest-default-rtdb.firebaseio.com/expenses/$id.json';
 
@@ -116,11 +130,14 @@ class _ExpensesAppState extends State<ExpensesApp> {
       final response = await http.get(Uri.parse(url));
 
       if (response.statusCode == 200) {
+        fetchDataTrace.stop();
         return json.decode(response.body);
       } else {
+        fetchDataTrace.stop();
         throw Exception('Failed to load data');
       }
     } catch (error) {
+      fetchDataTrace.stop();
       print('Error: $error');
       rethrow;
     }

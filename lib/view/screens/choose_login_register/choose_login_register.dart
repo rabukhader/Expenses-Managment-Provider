@@ -1,5 +1,6 @@
 import 'package:expenses_managment_app_provider/model/services/login_register_form/login_register_form.dart';
 import 'package:expenses_managment_app_provider/view_model/login_register_view_model.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -15,6 +16,19 @@ class ChooseLoginRegister extends StatefulWidget {
 }
 
 class _ChooseLoginRegisterState extends State<ChooseLoginRegister> {
+  final FirebaseAnalytics analytics = FirebaseAnalytics.instance;
+
+  Future<void> sendAnalyticsEvent() async {
+    await analytics.logEvent(
+      name: 'button_click',
+      parameters: <String, dynamic>{
+        'page': 'home',
+        'button_id': 'example_button',
+      },
+    );
+    await analytics.logLogin(loginMethod: 'Email Password');
+  }
+
   LoginRegisterForm loginRegisterForm = LoginRegisterForm();
   @override
   Widget build(BuildContext context) {
@@ -105,7 +119,8 @@ class _ChooseLoginRegisterState extends State<ChooseLoginRegister> {
                                     MainAxisAlignment.spaceAround,
                                 children: [
                                   TextButton(
-                                      onPressed: () {
+                                      onPressed: () async {
+                                        await sendAnalyticsEvent();
                                         Navigator.push(
                                             context,
                                             MaterialPageRoute(
@@ -258,11 +273,13 @@ class _ChooseLoginRegisterState extends State<ChooseLoginRegister> {
                                           context: context,
                                           builder: (context) =>
                                               const AlertDialog(
-                                            content:
-                                                SizedBox(
-                                                  width: 30,
-                                                  height: 150,
-                                                  child: CircularProgressIndicator(value: null,)),
+                                            content: SizedBox(
+                                                width: 30,
+                                                height: 150,
+                                                child:
+                                                    CircularProgressIndicator(
+                                                  value: null,
+                                                )),
                                           ),
                                         );
 
