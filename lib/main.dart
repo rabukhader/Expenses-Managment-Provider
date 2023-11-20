@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:camera/camera.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:geolocator/geolocator.dart';
@@ -41,9 +42,28 @@ void handleDeepLink(String link) {
   print('Received deep link: $link');
 }
 
+Future<void> initDynamicLinks() async {
+  final PendingDynamicLinkData? data =
+      await FirebaseDynamicLinks.instance.getInitialLink();
+  handleLinkData(data);
+
+  FirebaseDynamicLinks.instance.onLink.listen(
+    (PendingDynamicLinkData? dynamicLink) async {
+      handleLinkData(dynamicLink);
+    },
+  );
+}
+
+void handleLinkData(PendingDynamicLinkData? data) {
+  if (data == null) {
+    return;
+  }
+
+  final Uri deepLink = data.link;
+}
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await checkDeepLink();
   FacebookAuth.instance.webAndDesktopInitialize(
     appId: '257911473923789',
     cookie: true,
@@ -54,6 +74,8 @@ void main() async {
   GeolocatorPlatform.instance;
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await FirebasePerformance.instance.setPerformanceCollectionEnabled(true);
+  await checkDeepLink();
+  await initDynamicLinks();
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (_) => ExpensesViewModel()),
     ChangeNotifierProvider(create: (_) => NavigatorViewModel()),

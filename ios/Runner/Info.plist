@@ -11,10 +11,10 @@
 	<array>
     <dict>
         <key>CFBundleURLName</key>
-        <string></string> <!-- Your app's bundle identifier -->
+        <string>com.example.expensesManagmentAppProvider</string>
         <key>CFBundleURLSchemes</key>
         <array>
-            <string>your_app_scheme</string> <!-- Replace with your app's custom URL scheme -->
+            <string>com.example.expensesManagmentAppProvider</string>
         </array>
     </dict>
 	</array>
