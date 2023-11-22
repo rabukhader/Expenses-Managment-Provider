@@ -34,26 +34,18 @@
             android:hardwareAccelerated="true"
             android:windowSoftInputMode="adjustResize">
 
-             <meta-data
+            <meta-data
                 android:name="flutter_deeplinking_enabled"
                 android:value="true" />
 
-                <intent-filter>
-    <action android:name="android.intent.action.VIEW" />
-    <category android:name="android.intent.category.DEFAULT" />
-    <category android:name="android.intent.category.BROWSABLE" />
-    <data
-        android:scheme="https"
-        android:host="6559cfac85bcee0e0f7908f5--velvety-basbousa-733553.netlify.app" />
-</intent-filter>
-            
-            <intent-filter android:autoVerify="true">
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="http" android:host="https://6559cfac85bcee0e0f7908f5--velvety-basbousa-733553.netlify.app" />
-                <data android:scheme="https" />
-            </intent-filter>
+        <intent-filter android:autoVerify="true">
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.DEFAULT" />
+            <category android:name="android.intent.category.BROWSABLE" />
+            <data android:scheme="http" android:host="6559cfac85bcee0e0f7908f5--velvety-basbousa-733553.netlify.app" />
+            <data android:scheme="https" android:host="6559cfac85bcee0e0f7908f5--velvety-basbousa-733553.netlify.app" />
+        </intent-filter>
+
 
 
             <meta-data

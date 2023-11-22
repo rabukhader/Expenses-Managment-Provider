@@ -4,6 +4,7 @@ import 'package:expenses_managment_app_provider/model/expense.dart';
 import 'package:flutter/material.dart';
 import '../model/apis/custom_client.dart';
 import '../model/apis/end_point_firebase.dart';
+import '../model/local_db/db_helper.dart';
 
 Dio client = Client().init();
 EndpointFirebaseProvider api = EndpointFirebaseProvider(client);
@@ -17,16 +18,30 @@ class ExpensesViewModel with ChangeNotifier {
   Completer<void>? searchCompleter;
   CancelToken? cancelToken;
 
-  Future fetchExpenses() async {
+Future fetchExpenses() async {
+  try {
     final response = await api.fetchExpenses();
     Map<String, Expense> data = response.map((key, value) {
       return MapEntry(key, Expense.fromJson(value));
     });
+    final dbHelper = DBHelper.instance;
+    await dbHelper.insertData(data.values.toList());
+
     allExpenses = data;
     searchResults = data;
     dataStream.add(searchResults);
-    return data;
+  } catch (error) {
+    print('Error fetching expenses: $error');
+    
+    final dbHelper = DBHelper.instance;
+    final localData = await dbHelper.getData();
+
+    allExpenses = Map.fromIterable(localData, key: (item) => item.name);
+    searchResults = allExpenses;
+    dataStream.add(searchResults);
   }
+}
+
 
   Future<void> deleteExpense(id) async {
     await api.deleteExpense(id);
