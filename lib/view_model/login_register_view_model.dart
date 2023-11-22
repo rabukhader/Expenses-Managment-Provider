@@ -67,4 +67,14 @@ class LoginRegisterViewModel with ChangeNotifier {
       print("Error signing out: $e");
     }
   }
+
+Future<User?> getCurrentUser() async {
+    try {
+      final User? user = auth.currentUser;
+      return user;
+    } catch (e) {
+      print('Error getting current user: $e');
+      return null;
+    }
+  }
 }

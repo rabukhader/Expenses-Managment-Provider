@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:camera/camera.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
@@ -60,6 +61,7 @@ void handleLinkData(PendingDynamicLinkData? data) {
   }
 
   final Uri deepLink = data.link;
+  print(deepLink);
 }
 
 void main() async {
@@ -73,6 +75,9 @@ void main() async {
   cameras = await availableCameras();
   GeolocatorPlatform.instance;
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  FirebaseDatabase database = FirebaseDatabase.instance;
+  database.setPersistenceEnabled(true);
+  database.setPersistenceCacheSizeBytes(10000000);
   await FirebasePerformance.instance.setPerformanceCollectionEnabled(true);
   await checkDeepLink();
   await initDynamicLinks();
@@ -96,48 +101,99 @@ class _ExpensesAppState extends State<ExpensesApp> {
   @override
   Widget build(BuildContext context) {
     final Trace buildTrace = performance.newTrace('build_method');
+    final LoginRegisterViewModel loginRegisterViewModel =
+        Provider.of<LoginRegisterViewModel>(context);
     buildTrace.start();
 
-    final MaterialApp app = MaterialApp.router(
-      routerConfig: GoRouter(routes: [
-        GoRoute(
-          path: '/',
-          builder: (context, state) => const ChooseLoginRegister(),
-        ),
-        GoRoute(
-          path: '/home',
-          builder: (context, state) => const HomeScreen(),
-        ),
-        GoRoute(
-          path: '/expenseDetails/:id',
-          builder: (context, GoRouterState state) {
-            String id = state.pathParameters['id'] ?? '';
+    return FutureBuilder(
+        future: loginRegisterViewModel.getCurrentUser(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const CircularProgressIndicator();
+          } else if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}');
+          } else if (snapshot.hasData && snapshot.data != null) {
+            return MaterialApp.router(
+              routerConfig: GoRouter(
+                initialLocation: '/home',
+                routes: [
+                GoRoute(
+                  path: '/',
+                  builder: (context, state) => const ChooseLoginRegister(),
+                ),
+                GoRoute(
+                  path: '/home',
+                  builder: (context, state) => const HomeScreen(),
+                ),
+                GoRoute(
+                  path: '/expenseDetails/:id',
+                  builder: (context, GoRouterState state) {
+                    String id = state.pathParameters['id'] ?? '';
 
-            return FutureBuilder<Map<String, dynamic>>(
-              future: fetchDataById(id),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const CircularProgressIndicator();
-                } else if (snapshot.hasError) {
-                  return Text('Error fetching data: ${snapshot.error}');
-                } else if (snapshot.hasData) {
-                  Map<String, dynamic> sample = snapshot.data!;
-                  return ExpenseDetails(id: id, data: sample);
-                } else {
-                  return const Center(child: Text('Error'));
-                }
-              },
+                    return FutureBuilder<Map<String, dynamic>>(
+                      future: fetchDataById(id),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const CircularProgressIndicator();
+                        } else if (snapshot.hasError) {
+                          return Text('Error fetching data: ${snapshot.error}');
+                        } else if (snapshot.hasData) {
+                          Map<String, dynamic> sample = snapshot.data!;
+                          return ExpenseDetails(id: id, data: sample);
+                        } else {
+                          return const Center(child: Text('Error'));
+                        }
+                      },
+                    );
+                  },
+                ),
+              ]),
+              debugShowCheckedModeBanner: false,
+              theme: AppTheme.lightTheme(context),
+              darkTheme: AppTheme.darkTheme(context),
             );
-          },
-        ),
-      ]),
-      debugShowCheckedModeBanner: false,
-      theme: AppTheme.lightTheme(context),
-      darkTheme: AppTheme.darkTheme(context),
-    );
-    buildTrace.stop();
+          } else {
+            return MaterialApp.router(
+              routerConfig: GoRouter(routes: [
+                GoRoute(
+                  path: '/',
+                  builder: (context, state) => const ChooseLoginRegister(),
+                ),
+                GoRoute(
+                  path: '/home',
+                  builder: (context, state) => const HomeScreen(),
+                ),
+                GoRoute(
+                  path: '/expenseDetails/:id',
+                  builder: (context, GoRouterState state) {
+                    String id = state.pathParameters['id'] ?? '';
 
-    return app;
+                    return FutureBuilder<Map<String, dynamic>>(
+                      future: fetchDataById(id),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const CircularProgressIndicator();
+                        } else if (snapshot.hasError) {
+                          return Text('Error fetching data: ${snapshot.error}');
+                        } else if (snapshot.hasData) {
+                          Map<String, dynamic> sample = snapshot.data!;
+                          return ExpenseDetails(id: id, data: sample);
+                        } else {
+                          return const Center(child: Text('Error'));
+                        }
+                      },
+                    );
+                  },
+                ),
+              ]),
+              debugShowCheckedModeBanner: false,
+              theme: AppTheme.lightTheme(context),
+              darkTheme: AppTheme.darkTheme(context),
+            );
+          }
+        });
   }
 
   Future<Map<String, dynamic>> fetchDataById(String id) async {
