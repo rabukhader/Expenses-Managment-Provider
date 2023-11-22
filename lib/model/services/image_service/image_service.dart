@@ -1,10 +1,10 @@
 import 'dart:io';
-import 'dart:typed_data';
+// import 'dart:typed_data';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:photo_manager/photo_manager.dart';
+// import 'package:photo_manager/photo_manager.dart';
 
 class ImageService {
   TextEditingController imageController = TextEditingController();
@@ -65,32 +65,32 @@ class ImageService {
     }
   }
 
-  Future<List<AssetEntity>> getGalleryThumbnails() async {
-    var result = await PhotoManager.requestPermissionExtend();
-    if (result != PermissionState.authorized) {
-      return [];
-    }
+  // Future<List<AssetEntity>> getGalleryThumbnails() async {
+  //   var result = await PhotoManager.requestPermissionExtend();
+  //   if (result != PermissionState.authorized) {
+  //     return [];
+  //   }
 
-    List<AssetEntity> assets = await PhotoManager.getAssetPathList(
-      type: RequestType.image,
-    ).then((pathList) async {
-      if (pathList.isEmpty) return [];
+  //   List<AssetEntity> assets = await PhotoManager.getAssetPathList(
+  //     type: RequestType.image,
+  //   ).then((pathList) async {
+  //     if (pathList.isEmpty) return [];
 
-      List<AssetEntity> thumbnails = [];
+  //     List<AssetEntity> thumbnails = [];
 
-      List<AssetEntity> partialAssets =
-          await pathList[0].getAssetListRange(start: 0, end: 100);
+  //     List<AssetEntity> partialAssets =
+  //         await pathList[0].getAssetListRange(start: 0, end: 100);
 
-      for (var asset in partialAssets) {
-        Uint8List? thumbData = await asset.thumbnailData;
-        if (thumbData != null) {
-          thumbnails.add(asset);
-        }
-      }
+  //     for (var asset in partialAssets) {
+  //       Uint8List? thumbData = await asset.thumbnailData;
+  //       if (thumbData != null) {
+  //         thumbnails.add(asset);
+  //       }
+  //     }
 
-      return thumbnails;
-    });
+  //     return thumbnails;
+  //   });
 
-    return assets;
-  }
+  //   return assets;
+  // }
 }

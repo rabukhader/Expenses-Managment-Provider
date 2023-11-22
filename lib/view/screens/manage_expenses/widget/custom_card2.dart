@@ -27,7 +27,7 @@ class CustomCard2 extends StatelessWidget {
             color: color,
             borderRadius: BorderRadius.circular(15)),
         width: 320,
-        height: 190,
+        height: 220,
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 17.0, horizontal: 15),
           child: Column(

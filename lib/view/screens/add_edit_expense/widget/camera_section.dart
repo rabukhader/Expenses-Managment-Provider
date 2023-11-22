@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:expenses_managment_app_provider/model/services/image_service/image_service.dart';
 import 'package:flutter/material.dart';
-import 'package:photo_manager/photo_manager.dart';
+// import 'package:photo_manager/photo_manager.dart';
 import '../../../../main.dart';
 import 'camera_view_photo.dart';
 
@@ -17,7 +17,7 @@ class CameraSection extends StatefulWidget {
 class _CameraSectionState extends State<CameraSection> {
   late CameraController camController;
   late Future<void> cameraValue;
-  List<AssetEntity> galleryPhotos = [];
+  // List<AssetEntity> galleryPhotos = [];
   bool isCaptureInProgress = false;
   bool isLoading = false;
 
@@ -30,16 +30,16 @@ class _CameraSectionState extends State<CameraSection> {
       imageFormatGroup: ImageFormatGroup.yuv420,
     );
     cameraValue = camController.initialize();
-    fetchGalleryPhotos();
+    // fetchGalleryPhotos();
   }
 
-  Future<void> fetchGalleryPhotos() async {
-    List<AssetEntity> photos = await widget.imageService.getGalleryThumbnails();
-    setState(() {
-      galleryPhotos = photos;
-    });
-    print("test" + galleryPhotos.toString());
-  }
+  // Future<void> fetchGalleryPhotos() async {
+  //   List<AssetEntity> photos = await widget.imageService.getGalleryThumbnails();
+  //   setState(() {
+  //     galleryPhotos = photos;
+  //   });
+  //   print("test" + galleryPhotos.toString());
+  // }
 
   @override
   void dispose() {
@@ -84,52 +84,52 @@ class _CameraSectionState extends State<CameraSection> {
                       onPressed: () => Navigator.pop(context),
                     ),
                   )),
-              Positioned(
-                  bottom: 100.0,
-                  child: Container(
-                    padding: const EdgeInsets.only(top: 5, bottom: 5),
-                    color: Colors.transparent,
-                    width: MediaQuery.of(context).size.width,
-                    child: SizedBox(
-                      height: 80,
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: galleryPhotos.length,
-                        itemBuilder: (context, index) {
-                          return InkWell(
-                            onTap: () async {
-                              final file = await galleryPhotos[index].file;
-                              await widget.imageService
-                                  .uploadImageToStorage(file!);
-                              var result = await Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => CameraViewPhoto(
-                                    url:
-                                        widget.imageService.imageController.text,
-                                  ),
-                                ),
-                              );
-                              if (result == false) {
-                                widget.imageService.imageController.clear();
-                              }
-                            },
-                            child: Container(
-                              color: const Color.fromRGBO(255, 255, 255, 0.4),
-                              margin: const EdgeInsets.all(8.0),
-                              child: Image(
-                                image: AssetEntityImageProvider(
-                                    galleryPhotos[index]),
-                                width: 60,
-                                height: 60,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  )),
+              // Positioned(
+              //     bottom: 100.0,
+              //     child: Container(
+              //       padding: const EdgeInsets.only(top: 5, bottom: 5),
+              //       color: Colors.transparent,
+              //       width: MediaQuery.of(context).size.width,
+              //       child: SizedBox(
+              //         height: 80,
+              //         child: ListView.builder(
+              //           scrollDirection: Axis.horizontal,
+              //           itemCount: galleryPhotos.length,
+              //           itemBuilder: (context, index) {
+              //             return InkWell(
+              //               onTap: () async {
+              //                 final file = await galleryPhotos[index].file;
+              //                 await widget.imageService
+              //                     .uploadImageToStorage(file!);
+              //                 var result = await Navigator.push(
+              //                   context,
+              //                   MaterialPageRoute(
+              //                     builder: (context) => CameraViewPhoto(
+              //                       url:
+              //                           widget.imageService.imageController.text,
+              //                     ),
+              //                   ),
+              //                 );
+              //                 if (result == false) {
+              //                   widget.imageService.imageController.clear();
+              //                 }
+              //               },
+              //               child: Container(
+              //                 color: const Color.fromRGBO(255, 255, 255, 0.4),
+              //                 margin: const EdgeInsets.all(8.0),
+              //                 child: Image(
+              //                   image: AssetEntityImageProvider(
+              //                       galleryPhotos[index]),
+              //                   width: 60,
+              //                   height: 60,
+              //                   fit: BoxFit.cover,
+              //                 ),
+              //               ),
+              //             );
+              //           },
+              //         ),
+              //       ),
+              //     )),
               Positioned(
                 bottom: 0.0,
                 child: Container(
