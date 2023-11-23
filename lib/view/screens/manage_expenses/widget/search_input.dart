@@ -1,5 +1,6 @@
 import 'package:expenses_managment_app_provider/view_model/expense_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 class SearchInput extends StatefulWidget {
@@ -33,11 +34,11 @@ class _SearchInputState extends State<SearchInput> {
       margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20.0),
-        color: Colors.grey[200],
+        color: Colors.grey[400],
       ),
       child: TextField(
         controller: textController,
-        style: const TextStyle(color: Colors.black),
+        style: GoogleFonts.poppins(fontWeight: FontWeight.w700, fontSize: 18),
         onChanged: (text) {
           Provider.of<ExpensesViewModel>(context, listen: false)
               .textStream
