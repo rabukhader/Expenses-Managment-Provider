@@ -2,7 +2,7 @@ import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 
 class LocationService {
-  String? address;
+  late String address;
   Position? currentPosition;
 
   loadData(prevAddress) {

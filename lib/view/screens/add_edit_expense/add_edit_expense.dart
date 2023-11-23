@@ -31,12 +31,12 @@ class _AddEditExpensesScreenState extends State<AddEditExpensesScreen> {
         title: Text('Expense Management App',
             style: GoogleFonts.openSans(
                 fontSize: 16, fontWeight: FontWeight.bold)),
-        backgroundColor: Colors.grey[900],
+        backgroundColor: const Color(0xff177DFF),
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);
           },
-          icon: const Icon(Icons.arrow_back , color:Colors.white),
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
         ),
       ),
       body: SingleChildScrollView(

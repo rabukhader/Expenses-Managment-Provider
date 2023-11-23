@@ -10,7 +10,7 @@ import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:uni_links/uni_links.dart' as UniLink;
+import 'package:uni_links/uni_links.dart' as unilink;
 import 'package:http/http.dart' as http;
 
 import 'package:expenses_managment_app_provider/firebase_options.dart';
@@ -27,12 +27,12 @@ import 'view_model/expense_view_model.dart';
 late List<CameraDescription> cameras;
 
 Future<void> checkDeepLink() async {
-  final res = await UniLink.getInitialLink();
+  final res = await unilink.getInitialLink();
   if (res != null) {
     handleDeepLink(res);
   }
 
-  UniLink.linkStream.listen((String? link) {
+  unilink.linkStream.listen((String? link) {
     if (link != null) {
       handleDeepLink(link);
     }
@@ -111,12 +111,11 @@ class _ExpensesAppState extends State<ExpensesApp> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const CircularProgressIndicator();
           } else if (snapshot.hasError) {
-            return Text('Error: ${snapshot.error}');
+            return Scaffold(
+                body: Center(child: Text('Error: ${snapshot.error}')));
           } else if (snapshot.hasData && snapshot.data != null) {
             return MaterialApp.router(
-              routerConfig: GoRouter(
-                initialLocation: '/home',
-                routes: [
+              routerConfig: GoRouter(initialLocation: '/home', routes: [
                 GoRoute(
                   path: '/',
                   builder: (context, state) => const ChooseLoginRegister(),
@@ -137,7 +136,13 @@ class _ExpensesAppState extends State<ExpensesApp> {
                             ConnectionState.waiting) {
                           return const CircularProgressIndicator();
                         } else if (snapshot.hasError) {
-                          return Text('Error fetching data: ${snapshot.error}');
+                          return Scaffold(
+                              body: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Center(
+                                child: Text(
+                                    'Error fetching data: ${snapshot.error}')),
+                          ));
                         } else if (snapshot.hasData) {
                           Map<String, dynamic> sample = snapshot.data!;
                           return ExpenseDetails(id: id, data: sample);
@@ -176,7 +181,13 @@ class _ExpensesAppState extends State<ExpensesApp> {
                             ConnectionState.waiting) {
                           return const CircularProgressIndicator();
                         } else if (snapshot.hasError) {
-                          return Text('Error fetching data: ${snapshot.error}');
+                          return Scaffold(
+                              body: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Center(
+                                child: Text(
+                                    'Error fetching data: ${snapshot.error}')),
+                          ));
                         } else if (snapshot.hasData) {
                           Map<String, dynamic> sample = snapshot.data!;
                           return ExpenseDetails(id: id, data: sample);

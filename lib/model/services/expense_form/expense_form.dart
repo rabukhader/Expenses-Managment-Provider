@@ -23,15 +23,25 @@ class ExpenseForm implements EForm {
   @override
   Future<void> selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: selectedDate,
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2101),
-    );
+        context: context,
+        initialDate: selectedDate,
+        firstDate: DateTime(2000),
+        lastDate: DateTime(2101),
+        builder: (context, Widget? child) {
+          return Theme(
+            data: ThemeData.light().copyWith(
+              primaryColor: Colors.teal,
+              colorScheme: const ColorScheme.light(
+                  primary: Colors.teal), // Header text color
+              buttonTheme: const ButtonThemeData(
+                  textTheme: ButtonTextTheme.primary), // Button text color
+            ),
+            child: child!,
+          );
+        });
     if (picked != null && picked != selectedDate) {
       selectedDate = picked;
       dateController.text = DateFormat('yyyy-MM-dd').format(selectedDate);
     }
   }
-
 }

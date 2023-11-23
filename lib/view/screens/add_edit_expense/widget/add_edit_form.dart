@@ -1,3 +1,4 @@
+import 'package:expenses_managment_app_provider/model/expense.dart';
 import 'package:expenses_managment_app_provider/model/services/image_service/image_service.dart';
 import 'package:expenses_managment_app_provider/model/services/location/location_service.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +10,7 @@ import 'camera_section.dart';
 
 class AddEditForm extends StatefulWidget {
   final ImageService? imageService;
-  final LocationService? locationService;
+  final LocationService locationService;
   final Map? data;
   final String? expenseId;
   final AddEditExpenseValidator validator;
@@ -18,7 +19,7 @@ class AddEditForm extends StatefulWidget {
   const AddEditForm(
       {super.key,
       this.imageService,
-      this.locationService,
+      required this.locationService,
       this.data,
       this.expenseId,
       required this.validator,
@@ -37,7 +38,7 @@ class _AddEditFormState extends State<AddEditForm> {
     super.initState();
     if (widget.expenseId != null) {
       widget.form.loadData(widget.data);
-      widget.locationService!.loadData(widget.data!['address']);
+      widget.locationService.loadData(widget.data!['address']);
       widget.imageService!.loadData(widget.data!['imageUrl']);
       isUploaded = true;
       isLocated = true;
@@ -203,7 +204,7 @@ class _AddEditFormState extends State<AddEditForm> {
                         elevation: 25,
                         shadowColor: Colors.blueGrey),
                     onPressed: () async {
-                      await widget.locationService!.fetchLocation();
+                      await widget.locationService.fetchLocation();
                       setState(() {
                         isLocated = true;
                       });
@@ -222,7 +223,7 @@ class _AddEditFormState extends State<AddEditForm> {
                   const SizedBox(height: 20),
                   Text(
                     isLocated
-                        ? 'Address: ${widget.locationService!.address}'
+                        ? 'Address: ${widget.locationService.address}'
                         : 'Address : ',
                     textAlign: TextAlign.center,
                   ),
@@ -236,13 +237,13 @@ class _AddEditFormState extends State<AddEditForm> {
                 shadowColor: Colors.blueGrey),
             icon: const Icon(Icons.add),
             onPressed: () {
-              var data = {
-                'name': widget.form.nameController.text,
-                'total': int.tryParse(widget.form.totalController.text),
-                'dueDate': widget.form.dateController.text,
-                'imageUrl': widget.imageService!.imageController.text,
-                'address': widget.locationService!.address
-              };
+              Expense data = Expense(
+                name: widget.form.nameController.text,
+                total: int.tryParse(widget.form.totalController.text),
+                dueDate: widget.form.dateController.text,
+                imageUrl: widget.imageService!.imageController.text,
+                address: widget.locationService.address
+              );
               if (widget.form.formKey.currentState!.validate()) {
                 Navigator.pop(context, data);
               } else {
