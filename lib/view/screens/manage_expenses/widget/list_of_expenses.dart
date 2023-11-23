@@ -18,8 +18,8 @@ class _ListOfExpensesState extends State<ListOfExpenses> {
   late StreamSubscription<String> subscription;
 
   @override
-  void initState() {
-    super.initState();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
     subscription = Provider.of<ExpensesViewModel>(context, listen: false)
         .textStream
         .stream
@@ -29,6 +29,12 @@ class _ListOfExpensesState extends State<ListOfExpenses> {
       Provider.of<ExpensesViewModel>(context, listen: false)
           .searchExpense(searchQuery);
     });
+  }
+
+  @override
+  void dispose() {
+    subscription.cancel();
+    super.dispose();
   }
 
   @override

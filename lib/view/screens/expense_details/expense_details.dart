@@ -8,7 +8,7 @@ import '../manage_expenses/widget/dialogs/delete_dialog.dart';
 
 class ExpenseDetails extends StatelessWidget {
   final String id;
-  final  data;
+  final data;
   const ExpenseDetails({super.key, required this.id, required this.data});
 
   @override
@@ -93,8 +93,9 @@ class ExpenseDetails extends StatelessWidget {
                                   processName: 'Edit',
                                   expenseId: id,
                                   data: editData)));
-                      if (result != null)
+                      if (result != null) {
                         await exProvider.editExpense(result, id);
+                      }
                     },
                     label: const Text(
                       "Edit",

@@ -97,8 +97,9 @@ class CustomCard2 extends StatelessWidget {
                                   processName: 'Edit',
                                   expenseId: id,
                                   data: editData)));
-                      if (result != null)
+                      if (result != null) {
                         await exProvider.editExpense(result, id);
+                      }
                     },
                     label: const Text(
                       "Edit",

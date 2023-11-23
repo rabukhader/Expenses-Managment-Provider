@@ -29,6 +29,12 @@ class _SearchInputState extends State<SearchInput> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    textController.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
