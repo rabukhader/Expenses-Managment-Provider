@@ -1,10 +1,11 @@
+import 'package:expenses_managment_app_provider/model/apis/end_point.dart';
 import 'package:expenses_managment_app_provider/model/expense.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../../view_model/expense_view_model.dart';
 
-class DBHelper {
+class DBHelper extends EndPoint {
   static Database? localDatabase;
   static final DBHelper instance = DBHelper._();
 
@@ -39,10 +40,21 @@ class DBHelper {
     );
   }
 
-  Future<void> insertData(Map<String, Expense> data) async {
+  @override
+  Future fetchExpenses() async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query('Expense');
+
+    return {
+      for (var item in maps) item['id'].toString(): Expense.fromMap(item)
+    };
+  }
+
+  @override
+  Future postExpense(expenseData) async {
     final db = await database;
     await db.transaction((txn) async {
-      for (var entry in data.entries) {
+      for (var entry in expenseData.entries) {
         final id = entry.key;
         final expense = entry.value;
         await txn.insert(
@@ -54,26 +66,20 @@ class DBHelper {
     });
   }
 
-  Future<Map<String, Expense>> getData() async {
-    final db = await database;
-    final List<Map<String, dynamic>> maps = await db.query('Expense');
-
-    return {
-      for (var item in maps) item['id'].toString(): Expense.fromJson(item)
-    };
-  }
-
-  Future<void> updateExpense(String id, changes) async {
+  @override
+  Future updateExpense(expenseId, updatedData) async {
     final db = await database;
     await db.transaction((txn) async {
-      await txn.update('Expense', changes, where: 'id = ?', whereArgs: [id]);
+      await txn
+          .update('Expense', updatedData, where: 'id = ?', whereArgs: [expenseId]);
     });
   }
 
-  Future<void> deleteExpense(String id) async {
+  @override
+  Future<void> deleteExpense(expenseId) async {
     final db = await database;
     await db.transaction((txn) async {
-      await txn.delete('Expense', where: 'id = ?', whereArgs: [id]);
+      await txn.delete('Expense', where: 'id = ?', whereArgs: [expenseId]);
     });
   }
 
@@ -109,8 +115,6 @@ class DBHelper {
               where: 'name LIKE ?',
               whereArgs: ['%$query%'],
             ));
-
-    // await db.close();
 
     return List.generate(maps.length, (i) {
       return Expense(

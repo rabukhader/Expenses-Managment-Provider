@@ -40,26 +40,26 @@ class _SearchInputState extends State<SearchInput> {
       margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20.0),
-        color: Colors.grey[400],
+        color: Theme.of(context).colorScheme.onSecondary,
       ),
       child: TextField(
         controller: textController,
-        style: GoogleFonts.poppins(fontWeight: FontWeight.w500, fontSize: 18),
+        style: GoogleFonts.poppins(fontWeight: FontWeight.w500, fontSize: 18, color: Theme.of(context).colorScheme.onBackground),
         onChanged: (text) {
           Provider.of<ExpensesViewModel>(context, listen: false)
               .textStream
               .add(text);
         },
-        decoration: const InputDecoration(
+        decoration: InputDecoration(
           hintText: 'Search',
-          hintStyle: TextStyle(color: Colors.black),
+          hintStyle: GoogleFonts.poppins(color: Theme.of(context).colorScheme.onBackground),
           prefixIcon: Icon(
             Icons.search,
-            color: Colors.black,
+            color: Theme.of(context).hintColor,
           ),
           border: InputBorder.none,
           contentPadding:
-              EdgeInsets.symmetric(horizontal: 16.0, vertical: 14.0),
+              const EdgeInsets.symmetric(horizontal: 16.0, vertical: 14.0),
         ),
       ),
     );

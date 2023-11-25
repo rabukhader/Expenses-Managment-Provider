@@ -17,12 +17,12 @@ class Cell extends StatelessWidget {
             '$data\$',
             textAlign: TextAlign.center,
             style:
-                GoogleFonts.poppins(fontWeight: FontWeight.w700, fontSize: 18),
+                GoogleFonts.poppins(fontWeight: FontWeight.w700, fontSize: 18, color: Theme.of(context).colorScheme.onBackground),
           ),
           Text(
             title,
             style:
-                GoogleFonts.poppins(fontWeight: FontWeight.w400, fontSize: 15),
+                GoogleFonts.poppins(fontWeight: FontWeight.w400, fontSize: 15, color:Theme.of(context).colorScheme.onSurface),
           ),
         ],
       ),

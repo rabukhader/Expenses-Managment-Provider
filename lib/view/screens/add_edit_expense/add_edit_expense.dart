@@ -1,3 +1,4 @@
+import 'package:expenses_managment_app_provider/model/expense.dart';
 import 'package:expenses_managment_app_provider/model/services/image_service/image_service.dart';
 import 'package:expenses_managment_app_provider/model/services/location/location_service.dart';
 import 'package:expenses_managment_app_provider/view/screens/add_edit_expense/widget/add_edit_form.dart';
@@ -10,7 +11,7 @@ import '../../widgets/custom_heading.dart';
 class AddEditExpensesScreen extends StatefulWidget {
   final String processName;
   final String? expenseId;
-  final Map? data;
+  final Expense? data;
   const AddEditExpensesScreen(
       {super.key, this.expenseId, this.data, required this.processName});
 
@@ -26,40 +27,44 @@ class _AddEditExpensesScreenState extends State<AddEditExpensesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Expense Management App',
-            style: GoogleFonts.openSans(
-                fontSize: 16, fontWeight: FontWeight.bold)),
-        backgroundColor: const Color(0xff177DFF),
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('Expense Management App',
+              style: GoogleFonts.openSans(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).colorScheme.background)),
+          backgroundColor: Theme.of(context).hintColor,
+          leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: const Icon(Icons.arrow_back, color: Colors.white),
+          ),
         ),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            CustomHeading(title: '${widget.processName} Expense'),
-            widget.expenseId == null
-                ? AddEditForm(
-                    imageService: imageService,
-                    locationService: locationService,
-                    form: form,
-                    validator: validator,
-                    processName: widget.processName)
-                : AddEditForm(
-                    imageService: imageService,
-                    locationService: locationService,
-                    form: form,
-                    validator: validator,
-                    processName: widget.processName,
-                    expenseId: widget.expenseId,
-                    data: widget.data,
-                  ),
-          ],
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              CustomHeading(title: '${widget.processName} Expense'),
+              widget.expenseId == null
+                  ? AddEditForm(
+                      imageService: imageService,
+                      locationService: locationService,
+                      form: form,
+                      validator: validator,
+                      processName: widget.processName)
+                  : AddEditForm(
+                      imageService: imageService,
+                      locationService: locationService,
+                      form: form,
+                      validator: validator,
+                      processName: widget.processName,
+                      expenseId: widget.expenseId,
+                      data: widget.data,
+                    ),
+            ],
+          ),
         ),
       ),
     );

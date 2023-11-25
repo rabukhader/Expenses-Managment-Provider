@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 
-class JsoorColorTheme {
+class ColorTheme {
   // ** Light Mode
-  static const Color lightPrimary =
-      Color(0xFF009688); // First Light 10% - Color #009688
-  static const Color lightSecondary =
-      Color(0xFFB1AAE8); // Second Light 10% - Color #B1AAE8
-  static const Color lightWhite = Colors.white; // 30% - Color #607D8B
+  static Color lightPrimary = const Color(0xFFDDF2FD);
+  static const Color lightSecondary = Color(0xFF164863);
+  static const Color lightWhite = Colors.white;
   static const Color lightBackgroundPrimary =
       Color(0xffEDEFF3); // Light 50% - Color #F5F5F5
   static final List<Color> gradientColors = [
@@ -20,13 +18,11 @@ class JsoorColorTheme {
     const Color(0xffffb56b),
   ];
 
-
   // ** Dark Mode
-  static const Color darkPrimary =
-      Color(0xFF009688); // First Dark 10% - Color #009688
-  static const Color darkSecondary =
-      Color(0xFFB1AAE8); // Second Dark 10% - Color #B1AAE8
-  static const Color darkAccent = Color(0xFF131314); // Dark 30% - Color #1E1E1E
+  static const Color darkPrimary = Color(0xFF427D9D);
+  static const Color darkSecondary = Color(0xFF164863);
+
+  static const Color darkAccent = Color(0xFF131314);
   static const Color darkBackgroundPrimary =
       Color(0xFF121212); // Dark 50% - Color #121212
 }

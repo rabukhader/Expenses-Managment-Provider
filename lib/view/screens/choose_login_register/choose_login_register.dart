@@ -1,4 +1,5 @@
 import 'package:expenses_managment_app_provider/model/services/login_register_form/login_register_form.dart';
+import 'package:expenses_managment_app_provider/view/widgets/loader.dart';
 import 'package:expenses_managment_app_provider/view_model/login_register_view_model.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
@@ -52,7 +53,7 @@ class _ChooseLoginRegisterState extends State<ChooseLoginRegister> {
                           width: width,
                           height: height / 2,
                           decoration: BoxDecoration(
-                              color: Theme.of(context).colorScheme.onBackground,
+                              color: Theme.of(context).primaryColor,
                               image: const DecorationImage(
                                   scale: 2.5,
                                   image: AssetImage(
@@ -65,16 +66,22 @@ class _ChooseLoginRegisterState extends State<ChooseLoginRegister> {
               ],
             ),
             Positioned(
-                bottom: 0,
+                bottom: -45,
                 top: 350,
                 child: Row(
                   children: [
                     Container(
                         decoration: BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(
+                                  color: Theme.of(context).hintColor,
+                                  spreadRadius: 3,
+                                  blurRadius: 50)
+                            ],
                             borderRadius: const BorderRadius.only(
                                 topLeft: Radius.circular(50),
                                 topRight: Radius.circular(50)),
-                            color: Theme.of(context).colorScheme.background),
+                            color: Theme.of(context).colorScheme.onSecondary),
                         width: width,
                         height: height / 2,
                         child: Padding(
@@ -100,7 +107,8 @@ class _ChooseLoginRegisterState extends State<ChooseLoginRegister> {
                                         TextSpan(
                                             text: 'EMA !\n',
                                             style: GoogleFonts.poppins(
-                                                color: const Color(0xff177DFF),
+                                                color:
+                                                    Theme.of(context).hintColor,
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 40)),
                                         TextSpan(
@@ -131,14 +139,15 @@ class _ChooseLoginRegisterState extends State<ChooseLoginRegister> {
                                                             loginRegisterForm)));
                                       },
                                       style: ButtonStyle(
-                                          shadowColor:
-                                              const MaterialStatePropertyAll(
-                                                  Colors.black),
+                                          shadowColor: MaterialStatePropertyAll(
+                                              Theme.of(context)
+                                                  .colorScheme
+                                                  .onBackground),
                                           backgroundColor:
                                               MaterialStatePropertyAll(
                                                   Theme.of(context)
                                                       .colorScheme
-                                                      .background)),
+                                                      .onSecondary)),
                                       child: Container(
                                         width: 90,
                                         height: 50,
@@ -159,8 +168,7 @@ class _ChooseLoginRegisterState extends State<ChooseLoginRegister> {
                                                   Colors.grey.withOpacity(0.5),
                                               spreadRadius: 1,
                                               blurRadius: 7,
-                                              offset: const Offset(0,
-                                                  3), // changes position of shadow
+                                              offset: const Offset(0, 3),
                                             ),
                                           ],
                                         ),
@@ -192,7 +200,7 @@ class _ChooseLoginRegisterState extends State<ChooseLoginRegister> {
                                               MaterialStatePropertyAll(
                                                   Theme.of(context)
                                                       .colorScheme
-                                                      .background)),
+                                                      .onSecondary)),
                                       child: Container(
                                         width: 90,
                                         height: 50,
@@ -202,7 +210,7 @@ class _ChooseLoginRegisterState extends State<ChooseLoginRegister> {
                                               color: Theme.of(context)
                                                   .colorScheme
                                                   .onBackground),
-                                          color: const Color(0xff177DFF),
+                                          color: Theme.of(context).primaryColor,
                                           borderRadius:
                                               BorderRadius.circular(10),
                                           boxShadow: [
@@ -257,108 +265,105 @@ class _ChooseLoginRegisterState extends State<ChooseLoginRegister> {
                                   )),
                                 ],
                               ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                children: [
-                                  ElevatedButton(
-                                      style: ButtonStyle(
-                                          backgroundColor:
-                                              MaterialStatePropertyAll(
-                                                  Theme.of(context)
+                              Padding(
+                                padding: const EdgeInsets.all(14.0),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: [
+                                    ElevatedButton(
+                                        style: ButtonStyle(
+                                            backgroundColor:
+                                                MaterialStatePropertyAll(
+                                                    Theme.of(context)
+                                                        .colorScheme
+                                                        .onSecondary)),
+                                        onPressed: () async {
+                                          showDialog(
+                                            context: context,
+                                            builder: (context) =>
+                                                const AlertDialog(
+                                              content: SizedBox(
+                                                  width: 30,
+                                                  height: 150,
+                                                  child: Loader()),
+                                            ),
+                                          );
+                                
+                                          try {
+                                            var result = await Provider.of<
+                                                LoginRegisterViewModel>(
+                                              context,
+                                              listen: false,
+                                            ).signInWithGoogle();
+                                
+                                            Navigator.pop(context);
+                                
+                                            if (result) {
+                                              GoRouter.of(context).go('/home',
+                                                  extra: (state) => state.isRoot);
+                                            }
+                                          } catch (error) {
+                                            Navigator.pop(context);
+                                
+                                            print(
+                                                "Error signing in with Google: $error");
+                                          }
+                                        },
+                                        child: Column(
+                                          children: [
+                                            Text(
+                                              "Google",
+                                              style: GoogleFonts.poppins(
+                                                  fontSize: 10,
+                                                  color: Theme.of(context)
                                                       .colorScheme
-                                                      .background)),
-                                      onPressed: () async {
-                                        showDialog(
-                                          context: context,
-                                          builder: (context) =>
-                                              const AlertDialog(
-                                            content: SizedBox(
-                                                width: 30,
-                                                height: 150,
-                                                child:
-                                                    CircularProgressIndicator(
-                                                  value: null,
-                                                )),
-                                          ),
-                                        );
-
-                                        try {
+                                                      .onBackground,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Image.asset(
+                                              'assets/google.png',
+                                              width: 50,
+                                            ),
+                                          ],
+                                        )),
+                                    ElevatedButton(
+                                        onPressed: () async {
                                           var result = await Provider.of<
-                                              LoginRegisterViewModel>(
-                                            context,
-                                            listen: false,
-                                          ).signInWithGoogle();
-
-                                          Navigator.pop(context);
-
+                                                      LoginRegisterViewModel>(
+                                                  context,
+                                                  listen: false)
+                                              .signInWithFacebook();
                                           if (result) {
                                             GoRouter.of(context).go('/home',
                                                 extra: (state) => state.isRoot);
                                           }
-                                        } catch (error) {
-                                          // Handle errors if the sign-in fails
-                                          // Dismiss the loading indicator
-                                          Navigator.pop(context);
-
-                                          // Show an error message or handle the error as needed
-                                          print(
-                                              "Error signing in with Google: $error");
-                                        }
-                                      },
-                                      child: Column(
-                                        children: [
-                                          Text(
-                                            "Google",
-                                            style: GoogleFonts.poppins(
-                                                fontSize: 10,
-                                                color: Theme.of(context)
-                                                    .colorScheme
-                                                    .onBackground,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          Image.asset(
-                                            'assets/google.png',
-                                            width: 50,
-                                          ),
-                                        ],
-                                      )),
-                                  ElevatedButton(
-                                      onPressed: () async {
-                                        var result = await Provider.of<
-                                                    LoginRegisterViewModel>(
-                                                context,
-                                                listen: false)
-                                            .signInWithFacebook();
-                                        if (result) {
-                                          GoRouter.of(context).go('/home',
-                                              extra: (state) => state.isRoot);
-                                        }
-                                      },
-                                      style: ButtonStyle(
-                                          backgroundColor:
-                                              MaterialStatePropertyAll(
-                                                  Theme.of(context)
+                                        },
+                                        style: ButtonStyle(
+                                            backgroundColor:
+                                                MaterialStatePropertyAll(
+                                                    Theme.of(context)
+                                                        .colorScheme
+                                                        .onSecondary)),
+                                        child: Column(
+                                          children: [
+                                            Text(
+                                              "Facebook",
+                                              style: GoogleFonts.poppins(
+                                                  fontSize: 10,
+                                                  color: Theme.of(context)
                                                       .colorScheme
-                                                      .background)),
-                                      child: Column(
-                                        children: [
-                                          Text(
-                                            "Facebook",
-                                            style: GoogleFonts.poppins(
-                                                fontSize: 10,
-                                                color: Theme.of(context)
-                                                    .colorScheme
-                                                    .onBackground,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          Image.asset(
-                                            'assets/facebook.png',
-                                            width: 50,
-                                          ),
-                                        ],
-                                      ))
-                                ],
+                                                      .onBackground,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Image.asset(
+                                              'assets/facebook.png',
+                                              width: 50,
+                                            ),
+                                          ],
+                                        ))
+                                  ],
+                                ),
                               ),
                             ],
                           ),

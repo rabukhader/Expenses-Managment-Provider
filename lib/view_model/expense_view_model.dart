@@ -22,6 +22,7 @@ class ExpensesViewModel with ChangeNotifier {
   CancelToken? cancelToken;
 
   List<LocalExpenseChange> localChanges = [];
+  
   ExpensesViewModel() {
     Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
       if (currentConnectivity != result) {
@@ -39,11 +40,11 @@ class ExpensesViewModel with ChangeNotifier {
     if (connectivityResult != ConnectivityResult.none) {
       final response = await api.fetchExpenses();
       Map<String, Expense> data = response.map((key, value) {
-        return MapEntry(key, Expense.fromJson(value));
+        return MapEntry(key, Expense.fromMap(value));
       });
       final dbHelper = DBHelper.instance;
       await dbHelper.clearData();
-      await dbHelper.insertData(data);
+      await dbHelper.postExpense(data);
 
       allExpenses = data;
       searchResults = data;
@@ -61,7 +62,7 @@ class ExpensesViewModel with ChangeNotifier {
 
   Future<void> fetchLocalExpenses() async {
     final dbHelper = DBHelper.instance;
-    final localData = await dbHelper.getData();
+    final localData = await dbHelper.fetchExpenses();
     allExpenses = localData;
     searchResults = allExpenses;
     dataStream.add(searchResults);
@@ -116,7 +117,7 @@ class ExpensesViewModel with ChangeNotifier {
       final response = await api.searchExpense(query, cancelToken: cancelToken);
       if (query.isNotEmpty) {
         searchResults = response.map((key, value) {
-          return MapEntry(key, Expense.fromJson(value));
+          return MapEntry(key, Expense.fromMap(value));
         });
       } else {
         searchResults = allExpenses;
@@ -164,7 +165,7 @@ class ExpensesViewModel with ChangeNotifier {
         '${newExpense.name}_${DateTime.now().millisecondsSinceEpoch}';
 
     final Map<String, Expense> newE = {uniqueId: newExpense};
-    await dbHelper.insertData(newE);
+    await dbHelper.postExpense(newE);
 
     localChanges.add(
         LocalExpenseChange(id: newExpense.name, changes: {'new': newExpense}));

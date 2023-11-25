@@ -1,6 +1,8 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:expenses_managment_app_provider/model/expense.dart';
 import 'package:expenses_managment_app_provider/model/services/image_service/image_service.dart';
 import 'package:expenses_managment_app_provider/model/services/location/location_service.dart';
+import 'package:expenses_managment_app_provider/view/widgets/loader.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
@@ -11,7 +13,7 @@ import 'camera_section.dart';
 class AddEditForm extends StatefulWidget {
   final ImageService? imageService;
   final LocationService locationService;
-  final Map? data;
+  final Expense? data;
   final String? expenseId;
   final AddEditExpenseValidator validator;
   final ExpenseForm form;
@@ -37,9 +39,9 @@ class _AddEditFormState extends State<AddEditForm> {
   void initState() {
     super.initState();
     if (widget.expenseId != null) {
-      widget.form.loadData(widget.data);
-      widget.locationService.loadData(widget.data!['address']);
-      widget.imageService!.loadData(widget.data!['imageUrl']);
+      widget.form.loadData(widget.data!);
+      widget.locationService.loadData(widget.data!.address);
+      widget.imageService!.loadData(widget.data!.imageUrl);
       isUploaded = true;
       isLocated = true;
     }
@@ -57,11 +59,33 @@ class _AddEditFormState extends State<AddEditForm> {
             child: TextFormField(
               validator: (value) => widget.validator.validateName(value),
               controller: widget.form.nameController,
-              decoration: const InputDecoration(
-                  labelText: 'Title',
+              style: GoogleFonts.poppins(
+                  color: Theme.of(context).colorScheme.onBackground,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500),
+              decoration: InputDecoration(
+                  border: const OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(10))),
+                  enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                          color: Theme.of(context).colorScheme.onBackground,
+                          width: 2),
+                      borderRadius: const BorderRadius.all(Radius.circular(5))),
                   focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.teal)),
-                  labelStyle: TextStyle(color: Colors.black)),
+                      borderSide: BorderSide(
+                          color: Theme.of(context).colorScheme.onBackground,
+                          width: 2),
+                      borderRadius: const BorderRadius.all(Radius.circular(5))),
+                  labelText: 'Title',
+                  hintStyle: GoogleFonts.poppins(
+                      fontSize: 12, color: Theme.of(context).hintColor),
+                  hintText: 'Title',
+                  floatingLabelStyle: GoogleFonts.poppins(
+                      color: Theme.of(context).colorScheme.onBackground),
+                  labelStyle: GoogleFonts.poppins(
+                      fontSize: 16,
+                      color: Theme.of(context).hintColor,
+                      fontWeight: FontWeight.w500)),
             ),
           ),
           SizedBox(
@@ -72,11 +96,33 @@ class _AddEditFormState extends State<AddEditForm> {
               controller: widget.form.totalController,
               keyboardType:
                   const TextInputType.numberWithOptions(decimal: true),
-              decoration: const InputDecoration(
-                  labelText: 'Amount',
+              style: GoogleFonts.poppins(
+                  color: Theme.of(context).colorScheme.onBackground,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500),
+              decoration: InputDecoration(
+                  border: const OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(10))),
+                  enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                          color: Theme.of(context).colorScheme.onBackground,
+                          width: 2),
+                      borderRadius: const BorderRadius.all(Radius.circular(5))),
                   focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.teal)),
-                  labelStyle: TextStyle(color: Colors.black)),
+                      borderSide: BorderSide(
+                          color: Theme.of(context).colorScheme.onBackground,
+                          width: 2),
+                      borderRadius: const BorderRadius.all(Radius.circular(5))),
+                  labelText: 'Total',
+                  hintStyle: GoogleFonts.poppins(
+                      fontSize: 12, color: Theme.of(context).hintColor),
+                  hintText: 'Total',
+                  floatingLabelStyle: GoogleFonts.poppins(
+                      color: Theme.of(context).colorScheme.onBackground),
+                  labelStyle: GoogleFonts.poppins(
+                      fontSize: 16,
+                      color: Theme.of(context).hintColor,
+                      fontWeight: FontWeight.w500)),
             ),
           ),
           SizedBox(
@@ -86,11 +132,22 @@ class _AddEditFormState extends State<AddEditForm> {
               readOnly: true,
               validator: (value) => widget.validator.validate(value),
               controller: widget.form.dateController,
+              style: GoogleFonts.poppins(
+                  color: Theme.of(context).colorScheme.onBackground,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500),
               decoration: InputDecoration(
-                  focusedBorder: const OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.teal)),
+                  enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                          color: Theme.of(context).colorScheme.onBackground,
+                          width: 2),
+                      borderRadius: const BorderRadius.all(Radius.circular(5))),
+                  focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                          color: Theme.of(context).colorScheme.onBackground)),
                   labelText: 'Date (YYYY-MM-DD)',
-                  labelStyle: const TextStyle(color: Colors.black),
+                  labelStyle: GoogleFonts.poppins(
+                      color: Theme.of(context).colorScheme.onBackground),
                   suffixIcon: IconButton(
                       icon: const Icon(Icons.calendar_today),
                       onPressed: () {
@@ -111,16 +168,26 @@ class _AddEditFormState extends State<AddEditForm> {
                     const SizedBox(height: 16),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.black,
-                          foregroundColor: Colors.blue,
+                          backgroundColor:
+                              Theme.of(context).colorScheme.onBackground,
+                          foregroundColor:
+                              Theme.of(context).colorScheme.background,
                           elevation: 25,
                           shadowColor: Colors.blueGrey),
                       onPressed: () {
                         showDialog(
+                          barrierColor: Theme.of(context).dialogBackgroundColor,
                           context: context,
                           builder: (BuildContext context) {
                             return AlertDialog(
-                              title: const Text("Choose an image source"),
+                              backgroundColor: Theme.of(context).hintColor,
+                              title: Text(
+                                "Choose an image source",
+                                style: GoogleFonts.poppins(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .background),
+                              ),
                               actions: [
                                 TextButton(
                                   onPressed: () async {
@@ -141,7 +208,13 @@ class _AddEditFormState extends State<AddEditForm> {
                                       });
                                     }
                                   },
-                                  child: const Text("Camera"),
+                                  child: Text(
+                                    "Camera",
+                                    style: GoogleFonts.poppins(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .background),
+                                  ),
                                 ),
                                 TextButton(
                                   onPressed: () async {
@@ -156,7 +229,13 @@ class _AddEditFormState extends State<AddEditForm> {
                                       });
                                     }
                                   },
-                                  child: const Text("Gallery"),
+                                  child: Text(
+                                    "Gallery",
+                                    style: GoogleFonts.poppins(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .background),
+                                  ),
                                 ),
                               ],
                             );
@@ -185,8 +264,14 @@ class _AddEditFormState extends State<AddEditForm> {
                       width: MediaQuery.of(context).size.width * 0.5,
                       height: MediaQuery.of(context).size.height * 0.2,
                       padding: const EdgeInsets.all(12.0),
-                      child: Image.network(
-                          widget.imageService!.imageController.text),
+                      child: CachedNetworkImage(
+                        imageUrl: widget.imageService!.imageController.text,
+                        placeholder: (context, url) => const Loader(),
+                        errorWidget: (context, url, error) => const Icon(
+                          Icons.error,
+                          size: 29,
+                        ),
+                      ),
                     )
                   : const Text('Choose Your Image')
             ],
@@ -199,8 +284,11 @@ class _AddEditFormState extends State<AddEditForm> {
                 children: <Widget>[
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.black,
-                        foregroundColor: Colors.blue,
+                        backgroundColor:
+                            Theme.of(context).colorScheme.onBackground,
+                        foregroundColor:
+                            Theme.of(context).colorScheme.background,
+                        elevation: 25,
                         shadowColor: Colors.blueGrey),
                     onPressed: () async {
                       await widget.locationService.fetchLocation();
@@ -230,8 +318,8 @@ class _AddEditFormState extends State<AddEditForm> {
               )),
           ElevatedButton.icon(
             style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.black,
-                foregroundColor: Colors.blue,
+                backgroundColor: Theme.of(context).colorScheme.onBackground,
+                foregroundColor: Theme.of(context).primaryColor,
                 elevation: 25,
                 shadowColor: Colors.blueGrey),
             icon: const Icon(Icons.add),
@@ -241,7 +329,7 @@ class _AddEditFormState extends State<AddEditForm> {
                   total: int.tryParse(widget.form.totalController.text),
                   dueDate: widget.form.dateController.text,
                   imageUrl: widget.imageService!.imageController.text,
-                  address: widget.locationService.address);
+                  address: widget.locationService.address ?? '');
               if (widget.form.formKey.currentState!.validate()) {
                 Navigator.pop(context, data);
               } else {

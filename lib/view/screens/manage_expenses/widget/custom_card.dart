@@ -1,11 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../model/expense.dart';
 import '../../../../view_model/expense_view_model.dart';
 import '../../add_edit_expense/add_edit_expense.dart';
 import 'dialogs/delete_dialog.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class CustomCard extends StatelessWidget {
   final Expense data;
@@ -15,15 +17,16 @@ class CustomCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final exProvider = Provider.of<ExpensesViewModel>(context, listen: false);
-    const color = Color(0xff177DFF);
+    Color color = Theme.of(context).colorScheme.onSecondary;
 
     return Padding(
-      padding: const EdgeInsets.only(right: 12.0),
+      padding: const EdgeInsets.symmetric(horizontal: 12.0),
       child: Container(
         decoration: BoxDecoration(
             gradient: LinearGradient(
                 begin: Alignment.bottomLeft,
-                colors: [color, color.withOpacity(0.8)]),
+                end: Alignment.topRight,
+                colors: [color, Theme.of(context).primaryColor, color]),
             color: color,
             borderRadius: BorderRadius.circular(15)),
         width: 320,
@@ -36,25 +39,31 @@ class CustomCard extends StatelessWidget {
             children: [
               Text(
                 data.name,
-                style: const TextStyle(color: Colors.white, fontSize: 30),
+                style:
+                    GoogleFonts.poppins(color: Theme.of(context).colorScheme.onBackground, fontSize: 30),
               ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    "Total",
-                    style: TextStyle(color: Colors.white, fontSize: 14),
-                  ),
                   Text(
-                    data.total.toString(),
-                    style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 30,
-                        fontWeight: FontWeight.w500),
+                    "Total",
+                    style: GoogleFonts.poppins(
+                        color: Theme.of(context).colorScheme.onBackground, fontSize: 14),
                   ),
-                  const Text(
-                    "/usd",
-                    style: TextStyle(color: Colors.white, fontSize: 16),
+                  Row(
+                    children: [
+                      Text(
+                        data.total.toString(),
+                        style: GoogleFonts.poppins(
+                            color: Theme.of(context).colorScheme.onBackground,
+                            fontSize: 30,
+                            fontWeight: FontWeight.w500),
+                      ),
+                      SvgPicture.asset(
+                        'assets/dolar.svg',
+                        width: 32,
+                      )
+                    ],
                   ),
                 ],
               ),
@@ -62,79 +71,85 @@ class CustomCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   ElevatedButton.icon(
-                    icon: const Icon(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Theme.of(context).primaryColor),
+                    icon: Icon(
                       Icons.delete,
-                      color: Colors.black,
+                      color: Theme.of(context).hintColor,
                     ),
                     onPressed: () {
                       deleteDialog(context, data.name, id);
                     },
-                    label: const Text(
+                    label: Text(
                       "Delete",
-                      style: TextStyle(
-                          color: Colors.black,
+                      style: GoogleFonts.poppins(
+                          color: Theme.of(context).colorScheme.onBackground,
                           fontSize: 14,
                           fontWeight: FontWeight.w500),
                     ),
                   ),
                   ElevatedButton.icon(
-                    icon: const Icon(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Theme.of(context).primaryColor),
+                    icon: Icon(
                       Icons.edit,
-                      color: Colors.black,
+                      color: Theme.of(context).hintColor,
                     ),
                     onPressed: () async {
-                      final editData = {
-                        'name': data.name,
-                        'total': data.total,
-                        'dueDate': data.dueDate,
-                        'imageUrl': data.imageUrl,
-                        'address': data.address
-                      };
+                      // final editData = {
+                      //   'name': data.name,
+                      //   'total': data.total,
+                      //   'dueDate': data.dueDate,
+                      //   'imageUrl': data.imageUrl,
+                      //   'address': data.address
+                      // };
                       final result = await Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) => AddEditExpensesScreen(
                                   processName: 'Edit',
                                   expenseId: id,
-                                  data: editData)));
+                                  data: data)));
                       if (result != null) {
                         await exProvider.editExpense(result, id);
                       }
                     },
-                    label: const Text(
+                    label: Text(
                       "Edit",
-                      style: TextStyle(
-                          color: Colors.black,
+                      style: GoogleFonts.poppins(
+                          color: Theme.of(context).colorScheme.onBackground,
                           fontSize: 14,
                           fontWeight: FontWeight.w500),
                     ),
                   ),
                   ElevatedButton.icon(
-                      icon: const Icon(
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Theme.of(context).primaryColor),
+                      icon: Icon(
                         Icons.copy,
-                        color: Colors.black,
+                        color: Theme.of(context).hintColor,
                       ),
                       onPressed: () async {
-                        final clonedData = {
-                          'name': data.name,
-                          'total': data.total,
-                          'dueDate': data.dueDate,
-                          'imageUrl': data.imageUrl,
-                          'address': data.address
-                        };
+                        // final clonedData = {
+                        //   'name': data.name,
+                        //   'total': data.total,
+                        //   'dueDate': data.dueDate,
+                        //   'imageUrl': data.imageUrl,
+                        //   'address': data.address
+                        // };
                         final result = await Navigator.push(
                             context,
                             MaterialPageRoute(
                                 builder: (context) => AddEditExpensesScreen(
                                     processName: 'Clone',
                                     expenseId: id,
-                                    data: clonedData)));
+                                    data: data)));
                         if (result != null) await exProvider.addExpense(result);
                       },
-                      label: const Text(
+                      label: Text(
                         "Clone",
-                        style: TextStyle(
-                            color: Colors.black,
+                        style: GoogleFonts.poppins(
+                            color: Theme.of(context).colorScheme.onBackground,
                             fontSize: 14,
                             fontWeight: FontWeight.w500),
                       )),

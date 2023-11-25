@@ -2,6 +2,7 @@ import 'package:expenses_managment_app_provider/view_model/analyze_view_model.da
 import 'package:expenses_managment_app_provider/view_model/expense_view_model.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../model/data/months.dart';
@@ -20,10 +21,11 @@ class Chart extends StatelessWidget {
 
     var barGroups = list.entries
         .map((item) => BarChartGroupData(
+          
                 x: list.keys.toList().indexOf(item.key),
                 barRods: [
                   BarChartRodData(
-                      color: Colors.teal,
+                      color: Theme.of(context).hintColor,
                       toY: item.value,
                       width: 16,
                       backDrawRodData: BackgroundBarChartRodData(show: true),
@@ -48,8 +50,9 @@ class Chart extends StatelessWidget {
                 if (value >= 0 && value < list.length) {
                   return Text(
                     list.keys.toList()[value.toInt()].substring(0, 3),
-                    style: const TextStyle(
-                        fontSize: 14, fontWeight: FontWeight.w500),
+                    style: GoogleFonts.poppins(
+                      color: Theme.of(context).colorScheme.onBackground,
+                        fontSize: 13, fontWeight: FontWeight.w500),
                   );
                 }
                 return const Text('Error');

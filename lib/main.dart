@@ -2,6 +2,9 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:camera/camera.dart';
+import 'package:expenses_managment_app_provider/model/expense.dart';
+import 'package:expenses_managment_app_provider/theme/app_theme.dart';
+import 'package:expenses_managment_app_provider/view/widgets/loader.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
@@ -21,6 +24,7 @@ import 'package:expenses_managment_app_provider/view_model/navigation_view_model
 import 'package:firebase_performance/firebase_performance.dart';
 
 import 'view_model/expense_view_model.dart';
+import 'view_model/theme_view_model.dart';
 
 late List<CameraDescription> cameras;
 
@@ -77,6 +81,7 @@ void main() async {
     ChangeNotifierProvider(create: (_) => ExpensesViewModel()),
     ChangeNotifierProvider(create: (_) => NavigatorViewModel()),
     ChangeNotifierProvider(create: (_) => LoginRegisterViewModel()),
+    ChangeNotifierProvider(create: (_) => ThemeViewModel()),
   ], child: const ExpensesApp()));
 }
 
@@ -97,60 +102,65 @@ class _ExpensesAppState extends State<ExpensesApp> {
         Provider.of<LoginRegisterViewModel>(context);
     buildTrace.start();
 
-    
-  Widget buildRouter(String initLocation) {
-    return MaterialApp.router(
-      routerConfig: GoRouter(initialLocation: initLocation, routes: [
-        GoRoute(
-          path: '/',
-          builder: (context, state) => const ChooseLoginRegister(),
-        ),
-        GoRoute(
-          path: '/home',
-          builder: (context, state) => const HomeScreen(),
-        ),
-        GoRoute(
-          path: '/expenseDetails/:id',
-          builder: (context, GoRouterState state) {
-            String id = state.pathParameters['id'] ?? '';
-            return FutureBuilder<Map<String, dynamic>>(
-              future: fetchDataById(id),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Scaffold(
-                    body: Center(child: CircularProgressIndicator()),
-                  );
-                } else if (snapshot.hasError) {
-                  return Scaffold(
-                    body: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Center(
-                        child: Text('Error fetching data: ${snapshot.error}'),
-                      ),
-                    ),
-                  );
-                } else if (snapshot.hasData) {
-                  Map<String, dynamic> sample = snapshot.data!;
-                  return ExpenseDetails(id: id, data: sample);
-                } else {
-                  return const Center(child: Text('Error'));
-                }
+    Widget buildRouter(String initLocation) {
+      return Consumer<ThemeViewModel>(
+        builder: (context, theme, child) => MaterialApp.router(
+          theme: theme.getCurrentTheme(context),
+          darkTheme: AppTheme.darkTheme(context),
+          debugShowCheckedModeBanner: false,
+          routerConfig: GoRouter(initialLocation: initLocation, routes: [
+            GoRoute(
+              path: '/',
+              builder: (context, state) => const ChooseLoginRegister(),
+            ),
+            GoRoute(
+              path: '/home',
+              builder: (context, state) => const HomeScreen(),
+            ),
+            GoRoute(
+              path: '/expenseDetails/:id',
+              builder: (context, GoRouterState state) {
+                String id = state.pathParameters['id'] ?? '';
+                return FutureBuilder<Map<String, dynamic>>(
+                  future: fetchDataById(id),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Loader();
+                    } else if (snapshot.hasError) {
+                      return Scaffold(
+                        body: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Center(
+                            child:
+                                Text('Error fetching data: ${snapshot.error}'),
+                          ),
+                        ),
+                      );
+                    } else if (snapshot.hasData) {
+                      Expense sample = Expense.fromMap(snapshot.data!);
+                      return ExpenseDetails(id: id, data: sample);
+                    } else {
+                      return const Center(child: Text('Error'));
+                    }
+                  },
+                );
               },
-            );
-          },
+            ),
+          ]),
         ),
-      ]),
-      debugShowCheckedModeBanner: false,
-    );
-  }
+      );
+    }
 
-  Widget buildLoading() {
-    return const Center(child: CircularProgressIndicator());
-  }
+    Widget buildLoading() {
+      return const MaterialApp(
+        home: Loader(),
+        debugShowCheckedModeBanner: false,
+      );
+    }
 
-  Widget buildError(dynamic error) {
-    return Center(child: Text('Error: $error'));
-  }
+    Widget buildError(dynamic error) {
+      return Center(child: Text('Error: $error'));
+    }
 
     return FutureBuilder(
       future: loginRegisterViewModel.getCurrentUser(),

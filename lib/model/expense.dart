@@ -13,12 +13,12 @@ class Expense {
     required this.address
   });
 
-  factory Expense.fromJson(Map<String, dynamic> json) => Expense(
-        name: json["name"],
-        total: json["total"],
-        dueDate: json["dueDate"],
-        imageUrl: json["imageUrl"],
-        address: json["address"]
+  factory Expense.fromMap(Map<String, dynamic> map) => Expense(
+        name: map["name"],
+        total: map["total"],
+        dueDate: map["dueDate"],
+        imageUrl: map["imageUrl"],
+        address: map["address"]
       );
 
   Map<String, dynamic> toJson() => {

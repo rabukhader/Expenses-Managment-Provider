@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:expenses_managment_app_provider/model/services/image_service/image_service.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 // import 'package:photo_manager/photo_manager.dart';
 import '../../../../main.dart';
 import 'camera_view_photo.dart';
@@ -170,9 +171,9 @@ class _CameraSectionState extends State<CameraSection> {
                       const SizedBox(
                         height: 4,
                       ),
-                      const Text(
+                      Text(
                         'Hold For Video, Tap for photo',
-                        style: TextStyle(color: Colors.white),
+                        style: GoogleFonts.poppins(color: Colors.white),
                         textAlign: TextAlign.center,
                       )
                     ],

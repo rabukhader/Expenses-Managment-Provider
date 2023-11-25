@@ -18,12 +18,13 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        resizeToAvoidBottomInset: false,
         appBar: AppBar(
+          iconTheme: IconThemeData(color: Theme.of(context).colorScheme.onBackground),
           title: Text('Expense Management App',
               style: GoogleFonts.openSans(
+                  color: Theme.of(context).colorScheme.background,
                   fontSize: 16, fontWeight: FontWeight.bold)),
-          backgroundColor: const Color(0xff177DFF),
+          backgroundColor: Theme.of(context).hintColor,
         ),
         body: Selector<NavigatorViewModel, Widget>(
           selector: (_, navProvider) => navProvider.currentPage,

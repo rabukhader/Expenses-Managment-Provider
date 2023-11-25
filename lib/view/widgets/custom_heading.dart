@@ -8,9 +8,14 @@ class CustomHeading extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-                height: MediaQuery.of(context).size.height * 0.08,
-                alignment: Alignment.center,
-                width: double.infinity,
-                child: Text(title, style: GoogleFonts.openSans(fontSize: 20, fontWeight: FontWeight.bold),));
+        height: MediaQuery.of(context).size.height * 0.08,
+        alignment: Alignment.centerLeft,
+        padding: const EdgeInsets.symmetric(horizontal: 12.0),
+        width: double.infinity,
+        child: Text(
+          title,
+          style:
+              GoogleFonts.poppins(fontSize: 24, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.onBackground),
+        ));
   }
 }

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:expenses_managment_app_provider/view/screens/manage_expenses/widget/custom_card.dart';
+import 'package:expenses_managment_app_provider/view/widgets/loader.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:expenses_managment_app_provider/model/expense.dart';
@@ -45,7 +46,7 @@ class _ListOfExpensesState extends State<ListOfExpenses> {
           stream: ex.dataStream.stream,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return const CircularProgressIndicator();
+              return const Loader();
             } else if (snapshot.hasError) {
               return Text('Error: ${snapshot.error}');
             } else if (ex.searchResults.isEmpty) {

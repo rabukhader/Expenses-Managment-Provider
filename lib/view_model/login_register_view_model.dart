@@ -10,8 +10,9 @@ class LoginRegisterViewModel with ChangeNotifier {
     try {
       await auth.signInWithEmailAndPassword(email: email, password: password);
       notifyListeners();
+      return true;
     } catch (e) {
-      rethrow;
+      return false;
     }
   }
 
@@ -20,8 +21,9 @@ class LoginRegisterViewModel with ChangeNotifier {
       await auth.createUserWithEmailAndPassword(
           email: email, password: password);
       notifyListeners();
+      return true;
     } catch (e) {
-      rethrow;
+      return false;
     }
   }
 
@@ -68,7 +70,7 @@ class LoginRegisterViewModel with ChangeNotifier {
     }
   }
 
-Future<User?> getCurrentUser() async {
+  Future<User?> getCurrentUser() async {
     try {
       final User? user = auth.currentUser;
       return user;

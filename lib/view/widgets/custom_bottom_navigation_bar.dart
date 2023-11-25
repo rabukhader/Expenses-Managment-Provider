@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import '../../view_model/navigation_view_model.dart';
@@ -11,8 +12,13 @@ class CustomBottomNavigationBar extends StatelessWidget {
     return Consumer<NavigatorViewModel>(
         builder:(context, navProvider, child) {
         return BottomNavigationBar(
-        selectedItemColor: const Color(0xff177DFF),
-        unselectedItemColor: Colors.grey,
+          elevation: 25,
+        backgroundColor: Theme.of(context).colorScheme.onSecondary,
+        selectedItemColor: Theme.of(context).hintColor,
+        unselectedItemColor: Theme.of(context).colorScheme.onSurface,
+        selectedLabelStyle: GoogleFonts.poppins(
+          color: Theme.of(context).colorScheme.onBackground
+        ),
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.list),

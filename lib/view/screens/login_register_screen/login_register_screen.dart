@@ -1,10 +1,12 @@
 import 'package:expenses_managment_app_provider/model/services/login_register_form/login_register_form.dart';
 import 'package:expenses_managment_app_provider/view/screens/home/home_screen.dart';
+import 'package:expenses_managment_app_provider/view/widgets/custom_text_field.dart';
 import 'package:expenses_managment_app_provider/view_model/login_register_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
+import '../../widgets/dialog.dart';
 import 'widget/bazier_container.dart';
 
 class LoginRegisterScreen extends StatefulWidget {
@@ -24,7 +26,6 @@ class _LoginRegisterScreenState extends State<LoginRegisterScreen> {
 
     return SafeArea(
       child: Scaffold(
-        resizeToAvoidBottomInset: false,
           body: Stack(
         children: [
           Positioned(
@@ -51,7 +52,7 @@ class _LoginRegisterScreenState extends State<LoginRegisterScreen> {
                   children: [
                     Image.asset(
                       'assets/user.png',
-                      scale: 4,
+                      scale: 2,
                     )
                   ],
                 ),
@@ -63,81 +64,15 @@ class _LoginRegisterScreenState extends State<LoginRegisterScreen> {
                   child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        TextFormField(
-                          controller: widget.loginRegisterForm.emailController,
-                          textInputAction: TextInputAction.next,
-                          style: GoogleFonts.poppins(
-                              color: Theme.of(context).colorScheme.onBackground,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500),
-                          decoration: InputDecoration(
-                              border: const OutlineInputBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(10))),
-                              enabledBorder: const OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Color(0xff009688), width: 2),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(5))),
-                              focusedBorder: const OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Color(0xff009688), width: 2),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(5))),
-                              labelText: 'Email',
-                              hintStyle: TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.grey.withOpacity(0.4)),
-                              hintText: 'Your Email Address',
-                              floatingLabelStyle:
-                                  const TextStyle(color: Color(0xffB1AAE8)),
-                              labelStyle: const TextStyle(
-                                  fontSize: 16,
-                                  color: Color(0xff009688),
-                                  fontWeight: FontWeight.w500)),
-                        ),
+                        CustomTextField(
+                            controller:
+                                widget.loginRegisterForm.emailController,
+                            label: 'Email'),
                         const SizedBox(height: 10),
-                        TextField(
-                          controller: widget.loginRegisterForm.passwordController,
-                          textInputAction: TextInputAction.next,
-                          style: GoogleFonts.poppins(
-                              color: Theme.of(context).colorScheme.onBackground,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500),
-                          decoration: InputDecoration(
-                              enabledBorder: const OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Color(0xff009688), width: 2),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(5))),
-                              border: const OutlineInputBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(10))),
-                              focusedBorder: const OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Color(0xff009688), width: 2),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(5))),
-                              labelText: 'Password',
-                              hintStyle: TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.grey.withOpacity(0.4)),
-                              hintText: 'Enter Your password',
-                              floatingLabelStyle:
-                                  const TextStyle(color: Color(0xffB1AAE8)),
-                              suffixIcon: IconButton(
-                                splashRadius: 20,
-                                splashColor:
-                                    const Color(0xff009688).withOpacity(0.2),
-                                onPressed: () {},
-                                icon: const Icon(Icons.visibility_off),
-                              ),
-                              labelStyle: const TextStyle(
-                                  fontSize: 16,
-                                  color: Color(0xff009688),
-                                  fontWeight: FontWeight.w500)),
-                          // obscureText: !isPasswordVisible,
-                        ),
+                        CustomTextField(
+                            controller:
+                                widget.loginRegisterForm.passwordController,
+                            label: 'Password')
                       ]),
                 ),
               ),
@@ -146,19 +81,24 @@ class _LoginRegisterScreenState extends State<LoginRegisterScreen> {
               ),
               TextButton(
                   onPressed: () async {
+                    final bool result;
                     final pr = Provider.of<LoginRegisterViewModel>(context,
                         listen: false);
                     widget.processName == 'Sign In'
-                        ? await pr.loginEmailPassword(
+                        ? result = await pr.loginEmailPassword(
                             widget.loginRegisterForm.emailController.text,
                             widget.loginRegisterForm.passwordController.text)
-                        : await pr.signUpEmailPassword(
+                        : result = await pr.signUpEmailPassword(
                             widget.loginRegisterForm.emailController.text,
                             widget.loginRegisterForm.passwordController.text);
-                    Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const HomeScreen()));
+                    if (result) {
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const HomeScreen()));
+                    } else {
+                      errorDialog(context, 'Invalid Credentials');
+                    }
                   },
                   style: ButtonStyle(
                       shadowColor: const MaterialStatePropertyAll(Colors.black),
@@ -171,7 +111,7 @@ class _LoginRegisterScreenState extends State<LoginRegisterScreen> {
                       border: Border.all(
                           width: 2,
                           color: Theme.of(context).colorScheme.onBackground),
-                      color: Theme.of(context).colorScheme.background,
+                      color: Theme.of(context).hintColor,
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Center(
@@ -179,9 +119,8 @@ class _LoginRegisterScreenState extends State<LoginRegisterScreen> {
                             style: GoogleFonts.poppins(
                                 fontSize: 15,
                                 fontWeight: FontWeight.bold,
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .onBackground))),
+                                color:
+                                    Theme.of(context).colorScheme.background))),
                   )),
             ],
           )

@@ -35,6 +35,9 @@ class _ManageExpensesState extends State<ManageExpenses> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Theme.of(context).hintColor,
+        splashColor: Theme.of(context).hintColor,
+        foregroundColor: Theme.of(context).primaryColor,
         onPressed: () async {
           final result = await Navigator.push(
               context,

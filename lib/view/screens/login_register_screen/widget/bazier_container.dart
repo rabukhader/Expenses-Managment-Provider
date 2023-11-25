@@ -16,11 +16,11 @@ class BezierContainer extends StatelessWidget {
       child: Container(
         height: MediaQuery.of(context).size.height *.5,
         width: MediaQuery.of(context).size.width,
-        decoration: const BoxDecoration(
+        decoration:  BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
-              colors: [Color.fromARGB(255, 72, 203, 251),Color.fromARGB(255, 118, 228, 16)]
+              colors: [Theme.of(context).hintColor, Theme.of(context).canvasColor]
             )
           ),
       ),

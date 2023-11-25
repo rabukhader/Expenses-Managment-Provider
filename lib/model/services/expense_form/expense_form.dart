@@ -1,26 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-abstract class EForm {
-  Future<void> selectDate(BuildContext context);
-  loadData(data);
-}
+import '../../expense.dart';
 
-class ExpenseForm implements EForm {
+
+class ExpenseForm {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   TextEditingController nameController = TextEditingController();
   TextEditingController totalController = TextEditingController();
   TextEditingController dateController = TextEditingController();
   DateTime selectedDate = DateTime.now();
 
-  @override
-  loadData(data) {
-    nameController.text = data['name'];
-    totalController.text = (data['total']).toString();
-    dateController.text = data['dueDate'];
+
+  loadData(Expense data) {
+    nameController.text = data.name;
+    totalController.text = (data.total).toString();
+    dateController.text = data.dueDate;
   }
 
-  @override
   Future<void> selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
         context: context,
@@ -30,9 +27,9 @@ class ExpenseForm implements EForm {
         builder: (context, Widget? child) {
           return Theme(
             data: ThemeData.light().copyWith(
-              primaryColor: Colors.teal,
-              colorScheme: const ColorScheme.light(
-                  primary: Colors.teal), // Header text color
+              primaryColor: Theme.of(context).primaryColor,
+              colorScheme: ColorScheme.light(
+                  primary: Theme.of(context).hintColor), // Header text color
               buttonTheme: const ButtonThemeData(
                   textTheme: ButtonTextTheme.primary), // Button text color
             ),

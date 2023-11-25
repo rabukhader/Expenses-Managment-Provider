@@ -25,7 +25,7 @@ class SummaryStatistics extends StatelessWidget {
                 .toString(),
             data2: analyzeViewModel
                 .averageExpenses(expenseViewModel.allExpenses.values.toList())
-                .toString().substring(0, 7)),
+                .toString()),
         const SizedBox(
           height: 20,
         ),
