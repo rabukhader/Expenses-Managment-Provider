@@ -100,4 +100,26 @@ class DBHelper {
     final db = await database;
     await db.delete('Expense');
   }
+
+  Future<List<Expense>> searchExpenses(String query) async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps =
+        await db.transaction((txn) => txn.query(
+              'Expense',
+              where: 'name LIKE ?',
+              whereArgs: ['%$query%'],
+            ));
+
+    // await db.close();
+
+    return List.generate(maps.length, (i) {
+      return Expense(
+        name: maps[i]['name'],
+        total: maps[i]['total'],
+        address: maps[i]['address'],
+        dueDate: maps[i]['dueDate'],
+        imageUrl: maps[i]['imageUrl'],
+      );
+    });
+  }
 }

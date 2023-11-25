@@ -201,17 +201,17 @@ class _CameraSectionState extends State<CameraSection> {
       var re = await camController.takePicture();
       final expenseImage = File(re.path);
       await widget.imageService.uploadImageToStorage(expenseImage);
-      // var result = await Navigator.push(
-      //   context,
-      //   MaterialPageRoute(
-      //     builder: (context) => CameraViewPhoto(
-      //       url: widget.imageService.imageController.text,
-      //     ),
-      //   ),
-      // );
-      // if (result == false) {
-      //   widget.imageService.imageController.clear();
-      // }
+      var result = await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => CameraViewPhoto(
+            url: widget.imageService.imageController.text,
+          ),
+        ),
+      );
+      if (result == false) {
+        widget.imageService.imageController.clear();
+      }
     } catch (e) {
       print("Error during capture and upload: $e");
     } finally {

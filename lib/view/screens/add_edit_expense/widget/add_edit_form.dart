@@ -111,8 +111,8 @@ class _AddEditFormState extends State<AddEditForm> {
                     const SizedBox(height: 16),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.greenAccent,
-                          foregroundColor: Colors.black,
+                          backgroundColor: Colors.black,
+                          foregroundColor: Colors.blue,
                           elevation: 25,
                           shadowColor: Colors.blueGrey),
                       onPressed: () {
@@ -131,8 +131,8 @@ class _AddEditFormState extends State<AddEditForm> {
                                             builder: (context) => CameraSection(
                                                 imageService:
                                                     widget.imageService!)));
-                                                    print(result);
-                                    
+                                    print(result);
+
                                     if (widget.imageService!.imageController
                                             .text !=
                                         '') {
@@ -199,9 +199,8 @@ class _AddEditFormState extends State<AddEditForm> {
                 children: <Widget>[
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.greenAccent,
-                        foregroundColor: Colors.black,
-                        elevation: 25,
+                        backgroundColor: Colors.black,
+                        foregroundColor: Colors.blue,
                         shadowColor: Colors.blueGrey),
                     onPressed: () async {
                       await widget.locationService.fetchLocation();
@@ -231,19 +230,18 @@ class _AddEditFormState extends State<AddEditForm> {
               )),
           ElevatedButton.icon(
             style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.greenAccent,
-                foregroundColor: Colors.black,
+                backgroundColor: Colors.black,
+                foregroundColor: Colors.blue,
                 elevation: 25,
                 shadowColor: Colors.blueGrey),
             icon: const Icon(Icons.add),
             onPressed: () {
               Expense data = Expense(
-                name: widget.form.nameController.text,
-                total: int.tryParse(widget.form.totalController.text),
-                dueDate: widget.form.dateController.text,
-                imageUrl: widget.imageService!.imageController.text,
-                address: widget.locationService.address
-              );
+                  name: widget.form.nameController.text,
+                  total: int.tryParse(widget.form.totalController.text),
+                  dueDate: widget.form.dateController.text,
+                  imageUrl: widget.imageService!.imageController.text,
+                  address: widget.locationService.address);
               if (widget.form.formKey.currentState!.validate()) {
                 Navigator.pop(context, data);
               } else {

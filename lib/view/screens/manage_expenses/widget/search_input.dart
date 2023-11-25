@@ -44,7 +44,7 @@ class _SearchInputState extends State<SearchInput> {
       ),
       child: TextField(
         controller: textController,
-        style: GoogleFonts.poppins(fontWeight: FontWeight.w700, fontSize: 18),
+        style: GoogleFonts.poppins(fontWeight: FontWeight.w500, fontSize: 18),
         onChanged: (text) {
           Provider.of<ExpensesViewModel>(context, listen: false)
               .textStream

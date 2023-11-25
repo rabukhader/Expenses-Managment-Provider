@@ -11,7 +11,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
     return Consumer<NavigatorViewModel>(
         builder:(context, navProvider, child) {
         return BottomNavigationBar(
-        selectedItemColor: Colors.teal,
+        selectedItemColor: const Color(0xff177DFF),
         unselectedItemColor: Colors.grey,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(

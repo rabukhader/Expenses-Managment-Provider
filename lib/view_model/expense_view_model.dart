@@ -110,14 +110,23 @@ class ExpensesViewModel with ChangeNotifier {
     }
     cancelToken = CancelToken();
 
-    final response = await api.searchExpense(query, cancelToken: cancelToken);
-    if (query.isNotEmpty) {
-      searchResults = response.map((key, value) {
-        return MapEntry(key, Expense.fromJson(value));
-      });
+    var connectivityResult = await Connectivity().checkConnectivity();
+
+    if (connectivityResult != ConnectivityResult.none) {
+      final response = await api.searchExpense(query, cancelToken: cancelToken);
+      if (query.isNotEmpty) {
+        searchResults = response.map((key, value) {
+          return MapEntry(key, Expense.fromJson(value));
+        });
+      } else {
+        searchResults = allExpenses;
+      }
     } else {
-      searchResults = allExpenses;
+      final dbHelper = DBHelper.instance;
+      final offlineResults = await dbHelper.searchExpenses(query);
+      searchResults = {for (var e in offlineResults) e.name: e};
     }
+
     notifyListeners();
   }
 

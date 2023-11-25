@@ -24,6 +24,7 @@ class _ManageExpensesState extends State<ManageExpenses> {
   Widget build(BuildContext context) {
     final exProvider = Provider.of<ExpensesViewModel>(context, listen: false);
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Consumer<ExpensesViewModel>(
         builder: (context, child, value) => const Column(
           children: [

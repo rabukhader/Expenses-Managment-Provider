@@ -17,6 +17,7 @@ class ExpenseDetails extends StatelessWidget {
 
     return SafeArea(
       child: Scaffold(
+          resizeToAvoidBottomInset: false,
           appBar: AppBar(
             backgroundColor: const Color(0xff177DFF),
             leading: IconButton(
@@ -36,23 +37,28 @@ class ExpenseDetails extends StatelessWidget {
                   height: MediaQuery.of(context).size.height * 0.6,
                   width: MediaQuery.of(context).size.width,
                   child: Image.network(data['imageUrl'])),
-              Text(
-                data['name'],
-                style: const TextStyle(fontSize: 36),
-              ),
-              Text(
-                data['address'],
-                textAlign: TextAlign.start,
-                style:
-                    const TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
-              ),
-              Text(
-                'Total : ${data['total'].toString()}\$',
-                style: const TextStyle(fontSize: 20),
-              ),
-              Text(
-                'Due Date : ${data['dueDate']}',
-                style: const TextStyle(fontSize: 20),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    data['name'],
+                    style: const TextStyle(fontSize: 36),
+                  ),
+                  Text(
+                    data['address'],
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                        fontSize: 16, fontWeight: FontWeight.w700),
+                  ),
+                  Text(
+                    'Total : ${data['total'].toString()}\$',
+                    style: const TextStyle(fontSize: 20),
+                  ),
+                  Text(
+                    'Due Date : ${data['dueDate']}',
+                    style: const TextStyle(fontSize: 20),
+                  ),
+                ],
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -60,7 +66,7 @@ class ExpenseDetails extends StatelessWidget {
                   ElevatedButton.icon(
                     icon: const Icon(
                       Icons.delete,
-                      color: Colors.greenAccent,
+                      color: Colors.black,
                     ),
                     onPressed: () {
                       deleteDialog(context, data.name, id);
@@ -68,7 +74,7 @@ class ExpenseDetails extends StatelessWidget {
                     label: const Text(
                       "Delete",
                       style: TextStyle(
-                          color: Colors.white,
+                          color: Colors.black,
                           fontSize: 14,
                           fontWeight: FontWeight.w500),
                     ),
@@ -76,7 +82,7 @@ class ExpenseDetails extends StatelessWidget {
                   ElevatedButton.icon(
                     icon: const Icon(
                       Icons.edit,
-                      color: Colors.greenAccent,
+                      color: Colors.black,
                     ),
                     onPressed: () async {
                       final editData = {
@@ -100,7 +106,7 @@ class ExpenseDetails extends StatelessWidget {
                     label: const Text(
                       "Edit",
                       style: TextStyle(
-                          color: Colors.white,
+                          color: Colors.black,
                           fontSize: 14,
                           fontWeight: FontWeight.w500),
                     ),
@@ -108,7 +114,7 @@ class ExpenseDetails extends StatelessWidget {
                   ElevatedButton.icon(
                       icon: const Icon(
                         Icons.copy,
-                        color: Colors.greenAccent,
+                        color: Colors.black,
                       ),
                       onPressed: () async {
                         final clonedData = {
@@ -130,7 +136,7 @@ class ExpenseDetails extends StatelessWidget {
                       label: const Text(
                         "Clone",
                         style: TextStyle(
-                            color: Colors.white,
+                            color: Colors.black,
                             fontSize: 14,
                             fontWeight: FontWeight.w500),
                       )),

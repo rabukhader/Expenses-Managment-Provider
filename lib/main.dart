@@ -6,7 +6,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -14,7 +13,6 @@ import 'package:uni_links/uni_links.dart' as unilink;
 import 'package:http/http.dart' as http;
 
 import 'package:expenses_managment_app_provider/firebase_options.dart';
-import 'package:expenses_managment_app_provider/theme/app_theme.dart';
 import 'package:expenses_managment_app_provider/view/screens/choose_login_register/choose_login_register.dart';
 import 'package:expenses_managment_app_provider/view/screens/expense_details/expense_details.dart';
 import 'package:expenses_managment_app_provider/view/screens/home/home_screen.dart';
@@ -66,12 +64,6 @@ void handleLinkData(PendingDynamicLinkData? data) {
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  FacebookAuth.instance.webAndDesktopInitialize(
-    appId: '257911473923789',
-    cookie: true,
-    xfbml: true,
-    version: 'v10.0',
-  );
   cameras = await availableCameras();
   GeolocatorPlatform.instance;
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
@@ -105,106 +97,77 @@ class _ExpensesAppState extends State<ExpensesApp> {
         Provider.of<LoginRegisterViewModel>(context);
     buildTrace.start();
 
+    
+  Widget buildRouter(String initLocation) {
+    return MaterialApp.router(
+      routerConfig: GoRouter(initialLocation: initLocation, routes: [
+        GoRoute(
+          path: '/',
+          builder: (context, state) => const ChooseLoginRegister(),
+        ),
+        GoRoute(
+          path: '/home',
+          builder: (context, state) => const HomeScreen(),
+        ),
+        GoRoute(
+          path: '/expenseDetails/:id',
+          builder: (context, GoRouterState state) {
+            String id = state.pathParameters['id'] ?? '';
+            return FutureBuilder<Map<String, dynamic>>(
+              future: fetchDataById(id),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Scaffold(
+                    body: Center(child: CircularProgressIndicator()),
+                  );
+                } else if (snapshot.hasError) {
+                  return Scaffold(
+                    body: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Center(
+                        child: Text('Error fetching data: ${snapshot.error}'),
+                      ),
+                    ),
+                  );
+                } else if (snapshot.hasData) {
+                  Map<String, dynamic> sample = snapshot.data!;
+                  return ExpenseDetails(id: id, data: sample);
+                } else {
+                  return const Center(child: Text('Error'));
+                }
+              },
+            );
+          },
+        ),
+      ]),
+      debugShowCheckedModeBanner: false,
+    );
+  }
+
+  Widget buildLoading() {
+    return const Center(child: CircularProgressIndicator());
+  }
+
+  Widget buildError(dynamic error) {
+    return Center(child: Text('Error: $error'));
+  }
+
     return FutureBuilder(
-        future: loginRegisterViewModel.getCurrentUser(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const CircularProgressIndicator();
-          } else if (snapshot.hasError) {
-            return Scaffold(
-                body: Center(child: Text('Error: ${snapshot.error}')));
-          } else if (snapshot.hasData && snapshot.data != null) {
-            return MaterialApp.router(
-              routerConfig: GoRouter(initialLocation: '/home', routes: [
-                GoRoute(
-                  path: '/',
-                  builder: (context, state) => const ChooseLoginRegister(),
-                ),
-                GoRoute(
-                  path: '/home',
-                  builder: (context, state) => const HomeScreen(),
-                ),
-                GoRoute(
-                  path: '/expenseDetails/:id',
-                  builder: (context, GoRouterState state) {
-                    String id = state.pathParameters['id'] ?? '';
+      future: loginRegisterViewModel.getCurrentUser(),
+      builder: (context, snapshot) {
+        buildTrace.stop();
 
-                    return FutureBuilder<Map<String, dynamic>>(
-                      future: fetchDataById(id),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return const CircularProgressIndicator();
-                        } else if (snapshot.hasError) {
-                          return Scaffold(
-                              body: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Center(
-                                child: Text(
-                                    'Error fetching data: ${snapshot.error}')),
-                          ));
-                        } else if (snapshot.hasData) {
-                          Map<String, dynamic> sample = snapshot.data!;
-                          return ExpenseDetails(id: id, data: sample);
-                        } else {
-                          return const Center(child: Text('Error'));
-                        }
-                      },
-                    );
-                  },
-                ),
-              ]),
-              debugShowCheckedModeBanner: false,
-              theme: AppTheme.lightTheme(context),
-              darkTheme: AppTheme.darkTheme(context),
-            );
-          } else {
-            return MaterialApp.router(
-              routerConfig: GoRouter(routes: [
-                GoRoute(
-                  path: '/',
-                  builder: (context, state) => const ChooseLoginRegister(),
-                ),
-                GoRoute(
-                  path: '/home',
-                  builder: (context, state) => const HomeScreen(),
-                ),
-                GoRoute(
-                  path: '/expenseDetails/:id',
-                  builder: (context, GoRouterState state) {
-                    String id = state.pathParameters['id'] ?? '';
-
-                    return FutureBuilder<Map<String, dynamic>>(
-                      future: fetchDataById(id),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return const CircularProgressIndicator();
-                        } else if (snapshot.hasError) {
-                          return Scaffold(
-                              body: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Center(
-                                child: Text(
-                                    'Error fetching data: ${snapshot.error}')),
-                          ));
-                        } else if (snapshot.hasData) {
-                          Map<String, dynamic> sample = snapshot.data!;
-                          return ExpenseDetails(id: id, data: sample);
-                        } else {
-                          return const Center(child: Text('Error'));
-                        }
-                      },
-                    );
-                  },
-                ),
-              ]),
-              debugShowCheckedModeBanner: false,
-              theme: AppTheme.lightTheme(context),
-              darkTheme: AppTheme.darkTheme(context),
-            );
-          }
-        });
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return buildLoading();
+        } else if (snapshot.hasError) {
+          return buildError(snapshot.error);
+        } else if (snapshot.hasData && snapshot.data != null) {
+          return buildRouter('/home');
+        } else {
+          return buildRouter('/');
+        }
+      },
+    );
   }
 
   Future<Map<String, dynamic>> fetchDataById(String id) async {

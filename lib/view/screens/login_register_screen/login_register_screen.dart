@@ -24,6 +24,7 @@ class _LoginRegisterScreenState extends State<LoginRegisterScreen> {
 
     return SafeArea(
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
           body: Stack(
         children: [
           Positioned(
@@ -57,85 +58,88 @@ class _LoginRegisterScreenState extends State<LoginRegisterScreen> {
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      TextFormField(
-                        controller: widget.loginRegisterForm.emailController,
-                        textInputAction: TextInputAction.next,
-                        style: GoogleFonts.poppins(
-                            color: Theme.of(context).colorScheme.onBackground,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500),
-                        decoration: InputDecoration(
-                            border: const OutlineInputBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10))),
-                            enabledBorder: const OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Color(0xff009688), width: 2),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(5))),
-                            focusedBorder: const OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Color(0xff009688), width: 2),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(5))),
-                            labelText: 'Email',
-                            hintStyle: TextStyle(
-                                fontSize: 12,
-                                color: Colors.grey.withOpacity(0.4)),
-                            hintText: 'Your Email Address',
-                            floatingLabelStyle:
-                                const TextStyle(color: Color(0xffB1AAE8)),
-                            labelStyle: const TextStyle(
-                                fontSize: 16,
-                                color: Color(0xff009688),
-                                fontWeight: FontWeight.w500)),
-                      ),
-                      const SizedBox(height: 10),
-                      TextField(
-                        controller: widget.loginRegisterForm.passwordController,
-                        textInputAction: TextInputAction.next,
-                        style: GoogleFonts.poppins(
-                            color: Theme.of(context).colorScheme.onBackground,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500),
-                        decoration: InputDecoration(
-                            enabledBorder: const OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Color(0xff009688), width: 2),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(5))),
-                            border: const OutlineInputBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10))),
-                            focusedBorder: const OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Color(0xff009688), width: 2),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(5))),
-                            labelText: 'Password',
-                            hintStyle: TextStyle(
-                                fontSize: 12,
-                                color: Colors.grey.withOpacity(0.4)),
-                            hintText: 'Enter Your password',
-                            floatingLabelStyle:
-                                const TextStyle(color: Color(0xffB1AAE8)),
-                            suffixIcon: IconButton(
-                              splashRadius: 20,
-                              splashColor:
-                                  const Color(0xff009688).withOpacity(0.2),
-                              onPressed: () {},
-                              icon: const Icon(Icons.visibility_off),
-                            ),
-                            labelStyle: const TextStyle(
-                                fontSize: 16,
-                                color: Color(0xff009688),
-                                fontWeight: FontWeight.w500)),
-                        // obscureText: !isPasswordVisible,
-                      ),
-                    ]),
+                child: Form(
+                  key: widget.loginRegisterForm.formKey,
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        TextFormField(
+                          controller: widget.loginRegisterForm.emailController,
+                          textInputAction: TextInputAction.next,
+                          style: GoogleFonts.poppins(
+                              color: Theme.of(context).colorScheme.onBackground,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500),
+                          decoration: InputDecoration(
+                              border: const OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10))),
+                              enabledBorder: const OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Color(0xff009688), width: 2),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(5))),
+                              focusedBorder: const OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Color(0xff009688), width: 2),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(5))),
+                              labelText: 'Email',
+                              hintStyle: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.grey.withOpacity(0.4)),
+                              hintText: 'Your Email Address',
+                              floatingLabelStyle:
+                                  const TextStyle(color: Color(0xffB1AAE8)),
+                              labelStyle: const TextStyle(
+                                  fontSize: 16,
+                                  color: Color(0xff009688),
+                                  fontWeight: FontWeight.w500)),
+                        ),
+                        const SizedBox(height: 10),
+                        TextField(
+                          controller: widget.loginRegisterForm.passwordController,
+                          textInputAction: TextInputAction.next,
+                          style: GoogleFonts.poppins(
+                              color: Theme.of(context).colorScheme.onBackground,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500),
+                          decoration: InputDecoration(
+                              enabledBorder: const OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Color(0xff009688), width: 2),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(5))),
+                              border: const OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10))),
+                              focusedBorder: const OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Color(0xff009688), width: 2),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(5))),
+                              labelText: 'Password',
+                              hintStyle: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.grey.withOpacity(0.4)),
+                              hintText: 'Enter Your password',
+                              floatingLabelStyle:
+                                  const TextStyle(color: Color(0xffB1AAE8)),
+                              suffixIcon: IconButton(
+                                splashRadius: 20,
+                                splashColor:
+                                    const Color(0xff009688).withOpacity(0.2),
+                                onPressed: () {},
+                                icon: const Icon(Icons.visibility_off),
+                              ),
+                              labelStyle: const TextStyle(
+                                  fontSize: 16,
+                                  color: Color(0xff009688),
+                                  fontWeight: FontWeight.w500)),
+                          // obscureText: !isPasswordVisible,
+                        ),
+                      ]),
+                ),
               ),
               const SizedBox(
                 height: 25,
@@ -151,11 +155,10 @@ class _LoginRegisterScreenState extends State<LoginRegisterScreen> {
                         : await pr.signUpEmailPassword(
                             widget.loginRegisterForm.emailController.text,
                             widget.loginRegisterForm.passwordController.text);
-                    Navigator.pushAndRemoveUntil(
+                    Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const HomeScreen()),
-                        (route) => false);
+                            builder: (context) => const HomeScreen()));
                   },
                   style: ButtonStyle(
                       shadowColor: const MaterialStatePropertyAll(Colors.black),

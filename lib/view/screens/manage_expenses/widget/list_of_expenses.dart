@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:expenses_managment_app_provider/view/screens/manage_expenses/widget/custom_card2.dart';
+import 'package:expenses_managment_app_provider/view/screens/manage_expenses/widget/custom_card.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:expenses_managment_app_provider/model/expense.dart';
@@ -65,7 +65,7 @@ class _ListOfExpensesState extends State<ListOfExpenses> {
                     },
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: CustomCard2(
+                      child: CustomCard(
                         data: expenseDetails,
                         id: id,
                       ),
