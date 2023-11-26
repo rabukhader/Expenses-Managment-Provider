@@ -7,26 +7,28 @@ import 'package:provider/provider.dart';
 
 import '../../../../model/data/months.dart';
 
-
 class Chart extends StatelessWidget {
   const Chart({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final analyzeViewModel = Provider.of<AnalyzeViewModel>(context, listen: false);
-    final expenseViewModel = Provider.of<ExpensesViewModel>(context, listen: false);
+    final analyzeViewModel =
+        Provider.of<AnalyzeViewModel>(context, listen: false);
+    final expenseViewModel =
+        Provider.of<ExpensesViewModel>(context, listen: false);
 
     var list = analyzeViewModel.classifyExpensesByMonth(
         expenseViewModel.allExpenses.values.toList(), months);
 
     var barGroups = list.entries
         .map((item) => BarChartGroupData(
-          
                 x: list.keys.toList().indexOf(item.key),
                 barRods: [
                   BarChartRodData(
-                      color: Theme.of(context).hintColor,
-                      toY: item.value,
+                      color: item.value > 5000
+                          ? Theme.of(context).colorScheme.error
+                          : Theme.of(context).hintColor,
+                      toY: item.value > 5000 ? 5000 : item.value,
                       width: 16,
                       backDrawRodData: BackgroundBarChartRodData(show: true),
                       borderRadius: const BorderRadius.all(Radius.zero))
@@ -51,8 +53,9 @@ class Chart extends StatelessWidget {
                   return Text(
                     list.keys.toList()[value.toInt()].substring(0, 3),
                     style: GoogleFonts.poppins(
-                      color: Theme.of(context).colorScheme.onBackground,
-                        fontSize: 13, fontWeight: FontWeight.w500),
+                        color: Theme.of(context).colorScheme.onBackground,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w500),
                   );
                 }
                 return const Text('Error');

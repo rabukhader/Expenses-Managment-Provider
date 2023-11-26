@@ -35,7 +35,6 @@ class LocationService {
 
   Future getCurrentPosition() async {
     final hasPermission = await handleLocationPermission();
-
     if (!hasPermission) return null;
     currentPosition = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
@@ -52,7 +51,12 @@ class LocationService {
   }
 
   Future fetchLocation() async {
-    await getCurrentPosition();
-    await getAddressFromPosition();
+    try {
+      await getCurrentPosition();
+      await getAddressFromPosition();
+      // return true;
+    } catch (e) {
+      return false;
+    }
   }
 }

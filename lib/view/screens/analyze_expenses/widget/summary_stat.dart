@@ -15,17 +15,20 @@ class SummaryStatistics extends StatelessWidget {
     final expenseViewModel =
         Provider.of<ExpensesViewModel>(context, listen: false);
 
+    final avg = analyzeViewModel
+        .averageExpenses(expenseViewModel.allExpenses.values.toList())
+        .toString();
+
     return Column(
       children: [
         CustomTable(
-            title1: 'Total',
-            title2: 'Average',
-            data1: analyzeViewModel
-                .totalExpenses(expenseViewModel.allExpenses.values.toList())
-                .toString(),
-            data2: analyzeViewModel
-                .averageExpenses(expenseViewModel.allExpenses.values.toList())
-                .toString()),
+          title1: 'Total',
+          title2: 'Average',
+          data1: analyzeViewModel
+              .totalExpenses(expenseViewModel.allExpenses.values.toList())
+              .toString(),
+          data2: avg.length > 6 ? avg.substring(0,6) : avg.toString(),
+        ),
         const SizedBox(
           height: 20,
         ),

@@ -8,6 +8,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../../../model/services/expense_form/expense_form.dart';
 import '../../../../model/services/expense_form/expense_validator.dart';
+import '../../../widgets/dialog.dart';
 import 'camera_section.dart';
 
 class AddEditForm extends StatefulWidget {
@@ -291,10 +292,24 @@ class _AddEditFormState extends State<AddEditForm> {
                         elevation: 25,
                         shadowColor: Colors.blueGrey),
                     onPressed: () async {
-                      await widget.locationService.fetchLocation();
-                      setState(() {
-                        isLocated = true;
-                      });
+                      showDialog(
+                        barrierDismissible: false,
+                        context: context,
+                        builder: (context) => const AlertDialog(
+                          content:
+                              SizedBox(width: 30, height: 150, child: Loader()),
+                        ),
+                      );
+                      final result =
+                          await widget.locationService.fetchLocation();
+                          Navigator.pop(context);
+                      if (result != null) {
+                        errorDialog(context, 'No Internet For Location');
+                      } else {
+                        setState(() {
+                          isLocated = true;
+                        });
+                      }
                     },
                     child: Padding(
                       padding: const EdgeInsets.all(12.0),

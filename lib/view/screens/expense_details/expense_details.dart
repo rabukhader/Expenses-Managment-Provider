@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:expenses_managment_app_provider/model/expense.dart';
+import 'package:expenses_managment_app_provider/view/screens/home/home_screen.dart';
 import 'package:expenses_managment_app_provider/view/widgets/loader.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -131,6 +132,10 @@ class ExpenseDetails extends StatelessWidget {
                                     data: data)));
                         if (result != null) {
                           await exProvider.editExpense(result, id);
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => HomeScreen()));
                         }
                       },
                       label: Text(
@@ -149,13 +154,6 @@ class ExpenseDetails extends StatelessWidget {
                           color: Theme.of(context).hintColor,
                         ),
                         onPressed: () async {
-                          // final clonedData = {
-                          //   'name': data['name'],
-                          // 'total': data['total'],
-                          // 'dueDate': data['dueDate'],
-                          // 'imageUrl': data['imageUrl'],
-                          // 'address': data['address']
-                          // };
                           final result = await Navigator.push(
                               context,
                               MaterialPageRoute(

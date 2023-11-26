@@ -1,3 +1,4 @@
+import 'package:expenses_managment_app_provider/view/screens/home/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -37,7 +38,8 @@ deleteDialog(context, name, id) {
                 onPressed: () async {
                   await Provider.of<ExpensesViewModel>(context, listen: false)
                       .deleteExpense(id);
-                  Navigator.pop(context);
+                  Navigator.pushReplacement(context,
+                      MaterialPageRoute(builder: (context) => HomeScreen()));
                 },
               ),
             ],

@@ -159,7 +159,9 @@ class _ExpensesAppState extends State<ExpensesApp> {
     }
 
     Widget buildError(dynamic error) {
-      return Center(child: Text('Error: $error'));
+      return MaterialApp(home: Scaffold(
+        appBar: AppBar(),
+        body: Center(child: Text('Error: $error'))));
     }
 
     return FutureBuilder(

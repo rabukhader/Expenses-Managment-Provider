@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 // import 'package:photo_manager/photo_manager.dart';
 import '../../../../main.dart';
+import '../../../widgets/loader.dart';
 import 'camera_view_photo.dart';
 
 class CameraSection extends StatefulWidget {
@@ -188,20 +189,18 @@ class _CameraSectionState extends State<CameraSection> {
   }
 
   Future<void> captureAndUpload() async {
-    if (isCaptureInProgress) {
-      setState(() {
-      });
-      return;
-    }
-
-    setState(() {
-      isCaptureInProgress = true;
-    });
-
     try {
       var re = await camController.takePicture();
+      showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (context) => const AlertDialog(
+          content: SizedBox(width: 30, height: 150, child: Loader()),
+        ),
+      );
       final expenseImage = File(re.path);
       await widget.imageService.uploadImageToStorage(expenseImage);
+      Navigator.pop(context);
       var result = await Navigator.push(
         context,
         MaterialPageRoute(
@@ -215,10 +214,6 @@ class _CameraSectionState extends State<CameraSection> {
       }
     } catch (e) {
       print("Error during capture and upload: $e");
-    } finally {
-      setState(() {
-        isCaptureInProgress = false;
-      });
     }
   }
 }

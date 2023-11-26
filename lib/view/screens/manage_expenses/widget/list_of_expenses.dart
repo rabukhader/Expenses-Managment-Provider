@@ -61,6 +61,7 @@ class _ListOfExpensesState extends State<ListOfExpenses> {
                   final Expense expenseDetails = entry.value;
                   return InkWell(
                     onTap: () {
+                      print('tst');
                       GoRouter.of(context).go('/expenseDetails/$id',
                           extra: {'id': id, 'data': expenseDetails});
                     },
