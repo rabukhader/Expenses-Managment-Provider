@@ -1,3 +1,4 @@
+import 'package:expenses_managment_app_provider/model/expense_model.dart';
 import 'package:expenses_managment_app_provider/view/screens/add_edit_expense/add_edit_expense.dart';
 import 'package:expenses_managment_app_provider/view/screens/manage_expenses/widget/list_of_expenses.dart';
 import 'package:expenses_managment_app_provider/view/screens/manage_expenses/widget/search_input.dart';
@@ -6,33 +7,58 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../view_model/expense_view_model.dart';
 
-class ManageExpenses extends StatefulWidget {
+class ManageExpenses extends StatelessWidget {
   const ManageExpenses({super.key});
 
   @override
-  State<ManageExpenses> createState() => _ManageExpensesState();
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (_) => ExpensesViewModel(),
+      child: const ManageExpensesView(),
+    );
+  }
 }
 
-class _ManageExpensesState extends State<ManageExpenses> {
+class ManageExpensesView extends StatefulWidget {
+  const ManageExpensesView({super.key});
+
   @override
-  void initState() {
-    super.initState();
-    Provider.of<ExpensesViewModel>(context, listen: false).fetchExpenses();
+  State<ManageExpensesView> createState() => _ManageExpensesViewState();
+}
+
+class _ManageExpensesViewState extends State<ManageExpensesView> {
+  @override
+  void dispose() {
+    Provider.of<ExpensesViewModel>(context, listen: false).disposeStreams();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final exProvider = Provider.of<ExpensesViewModel>(context, listen: false);
+    final exProvider = Provider.of(context, listen: false);
+    ExpenseModel ex = ExpenseModel();
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: Consumer<ExpensesViewModel>(
-        builder: (context, child, value) => const Column(
-          children: [
-            CustomHeading(title: 'Expenses List'),
-            SearchInput(),
-            Expanded(child: ListOfExpenses()),
-          ],
-        ),
+      body: Column(
+        children: [
+          const CustomHeading(title: 'Expenses List'),
+          SearchInput(
+              textStream: exProvider.textStream,
+              onSearch: (query) {
+                Provider.of<ExpensesViewModel>(context, listen: false)
+                    .textStream
+                    .add(query);
+              }),
+          Expanded(
+              child: ListOfExpenses(
+            dataStream: exProvider.dataStream,
+            onSearch: (text) =>
+                Provider.of<ExpensesViewModel>(context, listen: false)
+                    .dataStream
+                    .add(ex.searchResults),
+            result: ex.searchResults,
+          )),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Theme.of(context).hintColor,
@@ -45,7 +71,7 @@ class _ManageExpensesState extends State<ManageExpenses> {
                   builder: (context) => const AddEditExpensesScreen(
                         processName: 'Add',
                       )));
-          if (result != null) await exProvider.addExpense(result);
+          await exProvider.addExpense(result);
         },
         child: const Icon(
           Icons.add,

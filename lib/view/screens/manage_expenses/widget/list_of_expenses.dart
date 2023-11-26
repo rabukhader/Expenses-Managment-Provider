@@ -2,57 +2,42 @@ import 'dart:async';
 import 'package:expenses_managment_app_provider/view/screens/manage_expenses/widget/custom_card.dart';
 import 'package:expenses_managment_app_provider/view/widgets/loader.dart';
 import 'package:go_router/go_router.dart';
-import 'package:rxdart/rxdart.dart';
-import 'package:expenses_managment_app_provider/model/expense.dart';
+// import 'package:rxdart/rxdart.dart';
+import 'package:expenses_managment_app_provider/model/entities/expense.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../view_model/expense_view_model.dart';
 
 class ListOfExpenses extends StatefulWidget {
-  const ListOfExpenses({super.key});
+  final StreamController<Map<String, Expense>> dataStream;
+  final Function(String) onSearch;
+  final result;
+  const ListOfExpenses(
+      {super.key,
+      required this.dataStream,
+      required this.onSearch,
+      this.result});
 
   @override
   State<ListOfExpenses> createState() => _ListOfExpensesState();
 }
 
 class _ListOfExpensesState extends State<ListOfExpenses> {
-  late StreamSubscription<String> subscription;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    subscription = Provider.of<ExpensesViewModel>(context, listen: false)
-        .textStream
-        .stream
-        .debounceTime(const Duration(milliseconds: 300))
-        .distinct()
-        .listen((searchQuery) {
-      Provider.of<ExpensesViewModel>(context, listen: false)
-          .searchExpense(searchQuery);
-    });
-  }
-
-  @override
-  void dispose() {
-    subscription.cancel();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Consumer<ExpensesViewModel>(
       builder: (context, ex, child) {
         return StreamBuilder(
-          stream: ex.dataStream.stream,
+          stream: widget.dataStream.stream,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Loader();
             } else if (snapshot.hasError) {
               return Text('Error: ${snapshot.error}');
-            } else if (ex.searchResults.isEmpty) {
+            } else if (widget.result.isEmpty) {
               return const Text('Not Found');
             } else {
-              final displayedExpense = ex.searchResults;
+              final displayedExpense = widget.result;
               return ListView.builder(
                 itemCount: displayedExpense.length,
                 itemBuilder: (context, index) {
@@ -61,7 +46,6 @@ class _ListOfExpensesState extends State<ListOfExpenses> {
                   final Expense expenseDetails = entry.value;
                   return InkWell(
                     onTap: () {
-                      print('tst');
                       GoRouter.of(context).go('/expenseDetails/$id',
                           extra: {'id': id, 'data': expenseDetails});
                     },

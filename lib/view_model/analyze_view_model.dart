@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../model/expense.dart';
+import '../model/entities/expense.dart';
 
-class AnalyzeViewModel extends ChangeNotifier{
+class AnalyzeViewModel with ChangeNotifier{
   
   Map<String, double> classifyExpensesByMonth(
       List<Expense> expenses, List<String> months) {

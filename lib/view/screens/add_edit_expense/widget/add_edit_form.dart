@@ -1,5 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:expenses_managment_app_provider/model/expense.dart';
+import 'package:expenses_managment_app_provider/model/entities/expense.dart';
 import 'package:expenses_managment_app_provider/model/services/image_service/image_service.dart';
 import 'package:expenses_managment_app_provider/model/services/location/location_service.dart';
 import 'package:expenses_managment_app_provider/view/widgets/loader.dart';

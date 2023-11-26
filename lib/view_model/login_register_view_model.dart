@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
@@ -72,11 +75,30 @@ class LoginRegisterViewModel with ChangeNotifier {
 
   Future<User?> getCurrentUser() async {
     try {
+      await Future.delayed(Duration(milliseconds: 3000));
       final User? user = auth.currentUser;
       return user;
     } catch (e) {
       print('Error getting current user: $e');
       return null;
+    }
+  }
+
+  Future<Map<String, dynamic>> fetchDataById(String id) async {
+    final url =
+        'https://providerrest-default-rtdb.firebaseio.com/expenses/$id.json';
+
+    try {
+      final response = await http.get(Uri.parse(url));
+
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else {
+        throw Exception('Failed to load data');
+      }
+    } catch (error) {
+      print('Error: $error');
+      rethrow;
     }
   }
 }

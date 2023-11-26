@@ -11,24 +11,26 @@ class AnalyzeExpenses extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => AnalyzeViewModel()),
-      ],
-      child: Column(children: [
-        const CustomHeading(title: 'Monthly Expenses'),
-        Container(
-          padding: const EdgeInsets.only(top: 12.0, right: 6.0, left: 6.0),
-            height: MediaQuery.of(context).size.height * 0.4,
-            child: const Chart()),
-              const CustomHeading(title: 'Summary Statistics'),
-        SizedBox(
-            height: MediaQuery.of(context).size.height * 0.25,
-            child: const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: SummaryStatistics(),
-            )),
-      ]),
+    return ChangeNotifierProvider(
+      create: (_) => AnalyzeViewModel(),
+      child: Builder(
+        builder: (context) {
+          return Column(children: [
+            const CustomHeading(title: 'Monthly Expenses'),
+            Container(
+                padding: const EdgeInsets.only(top: 12.0, right: 6.0, left: 6.0),
+                height: MediaQuery.of(context).size.height * 0.4,
+                child: const Chart()),
+            const CustomHeading(title: 'Summary Statistics'),
+            SizedBox(
+                height: MediaQuery.of(context).size.height * 0.25,
+                child: const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: SummaryStatistics(),
+                )),
+          ]);
+        }
+      ),
     );
   }
 }

@@ -127,8 +127,7 @@ class _ChooseLoginRegisterState extends State<ChooseLoginRegister> {
                                     MainAxisAlignment.spaceAround,
                                 children: [
                                   TextButton(
-                                      onPressed: () async {
-                                        await sendAnalyticsEvent();
+                                      onPressed: () {
                                         Navigator.push(
                                             context,
                                             MaterialPageRoute(
@@ -296,7 +295,7 @@ class _ChooseLoginRegisterState extends State<ChooseLoginRegister> {
                                               context,
                                               listen: false,
                                             ).signInWithGoogle();
-                                
+                                            print(result);
                                             Navigator.pop(context);
                                 
                                             if (result) {

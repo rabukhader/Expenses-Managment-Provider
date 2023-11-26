@@ -1,4 +1,4 @@
-import 'package:expenses_managment_app_provider/model/expense.dart';
+import 'package:expenses_managment_app_provider/model/entities/expense.dart';
 import 'package:expenses_managment_app_provider/model/services/image_service/image_service.dart';
 import 'package:expenses_managment_app_provider/model/services/location/location_service.dart';
 import 'package:expenses_managment_app_provider/view/screens/add_edit_expense/widget/add_edit_form.dart';

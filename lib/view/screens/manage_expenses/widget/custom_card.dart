@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../model/expense.dart';
+import '../../../../model/entities/expense.dart';
 import '../../../../view_model/expense_view_model.dart';
 import '../../add_edit_expense/add_edit_expense.dart';
 import 'dialogs/delete_dialog.dart';

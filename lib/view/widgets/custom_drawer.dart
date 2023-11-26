@@ -68,7 +68,7 @@ class CustomDrawer extends StatelessWidget {
                 await Provider.of<LoginRegisterViewModel>(context,
                         listen: false)
                     .signOut();
-                GoRouter.of(context).go('/', extra: (state) => state.isRoot);
+                GoRouter.of(context).go('/');
               },
             ),
           ],

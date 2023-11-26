@@ -1,10 +1,15 @@
-import 'package:expenses_managment_app_provider/view_model/expense_view_model.dart';
+import 'dart:async';
+
+// import 'package:expenses_managment_app_provider/view_model/expense_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
+// import 'package:provider/provider.dart';
 
 class SearchInput extends StatefulWidget {
-  const SearchInput({super.key});
+  final StreamController<String> textStream;
+  final Function(String) onSearch;
+  const SearchInput(
+      {super.key, required this.textStream, required this.onSearch});
 
   @override
   State<SearchInput> createState() => _SearchInputState();
@@ -12,27 +17,22 @@ class SearchInput extends StatefulWidget {
 
 class _SearchInputState extends State<SearchInput> {
   final textController = TextEditingController();
-  late ExpensesViewModel expensesViewModel;
+  // late ExpensesViewModel expensesViewModel;
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    expensesViewModel = Provider.of<ExpensesViewModel>(context, listen: false);
-  }
+  // @override
+  // void didChangeDependencies() {
+  //   super.didChangeDependencies();
+  //   expensesViewModel = Provider.of<ExpensesViewModel>(context, listen: false);
+  // }
 
-  @override
-  void initState() {
-    super.initState();
-    textController.addListener(() {
-      expensesViewModel.textStream.add(textController.text);
-    });
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   textController.addListener(() {
+  //     expensesViewModel.textStream.add(textController.text);
+  //   });
+  // }
 
-  @override
-  void dispose() {
-    super.dispose();
-    textController.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,15 +44,18 @@ class _SearchInputState extends State<SearchInput> {
       ),
       child: TextField(
         controller: textController,
-        style: GoogleFonts.poppins(fontWeight: FontWeight.w500, fontSize: 18, color: Theme.of(context).colorScheme.onBackground),
+        style: GoogleFonts.poppins(
+            fontWeight: FontWeight.w500,
+            fontSize: 18,
+            color: Theme.of(context).colorScheme.onBackground),
         onChanged: (text) {
-          Provider.of<ExpensesViewModel>(context, listen: false)
-              .textStream
-              .add(text);
+          //to parent widget
+          widget.onSearch(text);
         },
         decoration: InputDecoration(
           hintText: 'Search',
-          hintStyle: GoogleFonts.poppins(color: Theme.of(context).colorScheme.onBackground),
+          hintStyle: GoogleFonts.poppins(
+              color: Theme.of(context).colorScheme.onBackground),
           prefixIcon: Icon(
             Icons.search,
             color: Theme.of(context).hintColor,

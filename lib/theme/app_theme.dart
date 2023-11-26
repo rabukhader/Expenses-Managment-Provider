@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'color_theme.dart';
-// import 'text_theme.dart';
 
 class AppTheme {
   static ThemeData lightTheme(BuildContext context) {
@@ -49,7 +48,7 @@ class AppTheme {
       brightness: Brightness.dark,
       primaryColor: ColorTheme.darkPrimary,
       hintColor: ColorTheme.darkSecondary,
-      cardColor: Color(0xFF8E8FFA),
+      cardColor: const Color(0xFF8E8FFA),
       dialogBackgroundColor: ColorTheme.darkPrimary.withOpacity(0.3) ,
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ButtonStyle(

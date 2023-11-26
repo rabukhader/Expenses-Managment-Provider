@@ -1,5 +1,5 @@
 import 'package:expenses_managment_app_provider/model/apis/end_point.dart';
-import 'package:expenses_managment_app_provider/model/expense.dart';
+import 'package:expenses_managment_app_provider/model/entities/expense.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 

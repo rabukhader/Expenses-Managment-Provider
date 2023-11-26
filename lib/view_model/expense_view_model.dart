@@ -1,10 +1,11 @@
 import 'dart:async';
 import 'package:connectivity/connectivity.dart';
 import 'package:dio/dio.dart';
-import 'package:expenses_managment_app_provider/model/expense.dart';
+import 'package:expenses_managment_app_provider/model/entities/expense.dart';
 import 'package:flutter/material.dart';
 import '../model/apis/custom_client.dart';
 import '../model/apis/end_point_firebase.dart';
+import '../model/expense_model.dart';
 import '../model/local_db/db_helper.dart';
 import '../model/local_db/local_expense_change.dart';
 
@@ -16,13 +17,17 @@ class ExpensesViewModel with ChangeNotifier {
   StreamController<String> textStream = StreamController.broadcast();
   StreamController<Map<String, Expense>> dataStream =
       StreamController<Map<String, Expense>>.broadcast();
-  Map<String, Expense> searchResults = {};
-  Map<String, Expense> allExpenses = {};
   Completer<void>? searchCompleter;
   CancelToken? cancelToken;
+  ExpenseModel expenseModel = ExpenseModel();
 
   List<LocalExpenseChange> localChanges = [];
-  
+
+  void disposeStreams() {
+    textStream.close();
+    dataStream.close();
+  }
+
   ExpensesViewModel() {
     Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
       if (currentConnectivity != result) {
@@ -46,9 +51,9 @@ class ExpensesViewModel with ChangeNotifier {
       await dbHelper.clearData();
       await dbHelper.postExpense(data);
 
-      allExpenses = data;
-      searchResults = data;
-      dataStream.add(searchResults);
+      expenseModel.allExpenses = data;
+      expenseModel.searchResults = data;
+      dataStream.add(expenseModel.searchResults);
     } else {
       await fetchLocalExpenses();
     }
@@ -63,9 +68,9 @@ class ExpensesViewModel with ChangeNotifier {
   Future<void> fetchLocalExpenses() async {
     final dbHelper = DBHelper.instance;
     final localData = await dbHelper.fetchExpenses();
-    allExpenses = localData;
-    searchResults = allExpenses;
-    dataStream.add(searchResults);
+    expenseModel.allExpenses = localData;
+    expenseModel.searchResults = expenseModel.allExpenses;
+    dataStream.add(expenseModel.searchResults);
     notifyListeners();
   }
 
@@ -116,16 +121,16 @@ class ExpensesViewModel with ChangeNotifier {
     if (connectivityResult != ConnectivityResult.none) {
       final response = await api.searchExpense(query, cancelToken: cancelToken);
       if (query.isNotEmpty) {
-        searchResults = response.map((key, value) {
+        expenseModel.searchResults = response.map((key, value) {
           return MapEntry(key, Expense.fromMap(value));
         });
       } else {
-        searchResults = allExpenses;
+        expenseModel.searchResults = expenseModel.allExpenses;
       }
     } else {
       final dbHelper = DBHelper.instance;
       final offlineResults = await dbHelper.searchExpenses(query);
-      searchResults = {for (var e in offlineResults) e.name: e};
+      expenseModel.searchResults = {for (var e in offlineResults) e.name: e};
     }
 
     notifyListeners();
