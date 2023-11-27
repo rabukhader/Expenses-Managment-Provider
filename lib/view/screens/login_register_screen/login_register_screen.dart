@@ -1,8 +1,8 @@
 import 'package:expenses_managment_app_provider/model/services/login_register_form/login_register_form.dart';
-import 'package:expenses_managment_app_provider/view/screens/home/home_screen.dart';
 import 'package:expenses_managment_app_provider/view/widgets/custom_text_field.dart';
 import 'package:expenses_managment_app_provider/view_model/login_register_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
@@ -92,10 +92,7 @@ class _LoginRegisterScreenState extends State<LoginRegisterScreen> {
                             widget.loginRegisterForm.emailController.text,
                             widget.loginRegisterForm.passwordController.text);
                     if (result) {
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const HomeScreen()));
+                      GoRouter.of(context).go('/home');
                     } else {
                       errorDialog(context, 'Invalid Credentials');
                     }

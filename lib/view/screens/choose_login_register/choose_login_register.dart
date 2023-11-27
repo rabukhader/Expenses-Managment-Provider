@@ -288,7 +288,7 @@ class _ChooseLoginRegisterState extends State<ChooseLoginRegister> {
                                                   child: Loader()),
                                             ),
                                           );
-                                
+
                                           try {
                                             var result = await Provider.of<
                                                 LoginRegisterViewModel>(
@@ -297,16 +297,14 @@ class _ChooseLoginRegisterState extends State<ChooseLoginRegister> {
                                             ).signInWithGoogle();
                                             print(result);
                                             Navigator.pop(context);
-                                
+
                                             if (result) {
                                               GoRouter.of(context).go('/home',
-                                                  extra: (state) => state.isRoot);
+                                                  extra: (state) =>
+                                                      state.isRoot);
                                             }
                                           } catch (error) {
                                             Navigator.pop(context);
-                                
-                                            print(
-                                                "Error signing in with Google: $error");
                                           }
                                         },
                                         child: Column(

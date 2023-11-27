@@ -1,11 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:expenses_managment_app_provider/model/entities/expense.dart';
 import 'package:expenses_managment_app_provider/model/services/image_service/image_service.dart';
 import 'package:expenses_managment_app_provider/model/services/location/location_service.dart';
 import 'package:expenses_managment_app_provider/view/widgets/loader.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import '../../../../model/data/expense_model.dart';
 import '../../../../model/services/expense_form/expense_form.dart';
 import '../../../../model/services/expense_form/expense_validator.dart';
 import '../../../widgets/dialog.dart';

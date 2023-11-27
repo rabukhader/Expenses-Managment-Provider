@@ -1,10 +1,11 @@
-import 'package:expenses_managment_app_provider/model/expense_model.dart';
+import 'dart:async';
 import 'package:expenses_managment_app_provider/view/screens/add_edit_expense/add_edit_expense.dart';
 import 'package:expenses_managment_app_provider/view/screens/manage_expenses/widget/list_of_expenses.dart';
 import 'package:expenses_managment_app_provider/view/screens/manage_expenses/widget/search_input.dart';
 import 'package:expenses_managment_app_provider/view/widgets/custom_heading.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:rxdart/rxdart.dart';
 import '../../../view_model/expense_view_model.dart';
 
 class ManageExpenses extends StatelessWidget {
@@ -27,37 +28,50 @@ class ManageExpensesView extends StatefulWidget {
 }
 
 class _ManageExpensesViewState extends State<ManageExpensesView> {
+  late StreamSubscription<String> subscription;
+  final textController = TextEditingController();
+
   @override
-  void dispose() {
-    Provider.of<ExpensesViewModel>(context, listen: false).disposeStreams();
-    super.dispose();
+  void initState() {
+    super.initState();
+    final exProvider = Provider.of<ExpensesViewModel>(context, listen: false);
+    exProvider.fetchExpenses();
+    textController.addListener(() {
+      exProvider.textStream.add(textController.text);
+    });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    subscription = Provider.of<ExpensesViewModel>(context, listen: false)
+        .textStream
+        .stream
+        .debounceTime(const Duration(milliseconds: 300))
+        .distinct()
+        .listen((searchQuery) {
+      print('search');
+      Provider.of<ExpensesViewModel>(context, listen: false)
+          .searchExpense(searchQuery);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    final exProvider = Provider.of(context, listen: false);
-    ExpenseModel ex = ExpenseModel();
+    final exProvider = Provider.of<ExpensesViewModel>(context, listen: false);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Column(
         children: [
           const CustomHeading(title: 'Expenses List'),
           SearchInput(
-              textStream: exProvider.textStream,
-              onSearch: (query) {
-                Provider.of<ExpensesViewModel>(context, listen: false)
-                    .textStream
-                    .add(query);
-              }),
-          Expanded(
-              child: ListOfExpenses(
-            dataStream: exProvider.dataStream,
-            onSearch: (text) =>
-                Provider.of<ExpensesViewModel>(context, listen: false)
-                    .dataStream
-                    .add(ex.searchResults),
-            result: ex.searchResults,
-          )),
+            textStream: exProvider.textStream,
+            onSearch: (query) {
+              exProvider.onSearch(query);
+            },
+            textController: textController,
+          ),
+          const Expanded(child: ListOfExpenses()),
         ],
       ),
       floatingActionButton: FloatingActionButton(

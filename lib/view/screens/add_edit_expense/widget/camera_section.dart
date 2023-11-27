@@ -4,8 +4,8 @@ import 'package:expenses_managment_app_provider/model/services/image_service/ima
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 // import 'package:photo_manager/photo_manager.dart';
+import '../../../../view_model/splash_view_model.dart';
 import '../../../widgets/loader.dart';
-import '../../splash_screen/splash_screen.dart';
 import 'camera_view_photo.dart';
 
 class CameraSection extends StatefulWidget {

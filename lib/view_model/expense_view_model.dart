@@ -1,32 +1,27 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:connectivity/connectivity.dart';
 import 'package:dio/dio.dart';
-import 'package:expenses_managment_app_provider/model/entities/expense.dart';
+import 'package:expenses_managment_app_provider/model/data/local_changes.dart';
 import 'package:flutter/material.dart';
-import '../model/apis/custom_client.dart';
-import '../model/apis/end_point_firebase.dart';
-import '../model/expense_model.dart';
-import '../model/local_db/db_helper.dart';
-import '../model/local_db/local_expense_change.dart';
+import '../repositry/Dio/custom_client.dart';
+import '../repositry/apis/end_point_firebase.dart';
+import '../model/data/expense_model.dart';
+import '../repositry/local_db/db_helper.dart';
+import 'package:http/http.dart' as http;
 
 Dio client = Client().init();
 EndpointFirebaseProvider api = EndpointFirebaseProvider(client);
 ConnectivityResult currentConnectivity = ConnectivityResult.none;
 
 class ExpensesViewModel with ChangeNotifier {
-  StreamController<String> textStream = StreamController.broadcast();
   StreamController<Map<String, Expense>> dataStream =
       StreamController<Map<String, Expense>>.broadcast();
+  StreamController<String> textStream = StreamController.broadcast();
   Completer<void>? searchCompleter;
   CancelToken? cancelToken;
-  ExpenseModel expenseModel = ExpenseModel();
-
-  List<LocalExpenseChange> localChanges = [];
-
-  void disposeStreams() {
-    textStream.close();
-    dataStream.close();
-  }
+  ExpenseModel expenseModel = ExpenseModel.instance;
+  LocalChangesModel localChanges = LocalChangesModel.instance;
 
   ExpensesViewModel() {
     Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
@@ -53,7 +48,7 @@ class ExpensesViewModel with ChangeNotifier {
 
       expenseModel.allExpenses = data;
       expenseModel.searchResults = data;
-      dataStream.add(expenseModel.searchResults);
+      dataStream.add(data);
     } else {
       await fetchLocalExpenses();
     }
@@ -65,13 +60,12 @@ class ExpensesViewModel with ChangeNotifier {
     });
   }
 
-  Future<void> fetchLocalExpenses() async {
+  Future fetchLocalExpenses() async {
     final dbHelper = DBHelper.instance;
     final localData = await dbHelper.fetchExpenses();
     expenseModel.allExpenses = localData;
     expenseModel.searchResults = expenseModel.allExpenses;
-    dataStream.add(expenseModel.searchResults);
-    notifyListeners();
+    return expenseModel.searchResults;
   }
 
   Future<void> deleteExpense(id) async {
@@ -140,7 +134,8 @@ class ExpensesViewModel with ChangeNotifier {
     final dbHelper = DBHelper.instance;
     await dbHelper.deleteExpense(id);
 
-    localChanges.add(LocalExpenseChange(id: id, changes: {'deleted': true}));
+    localChanges.listOfLocalChanges
+        .add(LocalExpenseChange(id: id, changes: {'deleted': true}));
     await dbHelper.syncLocalChangesWithApi();
 
     notifyListeners();
@@ -157,7 +152,7 @@ class ExpensesViewModel with ChangeNotifier {
     };
     await dbHelper.updateExpense(id, data);
 
-    localChanges
+    localChanges.listOfLocalChanges
         .add(LocalExpenseChange(id: id, changes: {'edited': updatedData}));
 
     await dbHelper.syncLocalChangesWithApi();
@@ -172,7 +167,7 @@ class ExpensesViewModel with ChangeNotifier {
     final Map<String, Expense> newE = {uniqueId: newExpense};
     await dbHelper.postExpense(newE);
 
-    localChanges.add(
+    localChanges.listOfLocalChanges.add(
         LocalExpenseChange(id: newExpense.name, changes: {'new': newExpense}));
     await dbHelper.syncLocalChangesWithApi();
     notifyListeners();
@@ -182,11 +177,11 @@ class ExpensesViewModel with ChangeNotifier {
     var connectivityResult = await Connectivity().checkConnectivity();
 
     if (connectivityResult != ConnectivityResult.none) {
-      if (localChanges.isEmpty) {
+      if (localChanges.listOfLocalChanges.isEmpty) {
         return;
       }
 
-      for (var localChange in localChanges) {
+      for (var localChange in localChanges.listOfLocalChanges) {
         if (localChange.changes.containsKey('deleted')) {
           await api.deleteExpense(localChange.id);
         } else if (localChange.changes.containsKey('edited')) {
@@ -198,6 +193,29 @@ class ExpensesViewModel with ChangeNotifier {
       }
     }
 
-    localChanges.clear();
+    localChanges.listOfLocalChanges.clear();
+  }
+
+  onSearch(text) {
+    textStream.add(text);
+    notifyListeners();
+  }
+
+  Future<Map<String, dynamic>> fetchDataById(String id) async {
+    final url =
+        'https://providerrest-default-rtdb.firebaseio.com/expenses/$id.json';
+
+    try {
+      final response = await http.get(Uri.parse(url));
+
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else {
+        throw Exception('Failed to load data');
+      }
+    } catch (error) {
+      print('Error: $error');
+      rethrow;
+    }
   }
 }

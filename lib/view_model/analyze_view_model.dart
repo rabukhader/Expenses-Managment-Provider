@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import '../model/data/expense_model.dart';
+import '../model/utils/months.dart';
 
-import '../model/entities/expense.dart';
-
-class AnalyzeViewModel with ChangeNotifier{
-  
-  Map<String, double> classifyExpensesByMonth(
-      List<Expense> expenses, List<String> months) {
+class AnalyzeViewModel with ChangeNotifier {
+  ExpenseModel expenseModel = ExpenseModel.instance;
+  Map<String, double> classifyExpensesByMonth() {
     final Map<String, double> monthlyExpenses = {};
 
     for (final monthName in months) {
       monthlyExpenses[monthName] = 0.0;
     }
 
-    for (final expense in expenses) {
+    for (final expense in expenseModel.allExpenses.values.toList()) {
       final DateTime expenseDate =
           DateFormat('yyyy-MM-dd').parse(expense.dueDate);
       final String monthName = DateFormat('MMMM').format(expenseDate);
@@ -28,21 +27,21 @@ class AnalyzeViewModel with ChangeNotifier{
     return monthlyExpenses;
   }
 
-  int totalExpenses(List<Expense> expenses) {
+  int totalExpenses() {
     int totalExpenses = 0;
 
-    for (var element in expenses) {
+    for (var element in expenseModel.allExpenses.values.toList()) {
       totalExpenses += element.total!;
     }
 
     return totalExpenses;
   }
 
-  double averageExpenses(List<Expense> expenses) {
+  String averageExpenses() {
     int totalExpenses = 0;
     int count = 0;
 
-    for (var element in expenses) {
+    for (var element in expenseModel.allExpenses.values.toList()) {
       totalExpenses += element.total!;
       count++;
     }
@@ -50,14 +49,20 @@ class AnalyzeViewModel with ChangeNotifier{
       count = 1;
     }
     double avgExpenses = totalExpenses / count;
+    String avg;
+    if (avgExpenses.toString().length > 6) {
+      avg = avgExpenses.toString().substring(0, 6);
+    } else {
+      avg = avgExpenses.toString();
+    }
 
-    return avgExpenses;
+    return avg;
   }
 
-  int minExpense(List<Expense> expenses) {
-    if (expenses.isNotEmpty) {
+  int minExpense() {
+    if (expenseModel.allExpenses.values.toList().isNotEmpty) {
       int minExpense = 9999999999999;
-      for (var element in expenses) {
+      for (var element in expenseModel.allExpenses.values.toList()) {
         if (element.total! < minExpense) {
           minExpense = element.total!;
         }
@@ -68,10 +73,10 @@ class AnalyzeViewModel with ChangeNotifier{
     }
   }
 
-  int maxExpense(List<Expense> expenses) {
-    if (expenses.isNotEmpty) {
+  int maxExpense() {
+    if (expenseModel.allExpenses.values.toList().isNotEmpty) {
       int maxExpense = -9999999999999;
-      for (var element in expenses) {
+      for (var element in expenseModel.allExpenses.values.toList()) {
         if (element.total! > maxExpense) {
           maxExpense = element.total!;
         }

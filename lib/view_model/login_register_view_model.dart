@@ -1,6 +1,6 @@
 import 'dart:convert';
+import 'package:expenses_managment_app_provider/model/data/user_model.dart';
 import 'package:http/http.dart' as http;
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
@@ -8,10 +8,13 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 class LoginRegisterViewModel with ChangeNotifier {
   final auth = FirebaseAuth.instance;
+  UserModel userModel = UserModel.instance;
 
   Future loginEmailPassword(email, password) async {
     try {
       await auth.signInWithEmailAndPassword(email: email, password: password);
+      User? currentUser = auth.currentUser;
+      userModel.user = currentUser;
       notifyListeners();
       return true;
     } catch (e) {
@@ -23,6 +26,8 @@ class LoginRegisterViewModel with ChangeNotifier {
     try {
       await auth.createUserWithEmailAndPassword(
           email: email, password: password);
+      User? currentUser = auth.currentUser;
+      userModel.user = currentUser;
       notifyListeners();
       return true;
     } catch (e) {
@@ -40,6 +45,8 @@ class LoginRegisterViewModel with ChangeNotifier {
         final credential = GoogleAuthProvider.credential(
             idToken: authAccount.idToken, accessToken: authAccount.accessToken);
         await auth.signInWithCredential(credential);
+        User? currentUser = auth.currentUser;
+        userModel.user = currentUser;
         notifyListeners();
         return true;
       }
@@ -70,17 +77,6 @@ class LoginRegisterViewModel with ChangeNotifier {
       print("User signed out");
     } catch (e) {
       print("Error signing out: $e");
-    }
-  }
-
-  Future<User?> getCurrentUser() async {
-    try {
-      await Future.delayed(Duration(milliseconds: 3000));
-      final User? user = auth.currentUser;
-      return user;
-    } catch (e) {
-      print('Error getting current user: $e');
-      return null;
     }
   }
 

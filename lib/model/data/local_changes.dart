@@ -1,3 +1,11 @@
+class LocalChangesModel {
+  LocalChangesModel._();
+    static final LocalChangesModel _instance = LocalChangesModel._();
+    static LocalChangesModel get instance => _instance;
+
+    List<LocalExpenseChange> listOfLocalChanges = [];
+}
+
 class LocalExpenseChange {
   final String id;
   final Map<String, dynamic> changes;

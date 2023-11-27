@@ -1,11 +1,8 @@
-import 'package:expenses_managment_app_provider/model/expense_model.dart';
 import 'package:expenses_managment_app_provider/view_model/analyze_view_model.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-
-import '../../../../model/utils/months.dart';
 
 class Chart extends StatelessWidget {
   const Chart({super.key});
@@ -14,10 +11,7 @@ class Chart extends StatelessWidget {
   Widget build(BuildContext context) {
     final analyzeViewModel =
         Provider.of<AnalyzeViewModel>(context, listen: false);
-    ExpenseModel ex = ExpenseModel();
-
-    var list = analyzeViewModel.classifyExpensesByMonth(
-        ex.allExpenses.values.toList(), months);
+    var list = analyzeViewModel.classifyExpensesByMonth();
 
     var barGroups = list.entries
         .map((item) => BarChartGroupData(

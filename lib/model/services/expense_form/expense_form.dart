@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../../entities/expense.dart';
+import '../../data/expense_model.dart';
+
 
 
 class ExpenseForm {

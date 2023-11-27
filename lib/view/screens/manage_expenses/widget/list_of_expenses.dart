@@ -1,43 +1,38 @@
-import 'dart:async';
+import 'package:expenses_managment_app_provider/model/data/expense_model.dart';
+import 'package:expenses_managment_app_provider/view/screens/expense_details/expense_details.dart';
 import 'package:expenses_managment_app_provider/view/screens/manage_expenses/widget/custom_card.dart';
 import 'package:expenses_managment_app_provider/view/widgets/loader.dart';
-import 'package:go_router/go_router.dart';
-// import 'package:rxdart/rxdart.dart';
-import 'package:expenses_managment_app_provider/model/entities/expense.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../view_model/expense_view_model.dart';
 
 class ListOfExpenses extends StatefulWidget {
-  final StreamController<Map<String, Expense>> dataStream;
-  final Function(String) onSearch;
-  final result;
-  const ListOfExpenses(
-      {super.key,
-      required this.dataStream,
-      required this.onSearch,
-      this.result});
+  const ListOfExpenses({
+    super.key,
+  });
 
   @override
   State<ListOfExpenses> createState() => _ListOfExpensesState();
 }
 
 class _ListOfExpensesState extends State<ListOfExpenses> {
+  ExpenseModel exModel = ExpenseModel.instance;
   @override
   Widget build(BuildContext context) {
     return Consumer<ExpensesViewModel>(
       builder: (context, ex, child) {
         return StreamBuilder(
-          stream: widget.dataStream.stream,
+          stream: ex.dataStream.stream,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Loader();
             } else if (snapshot.hasError) {
               return Text('Error: ${snapshot.error}');
-            } else if (widget.result.isEmpty) {
+            } else if (snapshot.data!.isEmpty) {
               return const Text('Not Found');
             } else {
-              final displayedExpense = widget.result;
+              final Map<String, Expense> displayedExpense =
+                  exModel.searchResults;
               return ListView.builder(
                 itemCount: displayedExpense.length,
                 itemBuilder: (context, index) {
@@ -46,8 +41,13 @@ class _ListOfExpensesState extends State<ListOfExpenses> {
                   final Expense expenseDetails = entry.value;
                   return InkWell(
                     onTap: () {
-                      GoRouter.of(context).go('/expenseDetails/$id',
-                          extra: {'id': id, 'data': expenseDetails});
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ExpenseDetails(
+                                  data: expenseDetails,
+                                  id: id,
+                                  exProvider: ex)));
                     },
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),

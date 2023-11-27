@@ -1,12 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:expenses_managment_app_provider/model/entities/expense.dart';
 import 'package:expenses_managment_app_provider/view/screens/home/home_screen.dart';
 import 'package:expenses_managment_app_provider/view/widgets/loader.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
-
+import '../../../model/data/expense_model.dart';
 import '../../../view_model/expense_view_model.dart';
 import '../add_edit_expense/add_edit_expense.dart';
 import '../manage_expenses/widget/dialogs/delete_dialog.dart';
@@ -14,11 +11,15 @@ import '../manage_expenses/widget/dialogs/delete_dialog.dart';
 class ExpenseDetails extends StatelessWidget {
   final String id;
   final Expense data;
-  const ExpenseDetails({super.key, required this.id, required this.data});
+  final ExpensesViewModel exProvider;
+  const ExpenseDetails(
+      {super.key,
+      required this.id,
+      required this.data,
+      required this.exProvider});
 
   @override
   Widget build(BuildContext context) {
-    final exProvider = Provider.of<ExpensesViewModel>(context, listen: false);
 
     return SafeArea(
       child: Scaffold(
@@ -31,7 +32,7 @@ class ExpenseDetails extends StatelessWidget {
                 Icons.arrow_back,
               ),
               onPressed: () {
-                GoRouter.of(context).go('/home');
+                Navigator.pop(context);
               },
             ),
           ),
@@ -105,7 +106,7 @@ class ExpenseDetails extends StatelessWidget {
                         color: Theme.of(context).hintColor,
                       ),
                       onPressed: () {
-                        deleteDialog(context, data.name, id);
+                        deleteDialog(context, data.name, id, exProvider);
                       },
                       label: Text(
                         "Delete",
@@ -163,6 +164,10 @@ class ExpenseDetails extends StatelessWidget {
                                       data: data)));
                           if (result != null)
                             await exProvider.addExpense(result);
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => HomeScreen()));
                         },
                         label: Text(
                           "Clone",

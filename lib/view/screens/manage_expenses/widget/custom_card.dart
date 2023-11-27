@@ -1,9 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../model/entities/expense.dart';
+import '../../../../model/data/expense_model.dart';
 import '../../../../view_model/expense_view_model.dart';
 import '../../add_edit_expense/add_edit_expense.dart';
 import 'dialogs/delete_dialog.dart';
@@ -70,22 +69,24 @@ class CustomCard extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  ElevatedButton.icon(
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: Theme.of(context).primaryColor),
-                    icon: Icon(
-                      Icons.delete,
-                      color: Theme.of(context).hintColor,
-                    ),
-                    onPressed: () {
-                      deleteDialog(context, data.name, id);
-                    },
-                    label: Text(
-                      "Delete",
-                      style: GoogleFonts.poppins(
-                          color: Theme.of(context).colorScheme.onBackground,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500),
+                  Consumer<ExpensesViewModel>(
+                    builder:(context, ex, child) => ElevatedButton.icon(
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Theme.of(context).primaryColor),
+                      icon: Icon(
+                        Icons.delete,
+                        color: Theme.of(context).hintColor,
+                      ),
+                      onPressed: () {
+                        deleteDialog(context, data.name, id, exProvider);
+                      },
+                      label: Text(
+                        "Delete",
+                        style: GoogleFonts.poppins(
+                            color: Theme.of(context).colorScheme.onBackground,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500),
+                      ),
                     ),
                   ),
                   ElevatedButton.icon(
@@ -96,13 +97,6 @@ class CustomCard extends StatelessWidget {
                       color: Theme.of(context).hintColor,
                     ),
                     onPressed: () async {
-                      // final editData = {
-                      //   'name': data.name,
-                      //   'total': data.total,
-                      //   'dueDate': data.dueDate,
-                      //   'imageUrl': data.imageUrl,
-                      //   'address': data.address
-                      // };
                       final result = await Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -130,13 +124,6 @@ class CustomCard extends StatelessWidget {
                         color: Theme.of(context).hintColor,
                       ),
                       onPressed: () async {
-                        // final clonedData = {
-                        //   'name': data.name,
-                        //   'total': data.total,
-                        //   'dueDate': data.dueDate,
-                        //   'imageUrl': data.imageUrl,
-                        //   'address': data.address
-                        // };
                         final result = await Navigator.push(
                             context,
                             MaterialPageRoute(
