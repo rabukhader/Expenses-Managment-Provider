@@ -2,7 +2,7 @@ import 'package:expenses_managment_app_provider/view/screens/analyze_expenses/an
 import 'package:expenses_managment_app_provider/view/screens/manage_expenses/manage_expenses.dart';
 import 'package:flutter/material.dart';
 
-class NavigatorViewModel with ChangeNotifier {
+class NavigatorProvider with ChangeNotifier {
   int currentIndex = 0;
   final List<Widget> pages = [
     const ManageExpenses(),

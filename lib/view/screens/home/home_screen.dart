@@ -2,8 +2,7 @@ import 'package:expenses_managment_app_provider/view/widgets/custom_bottom_navig
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-
-import '../../../view_model/navigation_view_model.dart';
+import '../../../view_model/navigation_provider.dart';
 import '../../widgets/custom_drawer.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -16,19 +15,23 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => NavigatorViewModel() ,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => NavigatorProvider()),
+      ],
       child: SafeArea(
         child: Scaffold(
           appBar: AppBar(
-            iconTheme: IconThemeData(color: Theme.of(context).colorScheme.onBackground),
+            iconTheme: IconThemeData(
+                color: Theme.of(context).colorScheme.onBackground),
             title: Text('Expense Management App',
                 style: GoogleFonts.openSans(
                     color: Theme.of(context).colorScheme.background,
-                    fontSize: 16, fontWeight: FontWeight.bold)),
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold)),
             backgroundColor: Theme.of(context).hintColor,
           ),
-          body: Selector<NavigatorViewModel, Widget>(
+          body: Selector<NavigatorProvider, Widget>(
             selector: (_, navProvider) => navProvider.currentPage,
             builder: (context, page, child) {
               return page;

@@ -33,6 +33,8 @@ class _ChooseLoginRegisterState extends State<ChooseLoginRegister> {
   LoginRegisterForm loginRegisterForm = LoginRegisterForm();
   @override
   Widget build(BuildContext context) {
+    final lgProvider =
+        Provider.of<LoginRegisterViewModel>(context, listen: false);
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     return MaterialApp(
@@ -135,7 +137,9 @@ class _ChooseLoginRegisterState extends State<ChooseLoginRegister> {
                                                     LoginRegisterScreen(
                                                         processName: 'Sign In',
                                                         loginRegisterForm:
-                                                            loginRegisterForm)));
+                                                            loginRegisterForm,
+                                                        onSubmit: lgProvider
+                                                            .loginEmailPassword)));
                                       },
                                       style: ButtonStyle(
                                           shadowColor: MaterialStatePropertyAll(
@@ -188,6 +192,8 @@ class _ChooseLoginRegisterState extends State<ChooseLoginRegister> {
                                                 builder: (context) =>
                                                     LoginRegisterScreen(
                                                         processName: 'Sign Up',
+                                                        onSubmit: lgProvider
+                                                            .signUpEmailPassword,
                                                         loginRegisterForm:
                                                             loginRegisterForm)));
                                       },

@@ -1,4 +1,4 @@
-import 'package:expenses_managment_app_provider/view_model/theme_view_model.dart';
+import 'package:expenses_managment_app_provider/theme/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -59,7 +59,7 @@ class CustomDrawer extends StatelessWidget {
             SidebarXItem(
                 label: 'Theme',
                 icon: Icons.sunny,
-                onTap: () => Provider.of<ThemeViewModel>(context, listen: false)
+                onTap: () => Provider.of<ThemeProvider>(context, listen: false)
                     .toggleTheme()),
             SidebarXItem(
               label: 'Log Out',

@@ -1,19 +1,20 @@
 import 'package:expenses_managment_app_provider/model/services/login_register_form/login_register_form.dart';
 import 'package:expenses_managment_app_provider/view/widgets/custom_text_field.dart';
-import 'package:expenses_managment_app_provider/view_model/login_register_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
-
 import '../../widgets/dialog.dart';
 import 'widget/bazier_container.dart';
 
 class LoginRegisterScreen extends StatefulWidget {
   final String processName;
   final LoginRegisterForm loginRegisterForm;
+  final onSubmit;
   const LoginRegisterScreen(
-      {super.key, required this.processName, required this.loginRegisterForm});
+      {super.key,
+      required this.processName,
+      required this.loginRegisterForm,
+      required this.onSubmit});
 
   @override
   State<LoginRegisterScreen> createState() => _LoginRegisterScreenState();
@@ -82,19 +83,13 @@ class _LoginRegisterScreenState extends State<LoginRegisterScreen> {
               TextButton(
                   onPressed: () async {
                     final bool result;
-                    final pr = Provider.of<LoginRegisterViewModel>(context,
-                        listen: false);
-                    widget.processName == 'Sign In'
-                        ? result = await pr.loginEmailPassword(
-                            widget.loginRegisterForm.emailController.text,
-                            widget.loginRegisterForm.passwordController.text)
-                        : result = await pr.signUpEmailPassword(
-                            widget.loginRegisterForm.emailController.text,
-                            widget.loginRegisterForm.passwordController.text);
+                    result = await widget.onSubmit(
+                        widget.loginRegisterForm.emailController.text,
+                        widget.loginRegisterForm.passwordController.text);
                     if (result) {
                       GoRouter.of(context).go('/home');
                     } else {
-                      errorDialog(context, 'Invalid Credentials');
+                      errorDialog(context, 'Error');
                     }
                   },
                   style: ButtonStyle(

@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
-import '../../view_model/navigation_view_model.dart';
+import '../../view_model/navigation_provider.dart';
 
 class CustomBottomNavigationBar extends StatelessWidget {
   const CustomBottomNavigationBar({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<NavigatorViewModel>(
+    return Consumer<NavigatorProvider>(
         builder:(context, navProvider, child) {
         return BottomNavigationBar(
           elevation: 25,

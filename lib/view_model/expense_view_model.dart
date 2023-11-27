@@ -4,7 +4,7 @@ import 'package:connectivity/connectivity.dart';
 import 'package:dio/dio.dart';
 import 'package:expenses_managment_app_provider/model/data/local_changes.dart';
 import 'package:flutter/material.dart';
-import '../repositry/Dio/custom_client.dart';
+import '../repositry/dio/custom_client.dart';
 import '../repositry/apis/end_point_firebase.dart';
 import '../model/data/expense_model.dart';
 import '../repositry/local_db/db_helper.dart';
@@ -52,7 +52,6 @@ class ExpensesViewModel with ChangeNotifier {
     } else {
       await fetchLocalExpenses();
     }
-
     Connectivity().onConnectivityChanged.listen((result) async {
       if (result != ConnectivityResult.none) {
         await fetchExpenses();
@@ -65,7 +64,8 @@ class ExpensesViewModel with ChangeNotifier {
     final localData = await dbHelper.fetchExpenses();
     expenseModel.allExpenses = localData;
     expenseModel.searchResults = expenseModel.allExpenses;
-    return expenseModel.searchResults;
+    dataStream.add(expenseModel.searchResults);
+    notifyListeners();
   }
 
   Future<void> deleteExpense(id) async {
