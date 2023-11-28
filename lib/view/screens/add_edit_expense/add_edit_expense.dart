@@ -3,7 +3,7 @@ import 'package:expenses_managment_app_provider/model/services/location/location
 import 'package:expenses_managment_app_provider/view/screens/add_edit_expense/widget/add_edit_form.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../../model/data/expense_model.dart';
+import '../../../model/entities/expense_entity.dart';
 import '../../../model/services/expense_form/expense_form.dart';
 import '../../../model/services/expense_form/expense_validator.dart';
 import '../../widgets/custom_heading.dart';

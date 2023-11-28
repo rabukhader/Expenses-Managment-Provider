@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
-import '../../data/expense_model.dart';
+import '../../entities/expense_entity.dart';
 
 
 

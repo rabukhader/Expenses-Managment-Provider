@@ -5,17 +5,28 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-
 import '../login_register_screen/login_register_screen.dart';
 
-class ChooseLoginRegister extends StatefulWidget {
+class ChooseLoginRegister extends StatelessWidget {
   const ChooseLoginRegister({super.key});
 
   @override
-  State<ChooseLoginRegister> createState() => _ChooseLoginRegisterState();
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (_) => LoginRegisterViewModel(),
+      child: const ChooseLoginRegisterView());
+  }
 }
 
-class _ChooseLoginRegisterState extends State<ChooseLoginRegister> {
+
+class ChooseLoginRegisterView extends StatefulWidget {
+  const ChooseLoginRegisterView({super.key});
+
+  @override
+  State<ChooseLoginRegisterView> createState() => _ChooseLoginRegisterViewState();
+}
+
+class _ChooseLoginRegisterViewState extends State<ChooseLoginRegisterView> {
 
   LoginRegisterForm loginRegisterForm = LoginRegisterForm();
   @override

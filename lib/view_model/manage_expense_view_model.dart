@@ -4,6 +4,7 @@ import 'package:connectivity/connectivity.dart';
 import 'package:dio/dio.dart';
 import 'package:expenses_managment_app_provider/model/data/local_changes.dart';
 import 'package:flutter/material.dart';
+import '../model/entities/expense_entity.dart';
 import '../repositry/dio/custom_client.dart';
 import '../repositry/apis/end_point_firebase.dart';
 import '../model/data/expense_model.dart';
@@ -14,16 +15,16 @@ Dio client = Client().init();
 EndpointFirebaseProvider api = EndpointFirebaseProvider(client);
 ConnectivityResult currentConnectivity = ConnectivityResult.none;
 
-class ExpensesViewModel with ChangeNotifier {
+class ManageExpensesViewModel with ChangeNotifier {
   StreamController<Map<String, Expense>> dataStream =
       StreamController<Map<String, Expense>>.broadcast();
   StreamController<String> textStream = StreamController.broadcast();
   Completer<void>? searchCompleter;
   CancelToken? cancelToken;
-  ExpenseModel expenseModel = ExpenseModel.instance;
+  ExpenseModel expenseModel = ExpenseModel();
   LocalChangesModel localChanges = LocalChangesModel.instance;
 
-  ExpensesViewModel() {
+  ManageExpensesViewModel() {
     Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
       if (currentConnectivity != result) {
         currentConnectivity = result;

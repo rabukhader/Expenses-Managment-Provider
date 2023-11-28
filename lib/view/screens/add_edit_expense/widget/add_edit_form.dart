@@ -5,7 +5,7 @@ import 'package:expenses_managment_app_provider/view/widgets/loader.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
-import '../../../../model/data/expense_model.dart';
+import '../../../../model/entities/expense_entity.dart';
 import '../../../../model/services/expense_form/expense_form.dart';
 import '../../../../model/services/expense_form/expense_validator.dart';
 import '../../../widgets/dialog.dart';

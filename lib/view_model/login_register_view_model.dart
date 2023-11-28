@@ -1,35 +1,16 @@
-import 'dart:convert';
 import 'package:expenses_managment_app_provider/model/data/user_model.dart';
-import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:http/http.dart' as http;
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 
 class LoginRegisterViewModel with ChangeNotifier {
-  final auth = FirebaseAuth.instance;
   UserModel userModel = UserModel.instance;
-  final FirebaseAnalytics analytics = FirebaseAnalytics.instance;
-
-  Future<void> sendAnalyticsEvent() async {
-    await analytics.logEvent(
-      name: 'button_click',
-      parameters: <String, dynamic>{
-        'page': 'home',
-        'button_id': 'example_button',
-      },
-    );
-    await analytics.logLogin(loginMethod: 'Email Password');
-  }
 
   Future loginEmailPassword(email, password) async {
     try {
-      await auth.signInWithEmailAndPassword(email: email, password: password);
-      User? currentUser = auth.currentUser;
-      userModel.user = currentUser;
-      notifyListeners();
-      return true;
+      bool success = await userModel.loginEmailPassword(email, password);
+      if (success) {
+        notifyListeners();
+      }
+      return success;
     } catch (e) {
       return false;
     }
@@ -37,33 +18,23 @@ class LoginRegisterViewModel with ChangeNotifier {
 
   Future signUpEmailPassword(email, password) async {
     try {
-      await auth.createUserWithEmailAndPassword(
-          email: email, password: password);
-      User? currentUser = auth.currentUser;
-      userModel.user = currentUser;
-      notifyListeners();
-      return true;
+      bool success = await userModel.signUpEmailPassword(email, password);
+      if (success) {
+        notifyListeners();
+      }
+      return success;
     } catch (e) {
       return false;
     }
   }
 
   Future<bool> signInWithGoogle() async {
-    final GoogleSignIn googleSignIn = GoogleSignIn();
-    googleSignIn.disconnect();
     try {
-      GoogleSignInAccount? account = await googleSignIn.signIn();
-      if (account != null) {
-        final authAccount = await account.authentication;
-        final credential = GoogleAuthProvider.credential(
-            idToken: authAccount.idToken, accessToken: authAccount.accessToken);
-        await auth.signInWithCredential(credential);
-        User? currentUser = auth.currentUser;
-        userModel.user = currentUser;
+      bool success = await userModel.signInWithGoogle();
+      if (success) {
         notifyListeners();
-        return true;
       }
-      return false;
+      return success;
     } on Exception catch (error) {
       print('error1111$error');
       return false;
@@ -72,42 +43,33 @@ class LoginRegisterViewModel with ChangeNotifier {
 
   Future<bool> signInWithFacebook() async {
     try {
-      final LoginResult loginResult = await FacebookAuth.instance.login();
-      print(loginResult);
-      final OAuthCredential facebookAuthCredential =
-          FacebookAuthProvider.credential(loginResult.accessToken!.token);
-      await auth.signInWithCredential(facebookAuthCredential);
-      return true;
+      bool success = await userModel.signInWithFacebook();
+      if (success) {
+        notifyListeners();
+      }
+      return success;
     } catch (e) {
       print(e);
       return false;
     }
   }
 
-  Future signOut() async {
-    try {
-      await auth.signOut();
-      print("User signed out");
-    } catch (e) {
-      print("Error signing out: $e");
-    }
-  }
 
-  Future<Map<String, dynamic>> fetchDataById(String id) async {
-    final url =
-        'https://providerrest-default-rtdb.firebaseio.com/expenses/$id.json';
+  // Future<Map<String, dynamic>> fetchDataById(String id) async {
+  //   final url =
+  //       'https://providerrest-default-rtdb.firebaseio.com/expenses/$id.json';
 
-    try {
-      final response = await http.get(Uri.parse(url));
+  //   try {
+  //     final response = await http.get(Uri.parse(url));
 
-      if (response.statusCode == 200) {
-        return json.decode(response.body);
-      } else {
-        throw Exception('Failed to load data');
-      }
-    } catch (error) {
-      print('Error: $error');
-      rethrow;
-    }
-  }
+  //     if (response.statusCode == 200) {
+  //       return json.decode(response.body);
+  //     } else {
+  //       throw Exception('Failed to load data');
+  //     }
+  //   } catch (error) {
+  //     print('Error: $error');
+  //     rethrow;
+  //   }
+  // }
 }

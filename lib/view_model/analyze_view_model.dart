@@ -4,7 +4,7 @@ import '../model/data/expense_model.dart';
 import '../model/utils/months.dart';
 
 class AnalyzeViewModel with ChangeNotifier {
-  ExpenseModel expenseModel = ExpenseModel.instance;
+  ExpenseModel expenseModel = ExpenseModel();
   Map<String, double> classifyExpensesByMonth() {
     final Map<String, double> monthlyExpenses = {};
 

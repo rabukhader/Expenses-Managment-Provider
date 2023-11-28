@@ -2,8 +2,8 @@ import 'package:expenses_managment_app_provider/repositry/apis/end_point.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
-import '../../view_model/expense_view_model.dart';
-import '../../model/data/expense_model.dart';
+import '../../model/entities/expense_entity.dart';
+import '../../view_model/manage_expense_view_model.dart';
 
 class DBHelper extends EndPoint {
   static Database? localDatabase;
@@ -84,7 +84,7 @@ class DBHelper extends EndPoint {
   }
 
   Future<void> syncLocalChangesWithApi() async {
-    final localChanges = ExpensesViewModel().localChanges;
+    final localChanges = ManageExpensesViewModel().localChanges;
     if (localChanges.listOfLocalChanges.isEmpty) {
       return;
     }

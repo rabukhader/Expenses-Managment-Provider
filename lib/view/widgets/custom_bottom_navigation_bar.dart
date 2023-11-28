@@ -9,7 +9,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<NavigatorProvider>(
+    return Consumer<NavigationProvider>(
         builder:(context, navProvider, child) {
         return BottomNavigationBar(
           elevation: 25,

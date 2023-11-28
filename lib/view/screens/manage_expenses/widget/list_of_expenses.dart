@@ -4,11 +4,14 @@ import 'package:expenses_managment_app_provider/view/screens/manage_expenses/wid
 import 'package:expenses_managment_app_provider/view/widgets/loader.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../../../view_model/expense_view_model.dart';
+import '../../../../model/entities/expense_entity.dart';
+import '../../../../view_model/manage_expense_view_model.dart';
 
 class ListOfExpenses extends StatefulWidget {
+  final Stream stream;
+  final Map<String, Expense>? result;
   const ListOfExpenses({
-    super.key,
+    super.key, required this.stream, this.result
   });
 
   @override
@@ -16,13 +19,13 @@ class ListOfExpenses extends StatefulWidget {
 }
 
 class _ListOfExpensesState extends State<ListOfExpenses> {
-  ExpenseModel exModel = ExpenseModel.instance;
+  ExpenseModel exModel = ExpenseModel();
   @override
   Widget build(BuildContext context) {
-    return Consumer<ExpensesViewModel>(
+    return Consumer<ManageExpensesViewModel>(
       builder: (context, ex, child) {
         return StreamBuilder(
-          stream: ex.dataStream.stream,
+          stream: widget.stream,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Loader();

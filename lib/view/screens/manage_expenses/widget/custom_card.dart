@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-
-import '../../../../model/data/expense_model.dart';
-import '../../../../view_model/expense_view_model.dart';
+import '../../../../model/entities/expense_entity.dart';
+import '../../../../view_model/manage_expense_view_model.dart';
 import '../../add_edit_expense/add_edit_expense.dart';
 import 'dialogs/delete_dialog.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -15,7 +14,7 @@ class CustomCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final exProvider = Provider.of<ExpensesViewModel>(context, listen: false);
+    final exProvider = Provider.of<ManageExpensesViewModel>(context, listen: false);
     Color color = Theme.of(context).colorScheme.onSecondary;
 
     return Padding(
@@ -69,7 +68,7 @@ class CustomCard extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Consumer<ExpensesViewModel>(
+                  Consumer<ManageExpensesViewModel>(
                     builder:(context, ex, child) => ElevatedButton.icon(
                       style: ElevatedButton.styleFrom(
                           backgroundColor: Theme.of(context).primaryColor),

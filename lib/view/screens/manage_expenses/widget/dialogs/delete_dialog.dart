@@ -1,9 +1,9 @@
 import 'package:expenses_managment_app_provider/view/screens/home/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../../../../view_model/expense_view_model.dart';
+import '../../../../../view_model/manage_expense_view_model.dart';
 
-deleteDialog(context, name, id, ExpensesViewModel exProvider) {
+deleteDialog(context, name, id, ManageExpensesViewModel exProvider) {
   showDialog(
       barrierColor: Theme.of(context).dialogBackgroundColor,
       context: context,

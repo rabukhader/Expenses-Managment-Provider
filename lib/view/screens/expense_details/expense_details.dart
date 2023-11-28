@@ -3,15 +3,15 @@ import 'package:expenses_managment_app_provider/view/screens/home/home_screen.da
 import 'package:expenses_managment_app_provider/view/widgets/loader.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../../model/data/expense_model.dart';
-import '../../../view_model/expense_view_model.dart';
+import '../../../model/entities/expense_entity.dart';
+import '../../../view_model/manage_expense_view_model.dart';
 import '../add_edit_expense/add_edit_expense.dart';
 import '../manage_expenses/widget/dialogs/delete_dialog.dart';
 
 class ExpenseDetails extends StatelessWidget {
   final String id;
   final Expense data;
-  final ExpensesViewModel exProvider;
+  final ManageExpensesViewModel exProvider;
   const ExpenseDetails(
       {super.key,
       required this.id,

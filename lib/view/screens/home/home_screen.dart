@@ -1,4 +1,5 @@
 import 'package:expenses_managment_app_provider/view/widgets/custom_bottom_navigation_bar.dart';
+import 'package:expenses_managment_app_provider/view_model/home_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -17,7 +18,8 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => NavigatorProvider()),
+        ChangeNotifierProvider(create: (_) => NavigationProvider()),
+        ChangeNotifierProvider(create: (_) => HomeViewModel()),
       ],
       child: SafeArea(
         child: Scaffold(
@@ -31,7 +33,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     fontWeight: FontWeight.bold)),
             backgroundColor: Theme.of(context).hintColor,
           ),
-          body: Selector<NavigatorProvider, Widget>(
+          body: Selector<NavigationProvider, Widget>(
             selector: (_, navProvider) => navProvider.currentPage,
             builder: (context, page, child) {
               return page;

@@ -6,7 +6,7 @@ import 'package:expenses_managment_app_provider/view/widgets/custom_heading.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
-import '../../../view_model/expense_view_model.dart';
+import '../../../view_model/manage_expense_view_model.dart';
 
 class ManageExpenses extends StatelessWidget {
   const ManageExpenses({super.key});
@@ -14,7 +14,7 @@ class ManageExpenses extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => ExpensesViewModel(),
+      create: (_) => ManageExpensesViewModel(),
       child: const ManageExpensesView(),
     );
   }
@@ -34,7 +34,7 @@ class _ManageExpensesViewState extends State<ManageExpensesView> {
   @override
   void initState() {
     super.initState();
-    final exProvider = Provider.of<ExpensesViewModel>(context, listen: false);
+    final exProvider = Provider.of<ManageExpensesViewModel>(context, listen: false);
     exProvider.fetchExpenses();
     textController.addListener(() {
       exProvider.textStream.add(textController.text);
@@ -44,21 +44,20 @@ class _ManageExpensesViewState extends State<ManageExpensesView> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    subscription = Provider.of<ExpensesViewModel>(context, listen: false)
+    subscription = Provider.of<ManageExpensesViewModel>(context, listen: false)
         .textStream
         .stream
         .debounceTime(const Duration(milliseconds: 300))
         .distinct()
         .listen((searchQuery) {
-      print('search');
-      Provider.of<ExpensesViewModel>(context, listen: false)
+      Provider.of<ManageExpensesViewModel>(context, listen: false)
           .searchExpense(searchQuery);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final exProvider = Provider.of<ExpensesViewModel>(context, listen: false);
+    final exProvider = Provider.of<ManageExpensesViewModel>(context, listen: false);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Column(
@@ -71,7 +70,10 @@ class _ManageExpensesViewState extends State<ManageExpensesView> {
             },
             textController: textController,
           ),
-          const Expanded(child: ListOfExpenses()),
+          Expanded(
+              child: ListOfExpenses(
+            stream: exProvider.dataStream.stream,
+          )),
         ],
       ),
       floatingActionButton: FloatingActionButton(

@@ -1,11 +1,11 @@
 import 'package:expenses_managment_app_provider/theme/theme_provider.dart';
+import 'package:expenses_managment_app_provider/view_model/home_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:sidebarx/sidebarx.dart';
 
-import '../../view_model/login_register_view_model.dart';
 
 class CustomDrawer extends StatelessWidget {
   const CustomDrawer({super.key});
@@ -42,7 +42,6 @@ class CustomDrawer extends StatelessWidget {
           items: [
             SidebarXItem(
                 label: 'User',
-                
                 iconWidget: Center(
                   child: ClipRRect(
                       borderRadius: BorderRadius.circular(50),
@@ -65,7 +64,7 @@ class CustomDrawer extends StatelessWidget {
               label: 'Log Out',
               icon: Icons.logout,
               onTap: () async {
-                await Provider.of<LoginRegisterViewModel>(context,
+                await Provider.of<HomeViewModel>(context,
                         listen: false)
                     .signOut();
                 GoRouter.of(context).go('/');
