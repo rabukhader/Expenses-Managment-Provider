@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'package:camera/camera.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:expenses_managment_app_provider/model/services/image_service/image_service.dart';
+import 'package:expenses_managment_app_provider/view/widgets/dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 // import 'package:photo_manager/photo_manager.dart';
@@ -153,7 +155,10 @@ class _CameraSectionState extends State<CameraSection> {
                               )),
                           InkWell(
                               onTap: () async {
-                                await captureAndUpload();
+                                var result = await captureAndUpload();
+                                if (!result) {
+                                  errorDialog(context, 'No Internet');
+                                }
                               },
                               child: const Icon(
                                 Icons.panorama_fish_eye,
@@ -188,32 +193,38 @@ class _CameraSectionState extends State<CameraSection> {
     );
   }
 
-  Future<void> captureAndUpload() async {
-    try {
-      var re = await camController.takePicture();
-      showDialog(
-        barrierDismissible: false,
-        context: context,
-        builder: (context) => const AlertDialog(
-          content: SizedBox(width: 30, height: 150, child: Loader()),
-        ),
-      );
-      final expenseImage = File(re.path);
-      await widget.imageService.uploadImageToStorage(expenseImage);
-      Navigator.pop(context);
-      var result = await Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => CameraViewPhoto(
-            url: widget.imageService.imageController.text,
+  Future captureAndUpload() async {
+    var connectivityResult = await Connectivity().checkConnectivity();
+    if (connectivityResult != ConnectivityResult.none) {
+      try {
+        var re = await camController.takePicture();
+        showDialog(
+          barrierDismissible: false,
+          context: context,
+          builder: (context) => const AlertDialog(
+            content: SizedBox(width: 30, height: 150, child: Loader()),
           ),
-        ),
-      );
-      if (result == false) {
-        widget.imageService.imageController.clear();
+        );
+        final expenseImage = File(re.path);
+        await widget.imageService.uploadImageToStorage(expenseImage);
+        Navigator.pop(context);
+        var result = await Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => CameraViewPhoto(
+              url: widget.imageService.imageController.text,
+            ),
+          ),
+        );
+        if (result == false) {
+          widget.imageService.imageController.clear();
+        }
+      } catch (e) {
+        print("Error during capture and upload: $e");
+        return false;
       }
-    } catch (e) {
-      print("Error during capture and upload: $e");
+    } else {
+      errorDialog(context, 'No Internet Connection');
     }
   }
 }

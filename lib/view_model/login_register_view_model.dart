@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:expenses_managment_app_provider/model/data/user_model.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:http/http.dart' as http;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +10,18 @@ import 'package:google_sign_in/google_sign_in.dart';
 class LoginRegisterViewModel with ChangeNotifier {
   final auth = FirebaseAuth.instance;
   UserModel userModel = UserModel.instance;
+  final FirebaseAnalytics analytics = FirebaseAnalytics.instance;
+
+  Future<void> sendAnalyticsEvent() async {
+    await analytics.logEvent(
+      name: 'button_click',
+      parameters: <String, dynamic>{
+        'page': 'home',
+        'button_id': 'example_button',
+      },
+    );
+    await analytics.logLogin(loginMethod: 'Email Password');
+  }
 
   Future loginEmailPassword(email, password) async {
     try {

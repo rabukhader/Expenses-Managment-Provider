@@ -62,6 +62,7 @@ class ImageService {
       imageController.text = imageUrl;
     } catch (e) {
       print(e);
+      rethrow;
     }
   }
 

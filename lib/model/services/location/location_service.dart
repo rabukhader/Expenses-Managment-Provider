@@ -54,7 +54,6 @@ class LocationService {
     try {
       await getCurrentPosition();
       await getAddressFromPosition();
-      // return true;
     } catch (e) {
       return false;
     }

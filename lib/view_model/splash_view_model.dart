@@ -51,7 +51,7 @@ class SplashViewModel with ChangeNotifier {
 
   Future<User?> getCurrentUser() async {
     try {
-      await Future.delayed(const Duration(milliseconds: 3000));
+      // await Future.delayed(const Duration(milliseconds: 3000));
       final User? user = auth.currentUser;
       return user;
     } catch (e) {
@@ -65,16 +65,17 @@ class SplashViewModel with ChangeNotifier {
     GeolocatorPlatform.instance;
     await checkDeepLink();
     await initDynamicLinks();
-
-    getCurrentUser().then((user) {
+    try {
+      User? user = await getCurrentUser();
       if (user != null) {
         _navigateTo(context, '/home');
       } else {
         _navigateTo(context, '/');
       }
-    }).catchError((error) {
+      ;
+    } catch (e) {
       _navigateTo(context, '/error');
-    });
+    }
   }
 
   void _navigateTo(BuildContext context, String route) {
