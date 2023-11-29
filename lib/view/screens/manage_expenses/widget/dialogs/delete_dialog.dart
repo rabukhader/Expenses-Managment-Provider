@@ -1,9 +1,8 @@
 import 'package:expenses_managment_app_provider/view/screens/home/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../../../../view_model/manage_expense_view_model.dart';
 
-deleteDialog(context, name, id, ManageExpensesViewModel exProvider) {
+deleteDialog(context, name, id, onDeletePressed) {
   showDialog(
       barrierColor: Theme.of(context).dialogBackgroundColor,
       context: context,
@@ -35,8 +34,7 @@ deleteDialog(context, name, id, ManageExpensesViewModel exProvider) {
                 child: Text('Delete',
                     style: GoogleFonts.poppins(color: Colors.white)),
                 onPressed: () async {
-                  await exProvider
-                      .deleteExpense(id);
+                  await onDeletePressed(id);
                   Navigator.pushReplacement(context,
                       MaterialPageRoute(builder: (context) => HomeScreen()));
                 },

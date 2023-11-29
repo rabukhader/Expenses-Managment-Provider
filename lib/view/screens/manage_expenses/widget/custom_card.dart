@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
 import '../../../../model/entities/expense_entity.dart';
-import '../../../../view_model/manage_expense_view_model.dart';
 import '../../add_edit_expense/add_edit_expense.dart';
 import 'dialogs/delete_dialog.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -10,11 +8,20 @@ import 'package:flutter_svg/flutter_svg.dart';
 class CustomCard extends StatelessWidget {
   final Expense data;
   final String? id;
-  const CustomCard({Key? key, required this.data, this.id}) : super(key: key);
+  final onDeletePressed;
+  final onEditPressed;
+  final onCopyPressed;
+  const CustomCard(
+      {Key? key,
+      required this.data,
+      this.id,
+      this.onDeletePressed,
+      this.onEditPressed,
+      this.onCopyPressed})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final exProvider = Provider.of<ManageExpensesViewModel>(context, listen: false);
     Color color = Theme.of(context).colorScheme.onSecondary;
 
     return Padding(
@@ -37,8 +44,9 @@ class CustomCard extends StatelessWidget {
             children: [
               Text(
                 data.name,
-                style:
-                    GoogleFonts.poppins(color: Theme.of(context).colorScheme.onBackground, fontSize: 30),
+                style: GoogleFonts.poppins(
+                    color: Theme.of(context).colorScheme.onBackground,
+                    fontSize: 30),
               ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -46,7 +54,8 @@ class CustomCard extends StatelessWidget {
                   Text(
                     "Total",
                     style: GoogleFonts.poppins(
-                        color: Theme.of(context).colorScheme.onBackground, fontSize: 14),
+                        color: Theme.of(context).colorScheme.onBackground,
+                        fontSize: 14),
                   ),
                   Row(
                     children: [
@@ -68,24 +77,22 @@ class CustomCard extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Consumer<ManageExpensesViewModel>(
-                    builder:(context, ex, child) => ElevatedButton.icon(
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: Theme.of(context).primaryColor),
-                      icon: Icon(
-                        Icons.delete,
-                        color: Theme.of(context).hintColor,
-                      ),
-                      onPressed: () {
-                        deleteDialog(context, data.name, id, exProvider);
-                      },
-                      label: Text(
-                        "Delete",
-                        style: GoogleFonts.poppins(
-                            color: Theme.of(context).colorScheme.onBackground,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500),
-                      ),
+                  ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Theme.of(context).primaryColor),
+                    icon: Icon(
+                      Icons.delete,
+                      color: Theme.of(context).hintColor,
+                    ),
+                    onPressed: () {
+                      deleteDialog(context, data.name, id, onDeletePressed);
+                    },
+                    label: Text(
+                      "Delete",
+                      style: GoogleFonts.poppins(
+                          color: Theme.of(context).colorScheme.onBackground,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500),
                     ),
                   ),
                   ElevatedButton.icon(
@@ -104,7 +111,7 @@ class CustomCard extends StatelessWidget {
                                   expenseId: id,
                                   data: data)));
                       if (result != null) {
-                        await exProvider.editExpense(result, id);
+                        onEditPressed(result, id);
                       }
                     },
                     label: Text(
@@ -130,7 +137,7 @@ class CustomCard extends StatelessWidget {
                                     processName: 'Clone',
                                     expenseId: id,
                                     data: data)));
-                        if (result != null) await exProvider.addExpense(result);
+                        if (result != null) onCopyPressed(result);
                       },
                       label: Text(
                         "Clone",

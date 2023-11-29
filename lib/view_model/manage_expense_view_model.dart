@@ -1,27 +1,20 @@
 import 'dart:async';
-import 'dart:convert';
 import 'package:connectivity/connectivity.dart';
 import 'package:dio/dio.dart';
 import 'package:expenses_managment_app_provider/model/data/local_changes.dart';
 import 'package:flutter/material.dart';
 import '../model/entities/expense_entity.dart';
-import '../repositry/dio/custom_client.dart';
-import '../repositry/apis/end_point_firebase.dart';
 import '../model/data/expense_model.dart';
 import '../repositry/local_db/db_helper.dart';
-import 'package:http/http.dart' as http;
-
-Dio client = Client().init();
-EndpointFirebaseProvider api = EndpointFirebaseProvider(client);
-ConnectivityResult currentConnectivity = ConnectivityResult.none;
 
 class ManageExpensesViewModel with ChangeNotifier {
+  ConnectivityResult currentConnectivity = ConnectivityResult.none;
   StreamController<Map<String, Expense>> dataStream =
       StreamController<Map<String, Expense>>.broadcast();
   StreamController<String> textStream = StreamController.broadcast();
   Completer<void>? searchCompleter;
   CancelToken? cancelToken;
-  ExpenseModel expenseModel = ExpenseModel();
+  ExpenseModel expenseModel = ExpenseModel.instance;
   LocalChangesModel localChanges = LocalChangesModel.instance;
 
   ManageExpensesViewModel() {
@@ -39,17 +32,9 @@ class ManageExpensesViewModel with ChangeNotifier {
     var connectivityResult = await Connectivity().checkConnectivity();
 
     if (connectivityResult != ConnectivityResult.none) {
-      final response = await api.fetchExpenses();
-      Map<String, Expense> data = response.map((key, value) {
-        return MapEntry(key, Expense.fromMap(value));
-      });
-      final dbHelper = DBHelper.instance;
-      await dbHelper.clearData();
-      await dbHelper.postExpense(data);
-
-      expenseModel.allExpenses = data;
-      expenseModel.searchResults = data;
+      Map<String, Expense> data = await expenseModel.fetchExpense();
       dataStream.add(data);
+      return data;
     } else {
       await fetchLocalExpenses();
     }
@@ -58,6 +43,7 @@ class ManageExpensesViewModel with ChangeNotifier {
         await fetchExpenses();
       }
     });
+    notifyListeners();
   }
 
   Future fetchLocalExpenses() async {
@@ -73,7 +59,7 @@ class ManageExpensesViewModel with ChangeNotifier {
     var connectivityResult = await Connectivity().checkConnectivity();
 
     if (connectivityResult != ConnectivityResult.none) {
-      await api.deleteExpense(id);
+      await expenseModel.deleteExpense(id);
     } else {
       await deleteLocalExpense(id);
     }
@@ -85,7 +71,7 @@ class ManageExpensesViewModel with ChangeNotifier {
     var connectivityResult = await Connectivity().checkConnectivity();
 
     if (connectivityResult != ConnectivityResult.none) {
-      await api.updateExpense(id, updatedData);
+      expenseModel.editExpense(updatedData, id);
     } else {
       await editLocalExpense(updatedData, id);
     }
@@ -97,7 +83,7 @@ class ManageExpensesViewModel with ChangeNotifier {
     var connectivityResult = await Connectivity().checkConnectivity();
 
     if (connectivityResult != ConnectivityResult.none) {
-      await api.postExpense(newExpense);
+      await expenseModel.postExpense(newExpense);
     } else {
       await addLocalExpense(newExpense);
     }
@@ -127,7 +113,7 @@ class ManageExpensesViewModel with ChangeNotifier {
       final offlineResults = await dbHelper.searchExpenses(query);
       expenseModel.searchResults = {for (var e in offlineResults) e.name: e};
     }
-
+    dataStream.add(expenseModel.searchResults);
     notifyListeners();
   }
 
@@ -202,21 +188,21 @@ class ManageExpensesViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<Map<String, dynamic>> fetchDataById(String id) async {
-    final url =
-        'https://providerrest-default-rtdb.firebaseio.com/expenses/$id.json';
+  // Future<Map<String, dynamic>> fetchDataById(String id) async {
+  //   final url =
+  //       'https://providerrest-default-rtdb.firebaseio.com/expenses/$id.json';
 
-    try {
-      final response = await http.get(Uri.parse(url));
+  //   try {
+  //     final response = await http.get(Uri.parse(url));
 
-      if (response.statusCode == 200) {
-        return json.decode(response.body);
-      } else {
-        throw Exception('Failed to load data');
-      }
-    } catch (error) {
-      print('Error: $error');
-      rethrow;
-    }
-  }
+  //     if (response.statusCode == 200) {
+  //       return json.decode(response.body);
+  //     } else {
+  //       throw Exception('Failed to load data');
+  //     }
+  //   } catch (error) {
+  //     print('Error: $error');
+  //     rethrow;
+  //   }
+  // }
 }

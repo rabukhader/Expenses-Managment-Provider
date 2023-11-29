@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
 import '../../../view_model/manage_expense_view_model.dart';
+import '../../widgets/loader.dart';
 
 class ManageExpenses extends StatelessWidget {
   const ManageExpenses({super.key});
@@ -34,10 +35,11 @@ class _ManageExpensesViewState extends State<ManageExpensesView> {
   @override
   void initState() {
     super.initState();
-    final exProvider = Provider.of<ManageExpensesViewModel>(context, listen: false);
-    exProvider.fetchExpenses();
+    final homeProvider =
+        Provider.of<ManageExpensesViewModel>(context, listen: false);
+    homeProvider.fetchExpenses();
     textController.addListener(() {
-      exProvider.textStream.add(textController.text);
+      homeProvider.textStream.add(textController.text);
     });
   }
 
@@ -57,7 +59,8 @@ class _ManageExpensesViewState extends State<ManageExpensesView> {
 
   @override
   Widget build(BuildContext context) {
-    final exProvider = Provider.of<ManageExpensesViewModel>(context, listen: false);
+    final exProvider =
+        Provider.of<ManageExpensesViewModel>(context, listen: false);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Column(
@@ -71,9 +74,24 @@ class _ManageExpensesViewState extends State<ManageExpensesView> {
             textController: textController,
           ),
           Expanded(
-              child: ListOfExpenses(
-            stream: exProvider.dataStream.stream,
-          )),
+              child: StreamBuilder(
+                  stream: exProvider.dataStream.stream,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Loader();
+                    } else if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}');
+                    } else if (snapshot.data!.isEmpty) {
+                      return const Text('Not Found');
+                    } else {
+                      return ListOfExpenses(
+                        onDeletePressed: exProvider.deleteExpense,
+                        onCopyPressed: exProvider.addExpense,
+                        onEditPressed: exProvider.editExpense,
+                        data: exProvider.expenseModel.searchResults,
+                      );
+                    }
+                  })),
         ],
       ),
       floatingActionButton: FloatingActionButton(

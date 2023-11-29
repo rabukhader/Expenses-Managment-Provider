@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../model/data/expense_model.dart';
+import '../model/entities/expense_entity.dart';
 import '../model/utils/months.dart';
 
 class AnalyzeViewModel with ChangeNotifier {
-  ExpenseModel expenseModel = ExpenseModel();
+  ExpenseModel expenseModel = ExpenseModel.instance;
   Map<String, double> classifyExpensesByMonth() {
     final Map<String, double> monthlyExpenses = {};
 
@@ -85,5 +86,28 @@ class AnalyzeViewModel with ChangeNotifier {
     } else {
       return 0;
     }
+  }
+
+  Map<String, Expense> fetchExpenseByMonth(monthIndex) {
+    var classifiedExpenses = classifyExpensesByMonth();
+
+    if (monthIndex >= 0 && monthIndex < classifiedExpenses.length) {
+      var selectedMonth = classifiedExpenses.keys.toList()[monthIndex];
+      var expensesForMonth = expenseModel.allExpenses.values
+          .where((expense) =>
+              DateFormat('MMMM')
+                  .format(DateFormat('yyyy-MM-dd').parse(expense.dueDate)) ==
+              selectedMonth)
+          .toList();
+
+      Map<String, Expense> expenseMap = {};
+      for (var expense in expensesForMonth) {
+        expenseMap[expense.name] = expense;
+      }
+
+      return expenseMap;
+    }
+
+    return {};
   }
 }

@@ -4,24 +4,24 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../model/entities/expense_entity.dart';
+import 'month_expense.dart';
+
 class Chart extends StatelessWidget {
-  const Chart({super.key});
+  final Map<String, double> list;
+  const Chart({super.key, required this.list});
 
   @override
   Widget build(BuildContext context) {
-    final analyzeViewModel =
-        Provider.of<AnalyzeViewModel>(context, listen: false);
-    var list = analyzeViewModel.classifyExpensesByMonth();
-
     var barGroups = list.entries
         .map((item) => BarChartGroupData(
                 x: list.keys.toList().indexOf(item.key),
                 barRods: [
                   BarChartRodData(
-                      color: item.value > 5000
+                      color: item.value > 10000
                           ? Theme.of(context).colorScheme.error
                           : Theme.of(context).hintColor,
-                      toY: item.value > 5000 ? 5000 : item.value,
+                      toY: item.value > 10000 ? 10000 : item.value,
                       width: 16,
                       backDrawRodData: BackgroundBarChartRodData(show: true),
                       borderRadius: const BorderRadius.all(Radius.zero))
@@ -29,17 +29,17 @@ class Chart extends StatelessWidget {
         .toList();
 
     return BarChart(BarChartData(
-        maxY: 5000,
+        maxY: 10000,
         minY: 0,
         barGroups: barGroups,
         titlesData: FlTitlesData(
-            rightTitles:
-                const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-            topTitles:
-                const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-            bottomTitles: AxisTitles(
-                sideTitles: SideTitles(
-              interval: 500,
+          rightTitles:
+              const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+          topTitles:
+              const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+          bottomTitles: AxisTitles(
+            sideTitles: SideTitles(
+              interval: 1000,
               showTitles: true,
               getTitlesWidget: (value, key) {
                 if (value >= 0 && value < list.length) {
@@ -53,6 +53,21 @@ class Chart extends StatelessWidget {
                 }
                 return const Text('Error');
               },
-            )))));
+            ),
+          ),
+        ),
+        barTouchData:
+            BarTouchData(touchCallback: (touchEvent, barTouchResponse) {
+          if (barTouchResponse?.spot != null) {
+            int touchedIndex = barTouchResponse!.spot!.touchedBarGroupIndex;
+            Map<String, Expense> data =
+                Provider.of<AnalyzeViewModel>(context, listen: false)
+                    .fetchExpenseByMonth(touchedIndex);
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => MonthExpenses(data: data)));
+          }
+        })));
   }
 }

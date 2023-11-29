@@ -69,10 +69,15 @@ class UserModel {
   Future<bool> signOut() async {
     try {
       await auth.signOut();
+      clearUserInfo(); // Clear user information
       return true;
     } catch (e) {
       print("Error signing out: $e");
       return false;
     }
+  }
+
+  void clearUserInfo() {
+    user = null;
   }
 }

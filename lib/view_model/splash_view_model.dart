@@ -51,7 +51,6 @@ class SplashViewModel with ChangeNotifier {
 
   Future<User?> getCurrentUser() async {
     try {
-      // await Future.delayed(const Duration(milliseconds: 3000));
       final User? user = auth.currentUser;
       return user;
     } catch (e) {

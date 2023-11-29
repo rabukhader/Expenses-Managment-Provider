@@ -22,6 +22,7 @@ class ExpensesApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<ThemeProvider>(
         builder: (context, theme, child) => MaterialApp.router(
+          debugShowCheckedModeBanner: false,
               theme: theme.getCurrentTheme(context),
               darkTheme: AppTheme.darkTheme(context),
               routerConfig: GoRouter(
