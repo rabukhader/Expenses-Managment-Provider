@@ -1,3 +1,4 @@
+import 'package:expenses_managment_app_provider/model/utils/months.dart';
 import 'package:expenses_managment_app_provider/view_model/analyze_view_model.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -66,7 +67,7 @@ class Chart extends StatelessWidget {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => MonthExpenses(data: data)));
+                    builder: (context) => MonthExpenses(data: data, monthName: months[touchedIndex])));
           }
         })));
   }

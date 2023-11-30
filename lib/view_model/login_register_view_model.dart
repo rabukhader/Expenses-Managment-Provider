@@ -36,7 +36,7 @@ class LoginRegisterViewModel with ChangeNotifier {
       }
       return success;
     } on Exception catch (error) {
-      print('error1111$error');
+      print(error);
       return false;
     }
   }

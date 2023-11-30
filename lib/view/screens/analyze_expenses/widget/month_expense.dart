@@ -5,7 +5,8 @@ import 'package:google_fonts/google_fonts.dart';
 
 class MonthExpenses extends StatelessWidget {
   final Map<String, Expense> data;
-  const MonthExpenses({super.key, required this.data});
+  final String monthName;
+  const MonthExpenses({super.key, required this.data, required this.monthName});
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +14,7 @@ class MonthExpenses extends StatelessWidget {
       appBar: AppBar(
         iconTheme:
             IconThemeData(color: Theme.of(context).colorScheme.onBackground),
-        title: Text('Expense Management App',
+        title: Text(monthName,
             style: GoogleFonts.openSans(
                 color: Theme.of(context).colorScheme.background,
                 fontSize: 16,

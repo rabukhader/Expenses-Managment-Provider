@@ -59,7 +59,7 @@ class _ManageExpensesViewState extends State<ManageExpensesView> {
 
   @override
   Widget build(BuildContext context) {
-    final exProvider =
+    final exViewModel =
         Provider.of<ManageExpensesViewModel>(context, listen: false);
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -67,15 +67,15 @@ class _ManageExpensesViewState extends State<ManageExpensesView> {
         children: [
           const CustomHeading(title: 'Expenses List'),
           SearchInput(
-            textStream: exProvider.textStream,
+            textStream: exViewModel.textStream,
             onSearch: (query) {
-              exProvider.onSearch(query);
+              exViewModel.onSearch(query);
             },
             textController: textController,
           ),
           Expanded(
               child: StreamBuilder(
-                  stream: exProvider.dataStream.stream,
+                  stream: exViewModel.dataStream.stream,
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Loader();
@@ -85,10 +85,10 @@ class _ManageExpensesViewState extends State<ManageExpensesView> {
                       return const Text('Not Found');
                     } else {
                       return ListOfExpenses(
-                        onDeletePressed: exProvider.deleteExpense,
-                        onCopyPressed: exProvider.addExpense,
-                        onEditPressed: exProvider.editExpense,
-                        data: exProvider.expenseModel.searchResults,
+                        onDeletePressed: exViewModel.deleteExpense,
+                        onCopyPressed: exViewModel.addExpense,
+                        onEditPressed: exViewModel.editExpense,
+                        data: exViewModel.expenseModel.searchResults,
                         onTap: (BuildContext context, WidgetBuilder builder) {
                           Navigator.push(
                               context, MaterialPageRoute(builder: builder));
@@ -109,7 +109,7 @@ class _ManageExpensesViewState extends State<ManageExpensesView> {
                   builder: (context) => const AddEditExpensesScreen(
                         processName: 'Add',
                       )));
-          if (result != null) await exProvider.addExpense(result);
+          if (result != null) await exViewModel.addExpense(result);
         },
         child: const Icon(
           Icons.add,
