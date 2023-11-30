@@ -17,28 +17,44 @@ class ExpenseModel {
   Map<String, Expense> searchResults = {};
 
   Future postExpense(newExpense) async {
-    await api.postExpense(newExpense);
+    try {
+      await api.postExpense(newExpense);
+    } catch (e) {
+      rethrow;
+    }
   }
 
   Future fetchExpense() async {
-    final response = await api.fetchExpenses();
-    Map<String, Expense> data = response.map((key, value) {
-      return MapEntry(key, Expense.fromMap(value));
-    });
-    final dbHelper = DBHelper.instance;
-    await dbHelper.clearData();
-    await dbHelper.postExpense(data);
+    try {
+      final response = await api.fetchExpenses();
+      Map<String, Expense> data = response.map((key, value) {
+        return MapEntry(key, Expense.fromMap(value));
+      });
+      final dbHelper = DBHelper.instance;
+      await dbHelper.clearData();
+      await dbHelper.postExpense(data);
 
-    allExpenses = data;
-    searchResults = data;
-    return data;
+      allExpenses = data;
+      searchResults = data;
+      return data;
+    } catch (e) {
+      rethrow;
+    }
   }
 
   Future deleteExpense(id) async {
-    await api.deleteExpense(id);
+    try {
+      await api.deleteExpense(id);
+    } catch (e) {
+      rethrow;
+    }
   }
 
   Future editExpense(updatedData, id) async {
-    await api.updateExpense(id, updatedData);
+    try {
+      await api.updateExpense(id, updatedData);
+    } catch (e) {
+      rethrow;
+    }
   }
 }

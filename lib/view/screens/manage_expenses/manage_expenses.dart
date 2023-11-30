@@ -35,11 +35,11 @@ class _ManageExpensesViewState extends State<ManageExpensesView> {
   @override
   void initState() {
     super.initState();
-    final homeProvider =
+    final exViewModel =
         Provider.of<ManageExpensesViewModel>(context, listen: false);
-    homeProvider.fetchExpenses();
+    exViewModel.fetchExpenses();
     textController.addListener(() {
-      homeProvider.textStream.add(textController.text);
+      exViewModel.textStream.add(textController.text);
     });
   }
 
@@ -89,6 +89,10 @@ class _ManageExpensesViewState extends State<ManageExpensesView> {
                         onCopyPressed: exProvider.addExpense,
                         onEditPressed: exProvider.editExpense,
                         data: exProvider.expenseModel.searchResults,
+                        onTap: (BuildContext context, WidgetBuilder builder) {
+                          Navigator.push(
+                              context, MaterialPageRoute(builder: builder));
+                        },
                       );
                     }
                   })),
@@ -105,7 +109,7 @@ class _ManageExpensesViewState extends State<ManageExpensesView> {
                   builder: (context) => const AddEditExpensesScreen(
                         processName: 'Add',
                       )));
-          await exProvider.addExpense(result);
+          if (result != null) await exProvider.addExpense(result);
         },
         child: const Icon(
           Icons.add,

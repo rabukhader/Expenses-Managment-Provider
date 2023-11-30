@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class LoginRegisterViewModel with ChangeNotifier {
   UserModel userModel = UserModel.instance;
 
-  Future loginEmailPassword(email, password) async {
+  Future<bool> loginEmailPassword(email, password) async {
     try {
       bool success = await userModel.loginEmailPassword(email, password);
       if (success) {
@@ -16,7 +16,7 @@ class LoginRegisterViewModel with ChangeNotifier {
     }
   }
 
-  Future signUpEmailPassword(email, password) async {
+  Future<bool> signUpEmailPassword(email, password) async {
     try {
       bool success = await userModel.signUpEmailPassword(email, password);
       if (success) {

@@ -1,9 +1,9 @@
 import 'package:expenses_managment_app_provider/view/widgets/custom_bottom_navigation_bar.dart';
 import 'package:expenses_managment_app_provider/view_model/home_view_model.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import '../../../view_model/navigation_provider.dart';
+import '../../widgets/custom_app_bar.dart';
 import '../../widgets/custom_drawer.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -23,15 +23,9 @@ class _HomeScreenState extends State<HomeScreen> {
       ],
       child: SafeArea(
         child: Scaffold(
-          appBar: AppBar(
-            iconTheme: IconThemeData(
-                color: Theme.of(context).colorScheme.onBackground),
-            title: Text('Expense Management App',
-                style: GoogleFonts.openSans(
-                    color: Theme.of(context).colorScheme.background,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold)),
-            backgroundColor: Theme.of(context).hintColor,
+          appBar: const PreferredSize(
+            preferredSize: Size.fromHeight(60),
+            child: CustomAppBar(),
           ),
           body: Selector<NavigationProvider, Widget>(
             selector: (_, navProvider) => navProvider.currentPage,

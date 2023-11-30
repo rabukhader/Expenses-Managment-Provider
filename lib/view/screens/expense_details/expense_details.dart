@@ -11,16 +11,21 @@ import '../manage_expenses/widget/dialogs/delete_dialog.dart';
 class ExpenseDetails extends StatelessWidget {
   final String id;
   final Expense data;
-  final ManageExpensesViewModel exProvider;
+  final ManageExpensesViewModel? exProvider;
+  final onDeletePressed;
+  final onEditPressed;
+  final onCopyPressed;
   const ExpenseDetails(
       {super.key,
       required this.id,
       required this.data,
-      required this.exProvider});
+      this.exProvider,
+      this.onDeletePressed,
+      this.onEditPressed,
+      this.onCopyPressed});
 
   @override
   Widget build(BuildContext context) {
-
     return SafeArea(
       child: Scaffold(
           appBar: AppBar(
@@ -106,7 +111,7 @@ class ExpenseDetails extends StatelessWidget {
                         color: Theme.of(context).hintColor,
                       ),
                       onPressed: () {
-                        deleteDialog(context, data.name, id, exProvider);
+                        deleteDialog(context, data.name, id, onDeletePressed);
                       },
                       label: Text(
                         "Delete",
@@ -116,7 +121,7 @@ class ExpenseDetails extends StatelessWidget {
                             fontWeight: FontWeight.w500),
                       ),
                     ),
-                    ElevatedButton.icon(
+                    onEditPressed != null ? ElevatedButton.icon(
                       style: ElevatedButton.styleFrom(
                           backgroundColor: Theme.of(context).primaryColor),
                       icon: Icon(
@@ -132,7 +137,7 @@ class ExpenseDetails extends StatelessWidget {
                                     expenseId: id,
                                     data: data)));
                         if (result != null) {
-                          await exProvider.editExpense(result, id);
+                          await onEditPressed(result, id);
                           Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -146,7 +151,7 @@ class ExpenseDetails extends StatelessWidget {
                             fontSize: 14,
                             fontWeight: FontWeight.w500),
                       ),
-                    ),
+                    ): Container(),
                     ElevatedButton.icon(
                         style: ElevatedButton.styleFrom(
                             backgroundColor: Theme.of(context).primaryColor),
@@ -162,8 +167,7 @@ class ExpenseDetails extends StatelessWidget {
                                       processName: 'Clone',
                                       expenseId: id,
                                       data: data)));
-                          if (result != null)
-                            await exProvider.addExpense(result);
+                          if (result != null) await onCopyPressed(result);
                           Navigator.push(
                               context,
                               MaterialPageRoute(

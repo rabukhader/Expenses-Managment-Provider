@@ -77,7 +77,7 @@ class CustomCard extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  ElevatedButton.icon(
+                  onDeletePressed != null? ElevatedButton.icon(
                     style: ElevatedButton.styleFrom(
                         backgroundColor: Theme.of(context).primaryColor),
                     icon: Icon(
@@ -94,8 +94,8 @@ class CustomCard extends StatelessWidget {
                           fontSize: 14,
                           fontWeight: FontWeight.w500),
                     ),
-                  ),
-                  ElevatedButton.icon(
+                  ): Container(),
+                  onEditPressed != null? ElevatedButton.icon(
                     style: ElevatedButton.styleFrom(
                         backgroundColor: Theme.of(context).primaryColor),
                     icon: Icon(
@@ -111,7 +111,7 @@ class CustomCard extends StatelessWidget {
                                   expenseId: id,
                                   data: data)));
                       if (result != null) {
-                        onEditPressed(result, id);
+                        await onEditPressed(result, id);
                       }
                     },
                     label: Text(
@@ -121,8 +121,8 @@ class CustomCard extends StatelessWidget {
                           fontSize: 14,
                           fontWeight: FontWeight.w500),
                     ),
-                  ),
-                  ElevatedButton.icon(
+                  ): Container(),
+                  onDeletePressed != null? ElevatedButton.icon(
                       style: ElevatedButton.styleFrom(
                           backgroundColor: Theme.of(context).primaryColor),
                       icon: Icon(
@@ -137,7 +137,7 @@ class CustomCard extends StatelessWidget {
                                     processName: 'Clone',
                                     expenseId: id,
                                     data: data)));
-                        if (result != null) onCopyPressed(result);
+                        if (result != null) await onCopyPressed(result);
                       },
                       label: Text(
                         "Clone",
@@ -145,7 +145,7 @@ class CustomCard extends StatelessWidget {
                             color: Theme.of(context).colorScheme.onBackground,
                             fontSize: 14,
                             fontWeight: FontWeight.w500),
-                      )),
+                      )): Container(),
                 ],
               )
             ],
