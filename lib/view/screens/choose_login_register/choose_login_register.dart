@@ -297,23 +297,22 @@ class _ChooseLoginRegisterViewState extends State<ChooseLoginRegisterView> {
                                                   child: Loader()),
                                             ),
                                           );
-                                          // analytics.sendLoginEvent('Google_login');
-                                          // try {
-                                          //   var result = await Provider.of<
-                                          //       LoginRegisterViewModel>(
-                                          //     context,
-                                          //     listen: false,
-                                          //   ).signInWithGoogle();
-                                          //   Navigator.pop(context);
+                                          try {
+                                            var result = await Provider.of<
+                                                LoginRegisterViewModel>(
+                                              context,
+                                              listen: false,
+                                            ).signInWithGoogle();
+                                            Navigator.pop(context);
 
-                                          //   if (result) {
-                                          //     GoRouter.of(context).go('/home',
-                                          //         extra: (state) =>
-                                          //             state.isRoot);
-                                          //   }
-                                          // } catch (error) {
-                                          //   Navigator.pop(context);
-                                          // }
+                                            if (result) {
+                                              GoRouter.of(context).go('/home',
+                                                  extra: (state) =>
+                                                      state.isRoot);
+                                            }
+                                          } catch (error) {
+                                            Navigator.pop(context);
+                                          }
                                         },
                                         child: Column(
                                           children: [

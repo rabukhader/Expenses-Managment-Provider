@@ -28,30 +28,17 @@ class LoginRegisterViewModel with ChangeNotifier {
     }
   }
 
-  // Future<bool> signInWithGoogle() async {
-  //   try {
-  //     bool success = await userModel.signInWithGoogle();
-  //     if (success) {
-  //       notifyListeners();
-  //     }
-  //     return success;
-  //   } on Exception catch (error) {
-  //     print(error);
-  //     return false;
-  //   }
-  // }
-
-  // Future<bool> signInWithFacebook() async {
-  //   try {
-  //     bool success = await userModel.signInWithFacebook();
-  //     if (success) {
-  //       notifyListeners();
-  //     }
-  //     return success;
-  //   } catch (e) {
-  //     print(e);
-  //     return false;
-  //   }
-  // }
+  Future<bool> signInWithGoogle() async {
+    try {
+      bool success = await userModel.googleSignIn();
+      if (success) {
+        notifyListeners();
+      }
+      return success;
+    } on Exception catch (error) {
+      print(error);
+      return false;
+    }
+  }
 
 }
