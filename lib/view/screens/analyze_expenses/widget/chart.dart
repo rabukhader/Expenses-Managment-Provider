@@ -1,4 +1,4 @@
-import 'package:expenses_managment_app_provider/model/utils/months.dart';
+import 'package:expenses_managment_app_provider/utils/months.dart';
 import 'package:expenses_managment_app_provider/view_model/analyze_view_model.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';

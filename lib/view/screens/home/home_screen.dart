@@ -57,17 +57,10 @@ class _HomeScreenViewState extends State<HomeScreenView> {
               },
             ),
             bottomNavigationBar: const CustomBottomNavigationBar(),
-            drawer: FutureBuilder(
-                future: homeVM.loadUserInfo(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Loader();
-                  } else {
-                    return CustomDrawer(
-                      userInfo: snapshot.data?[0],
-                    );
-                  }
-                }),
+            drawer: CustomDrawer(
+              userName: homeVM.loadUserInfo()[0],
+              userPhotoURL: homeVM.loadUserInfo()[1]
+            ),
           ),
         );
       },

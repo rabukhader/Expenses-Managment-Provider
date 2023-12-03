@@ -3,22 +3,22 @@ import 'dart:async';
 import 'package:dio/dio.dart';
 import '../../repositry/local_db/db_helper.dart';
 import '../entities/expense_entity.dart';
-import '../../repositry/apis/end_point_firebase.dart';
+import '../../repositry/firebase/end_point_firebase.dart';
 import '../../repositry/dio/custom_client.dart';
 
 Dio client = Client().init();
 EndpointFirebaseProvider api = EndpointFirebaseProvider(client);
 
-class ExpenseModel {
-  ExpenseModel._();
-  static final ExpenseModel _instance = ExpenseModel._();
+class ExpenseModelFirebase {
+  ExpenseModelFirebase._();
+  static final ExpenseModelFirebase _instance = ExpenseModelFirebase._();
 
-  static ExpenseModel get instance => _instance;
+  static ExpenseModelFirebase get instance => _instance;
 
   Map<String, Expense> allExpenses = {};
   Map<String, Expense> searchResults = {};
 
-  Future fetchExpense() async {
+  Future fetchExpenses() async {
     try {
       final response = await api.fetchExpenses();
       Map<String, Expense> data = response.map((key, value) {

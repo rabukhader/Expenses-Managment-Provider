@@ -7,8 +7,10 @@ import 'package:provider/provider.dart';
 import 'package:sidebarx/sidebarx.dart';
 
 class CustomDrawer extends StatelessWidget {
-  final userInfo;
-  const CustomDrawer({super.key, this.userInfo});
+  final String userName;
+  final String userPhotoURL;
+  const CustomDrawer(
+      {super.key, required this.userName, required this.userPhotoURL});
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +43,7 @@ class CustomDrawer extends StatelessWidget {
           ),
           items: [
             SidebarXItem(
-                label: userInfo.displayName ?? userInfo.email,
+                label: userName,
                 iconWidget: Center(
                   child: ClipRRect(
                       borderRadius: BorderRadius.circular(50),
@@ -51,8 +53,9 @@ class CustomDrawer extends StatelessWidget {
                           child: Container(
                             decoration: BoxDecoration(
                                 image: DecorationImage(
-                                    image: NetworkImage(userInfo.photoURL ??
-                                        'https://images.rawpixel.com/image_png_800/cHJpdmF0ZS9sci9pbWFnZXMvd2Vic2l0ZS8yMDIyLTA0L3BmLWljb240LWppcjIwNjItcG9yLWwtam9iNzg4LnBuZw.png')),
+                                    image: NetworkImage(userPhotoURL != ''
+                                        ? userPhotoURL
+                                        : 'https://images.rawpixel.com/image_png_800/cHJpdmF0ZS9sci9pbWFnZXMvd2Vic2l0ZS8yMDIyLTA0L3BmLWljb240LWppcjIwNjItcG9yLWwtam9iNzg4LnBuZw.png')),
                                 borderRadius: BorderRadius.circular(10)),
                           ))),
                 )),

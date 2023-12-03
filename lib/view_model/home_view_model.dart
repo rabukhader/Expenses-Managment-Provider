@@ -1,19 +1,18 @@
 import 'dart:async';
-import 'package:expenses_managment_app_provider/model/data/expense_model.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:expenses_managment_app_provider/model/data/expense_model_supabase.dart';
+import 'package:expenses_managment_app_provider/model/data/user_model_supabase.dart';
 import 'package:flutter/material.dart';
-import '../model/data/user_model.dart';
 
 class HomeViewModel with ChangeNotifier {
-  UserModel userModel = UserModel.instance;
-  ExpenseModel expenseModel = ExpenseModel.instance;
+  UserModelSupabase userModel = UserModelSupabase.instance;
+  ExpenseModelSupabase expenseModel = ExpenseModelSupabase.instance;
 
   Future fetchExpenses() async {
-    await expenseModel.fetchExpense();
+    await expenseModel.fetchExpenses();
   }
 
-  Future<List<UserInfo?>> loadUserInfo() async {
-    final data = await userModel.getUserInfo();
+  List loadUserInfo() {
+    final data = userModel.getUserInfo();
     return data;
   }
 

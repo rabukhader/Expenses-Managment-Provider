@@ -3,8 +3,8 @@ import 'package:connectivity/connectivity.dart';
 import 'package:dio/dio.dart';
 import 'package:expenses_managment_app_provider/model/data/local_changes.dart';
 import 'package:flutter/material.dart';
+import '../model/data/expense_model_supabase.dart';
 import '../model/entities/expense_entity.dart';
-import '../model/data/expense_model.dart';
 import '../repositry/local_db/db_helper.dart';
 
 class ManageExpensesViewModel with ChangeNotifier {
@@ -13,7 +13,7 @@ class ManageExpensesViewModel with ChangeNotifier {
   TextEditingController textController = TextEditingController();
   Completer<void>? searchCompleter;
   CancelToken? cancelToken;
-  ExpenseModel expenseModel = ExpenseModel.instance;
+  ExpenseModelSupabase expenseModel = ExpenseModelSupabase.instance;
   LocalChangesModel localChanges = LocalChangesModel.instance;
 
   ManageExpensesViewModel() {
@@ -42,7 +42,7 @@ class ManageExpensesViewModel with ChangeNotifier {
     var connectivityResult = await Connectivity().checkConnectivity();
 
     if (connectivityResult != ConnectivityResult.none) {
-      Map<String, Expense> data = await expenseModel.fetchExpense();
+      Map<String, Expense> data = await expenseModel.fetchExpenses();
       return data;
     } else {
       await fetchLocalExpenses();
@@ -107,11 +107,10 @@ class ManageExpensesViewModel with ChangeNotifier {
     var connectivityResult = await Connectivity().checkConnectivity();
 
     if (connectivityResult != ConnectivityResult.none) {
-      final response = await api.searchExpense(query, cancelToken: cancelToken);
+      final response =
+          await expenseModel.searchExpense(query, cancelToken: cancelToken);
       if (query.isNotEmpty) {
-        expenseModel.searchResults = response.map((key, value) {
-          return MapEntry(key, Expense.fromMap(value));
-        });
+        expenseModel.searchResults = response;
       } else {
         expenseModel.searchResults = expenseModel.allExpenses;
       }

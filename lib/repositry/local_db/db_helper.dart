@@ -1,14 +1,15 @@
-import 'package:expenses_managment_app_provider/repositry/apis/end_point.dart';
+import 'package:expenses_managment_app_provider/repositry/firebase/end_point.dart';
+import 'package:expenses_managment_app_provider/repositry/supabase/end_point_supabase.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
-import '../../model/data/expense_model.dart';
 import '../../model/entities/expense_entity.dart';
 import '../../view_model/manage_expense_view_model.dart';
 
 class DBHelper extends EndPoint {
   static Database? localDatabase;
   static final DBHelper instance = DBHelper._();
+  EndPointSupabase endPointSupabase = EndPointSupabase();
 
   DBHelper._();
 
@@ -71,8 +72,8 @@ class DBHelper extends EndPoint {
   Future updateExpense(expenseId, updatedData) async {
     final db = await database;
     await db.transaction((txn) async {
-      await txn
-          .update('Expense', updatedData, where: 'id = ?', whereArgs: [expenseId]);
+      await txn.update('Expense', updatedData,
+          where: 'id = ?', whereArgs: [expenseId]);
     });
   }
 
@@ -92,11 +93,12 @@ class DBHelper extends EndPoint {
 
     for (var localChange in localChanges.listOfLocalChanges) {
       if (localChange.changes.containsKey('deleted')) {
-        await api.deleteExpense(localChange.id);
+        await endPointSupabase.deleteExpense(localChange.id);
       } else if (localChange.changes.containsKey('edited')) {
-        await api.updateExpense(localChange.id, localChange.changes['edited']);
+        await endPointSupabase.updateExpense(
+            localChange.id, localChange.changes['edited']);
       } else {
-        await api.postExpense(localChange.changes);
+        await endPointSupabase.postExpense(localChange.changes);
       }
     }
 

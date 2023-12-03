@@ -1,11 +1,11 @@
+import 'package:expenses_managment_app_provider/model/data/expense_model_supabase.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../model/data/expense_model.dart';
 import '../model/entities/expense_entity.dart';
-import '../model/utils/months.dart';
+import '../utils/months.dart';
 
 class AnalyzeViewModel with ChangeNotifier {
-  ExpenseModel expenseModel = ExpenseModel.instance;
+  ExpenseModelSupabase expenseModel = ExpenseModelSupabase.instance;
   Map<String, double> classifyExpensesByMonth() {
     final Map<String, double> monthlyExpenses = {};
 

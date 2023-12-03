@@ -1,12 +1,11 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:uni_links/uni_links.dart' as unilink;
 
 class SplashViewModel with ChangeNotifier {
-  final auth = FirebaseAuth.instance;
+  final supabaseAuth = Supabase.instance.client.auth;
 
   Future<void> checkDeepLink() async {
     final res = await unilink.getInitialLink();
@@ -25,30 +24,30 @@ class SplashViewModel with ChangeNotifier {
     print('Received deep link: $link');
   }
 
-  Future<void> initDynamicLinks() async {
-    final PendingDynamicLinkData? data =
-        await FirebaseDynamicLinks.instance.getInitialLink();
-    handleLinkData(data);
+  // Future<void> initDynamicLinks() async {
+  //   final PendingDynamicLinkData? data =
+  //       await FirebaseDynamicLinks.instance.getInitialLink();
+  //   handleLinkData(data);
 
-    FirebaseDynamicLinks.instance.onLink.listen(
-      (PendingDynamicLinkData? dynamicLink) async {
-        handleLinkData(dynamicLink);
-      },
-    );
-  }
+  //   FirebaseDynamicLinks.instance.onLink.listen(
+  //     (PendingDynamicLinkData? dynamicLink) async {
+  //       handleLinkData(dynamicLink);
+  //     },
+  //   );
+  // }
 
-  void handleLinkData(PendingDynamicLinkData? data) {
-    if (data == null) {
-      return;
-    }
+  // void handleLinkData(PendingDynamicLinkData? data) {
+  //   if (data == null) {
+  //     return;
+  //   }
 
-    final Uri deepLink = data.link;
-    print(deepLink);
-  }
+  //   final Uri deepLink = data.link;
+  //   print(deepLink);
+  // }
 
   Future<User?> getCurrentUser() async {
     try {
-      final User? user = auth.currentUser;
+      final User? user = supabaseAuth.currentUser;
       return user;
     } catch (e) {
       print('Error getting current user: $e');
@@ -59,7 +58,7 @@ class SplashViewModel with ChangeNotifier {
   void init(context) async {
     GeolocatorPlatform.instance;
     await checkDeepLink();
-    await initDynamicLinks();
+    // await initDynamicLinks();
     try {
       User? user = await getCurrentUser();
       if (user != null) {

@@ -1,8 +1,8 @@
-import 'package:expenses_managment_app_provider/model/data/user_model.dart';
+import 'package:expenses_managment_app_provider/model/data/user_model_supabase.dart';
 import 'package:flutter/material.dart';
 
 class LoginRegisterViewModel with ChangeNotifier {
-  UserModel userModel = UserModel.instance;
+  UserModelSupabase userModel = UserModelSupabase.instance;
 
   Future<bool> loginEmailPassword(email, password) async {
     try {
@@ -28,30 +28,30 @@ class LoginRegisterViewModel with ChangeNotifier {
     }
   }
 
-  Future<bool> signInWithGoogle() async {
-    try {
-      bool success = await userModel.signInWithGoogle();
-      if (success) {
-        notifyListeners();
-      }
-      return success;
-    } on Exception catch (error) {
-      print(error);
-      return false;
-    }
-  }
+  // Future<bool> signInWithGoogle() async {
+  //   try {
+  //     bool success = await userModel.signInWithGoogle();
+  //     if (success) {
+  //       notifyListeners();
+  //     }
+  //     return success;
+  //   } on Exception catch (error) {
+  //     print(error);
+  //     return false;
+  //   }
+  // }
 
-  Future<bool> signInWithFacebook() async {
-    try {
-      bool success = await userModel.signInWithFacebook();
-      if (success) {
-        notifyListeners();
-      }
-      return success;
-    } catch (e) {
-      print(e);
-      return false;
-    }
-  }
+  // Future<bool> signInWithFacebook() async {
+  //   try {
+  //     bool success = await userModel.signInWithFacebook();
+  //     if (success) {
+  //       notifyListeners();
+  //     }
+  //     return success;
+  //   } catch (e) {
+  //     print(e);
+  //     return false;
+  //   }
+  // }
 
 }

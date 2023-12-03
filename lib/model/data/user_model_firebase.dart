@@ -2,12 +2,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-class UserModel {
+class UserModelFirebase {
   final auth = FirebaseAuth.instance;
   User? user;
-  UserModel._();
-  static final UserModel _instance = UserModel._();
-  static UserModel get instance => _instance;
+  UserModelFirebase._();
+  static final UserModelFirebase _instance = UserModelFirebase._();
+  static UserModelFirebase get instance => _instance;
 
   Future loginEmailPassword(email, password) async {
     try {
@@ -77,7 +77,7 @@ class UserModel {
     }
   }
 
-  Future getUserInfo() async {
+  getUserInfo() {
     User? currentUser = auth.currentUser;
     return currentUser?.providerData;
   }
