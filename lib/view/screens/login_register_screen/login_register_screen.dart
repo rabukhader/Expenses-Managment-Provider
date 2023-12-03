@@ -1,5 +1,5 @@
 import 'package:expenses_managment_app_provider/model/services/login_register_form/login_register_form.dart';
-import 'package:expenses_managment_app_provider/view/widgets/custom_text_field.dart';
+import 'package:expenses_managment_app_provider/view/screens/login_register_screen/widget/custom_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -71,6 +71,7 @@ class _LoginRegisterScreenState extends State<LoginRegisterScreen> {
                             label: 'Email'),
                         const SizedBox(height: 10),
                         CustomTextField(
+                          obscure: true,
                             controller:
                                 widget.loginRegisterForm.passwordController,
                             label: 'Password')

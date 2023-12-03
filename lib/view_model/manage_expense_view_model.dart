@@ -9,15 +9,18 @@ import '../repositry/local_db/db_helper.dart';
 
 class ManageExpensesViewModel with ChangeNotifier {
   ConnectivityResult currentConnectivity = ConnectivityResult.none;
-  StreamController<Map<String, Expense>> dataStream =
-      StreamController<Map<String, Expense>>.broadcast();
   StreamController<String> textStream = StreamController.broadcast();
+  TextEditingController textController = TextEditingController();
   Completer<void>? searchCompleter;
   CancelToken? cancelToken;
   ExpenseModel expenseModel = ExpenseModel.instance;
   LocalChangesModel localChanges = LocalChangesModel.instance;
 
   ManageExpensesViewModel() {
+    expenseModel.searchResults = expenseModel.allExpenses;
+    textController.addListener(() {
+      textStream.add(textController.text);
+    });
     Connectivity()
         .onConnectivityChanged
         .listen((ConnectivityResult result) async {
@@ -31,21 +34,25 @@ class ManageExpensesViewModel with ChangeNotifier {
   }
 
   Future fetchExpenses() async {
+    if (cancelToken != null && !cancelToken!.isCancelled) {
+      cancelToken!.cancel("Cancelled");
+    }
+    cancelToken = CancelToken();
+
     var connectivityResult = await Connectivity().checkConnectivity();
 
     if (connectivityResult != ConnectivityResult.none) {
       Map<String, Expense> data = await expenseModel.fetchExpense();
-      dataStream.add(data);
       return data;
     } else {
       await fetchLocalExpenses();
     }
+    notifyListeners();
     Connectivity().onConnectivityChanged.listen((result) async {
       if (result != ConnectivityResult.none) {
         await fetchExpenses();
       }
     });
-    notifyListeners();
   }
 
   Future fetchLocalExpenses() async {
@@ -53,7 +60,6 @@ class ManageExpensesViewModel with ChangeNotifier {
     final localData = await dbHelper.fetchExpenses();
     expenseModel.allExpenses = localData;
     expenseModel.searchResults = expenseModel.allExpenses;
-    dataStream.add(expenseModel.searchResults);
     notifyListeners();
   }
 
@@ -77,6 +83,7 @@ class ManageExpensesViewModel with ChangeNotifier {
       await editLocalExpense(updatedData, id);
     }
     await fetchExpenses();
+    notifyListeners();
   }
 
   Future<void> addExpense(newExpense) async {
@@ -88,6 +95,7 @@ class ManageExpensesViewModel with ChangeNotifier {
       await addLocalExpense(newExpense);
     }
     await fetchExpenses();
+    notifyListeners();
   }
 
   Future searchExpense(String query) async {
@@ -112,7 +120,7 @@ class ManageExpensesViewModel with ChangeNotifier {
       final offlineResults = await dbHelper.searchExpenses(query);
       expenseModel.searchResults = {for (var e in offlineResults) e.name: e};
     }
-    dataStream.add(expenseModel.searchResults);
+
     notifyListeners();
   }
 
@@ -188,7 +196,7 @@ class ManageExpensesViewModel with ChangeNotifier {
     localChanges.listOfLocalChanges.clear();
   }
 
-  onSearch(text) {
+  void onSearch(text) {
     textStream.add(text);
     notifyListeners();
   }

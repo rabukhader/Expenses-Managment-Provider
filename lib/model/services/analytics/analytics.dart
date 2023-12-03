@@ -3,14 +3,19 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 class Analytics {
   final FirebaseAnalytics analytics = FirebaseAnalytics.instance;
 
-  Future<void> sendAnalyticsEvent() async {
+  Future<void> sendLogEvent(String name) async {
     await analytics.logEvent(
-      name: 'button_click',
+      name: name,
       parameters: <String, dynamic>{
         'page': 'home',
         'button_id': 'example_button',
       },
     );
-    await analytics.logLogin(loginMethod: 'Email Password');
+  }
+
+  Future sendLoginEvent(String loginMethod)async {
+    await analytics.logLogin(
+      loginMethod: loginMethod
+    );
   }
 }

@@ -19,15 +19,16 @@ class AddEditForm extends StatefulWidget {
   final AddEditExpenseValidator validator;
   final ExpenseForm form;
   final String processName;
-  const AddEditForm(
-      {super.key,
-      this.imageService,
-      required this.locationService,
-      this.data,
-      this.expenseId,
-      required this.validator,
-      required this.form,
-      required this.processName});
+  const AddEditForm({
+    super.key,
+    this.imageService,
+    required this.locationService,
+    this.data,
+    this.expenseId,
+    required this.validator,
+    required this.form,
+    required this.processName,
+  });
 
   @override
   State<AddEditForm> createState() => _AddEditFormState();
@@ -193,14 +194,12 @@ class _AddEditFormState extends State<AddEditForm> {
                                 TextButton(
                                   onPressed: () async {
                                     Navigator.pop(context);
-                                    var result = await Navigator.push(
+                                    await Navigator.push(
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) => CameraSection(
                                                 imageService:
                                                     widget.imageService!)));
-                                    print(result);
-
                                     if (widget.imageService!.imageController
                                             .text !=
                                         '') {
@@ -302,7 +301,7 @@ class _AddEditFormState extends State<AddEditForm> {
                       );
                       final result =
                           await widget.locationService.fetchLocation();
-                          Navigator.pop(context);
+                      Navigator.pop(context);
                       if (result != null) {
                         errorDialog(context, 'No Internet For Location');
                       } else {

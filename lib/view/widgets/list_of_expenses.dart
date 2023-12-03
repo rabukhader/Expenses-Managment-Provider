@@ -1,19 +1,21 @@
-import 'package:expenses_managment_app_provider/view/screens/manage_expenses/widget/custom_card.dart';
+import 'package:expenses_managment_app_provider/view/widgets/custom_card.dart';
 import 'package:flutter/material.dart';
-import '../../../../model/entities/expense_entity.dart';
-import '../../expense_details/expense_details.dart';
+import '../../model/entities/expense_entity.dart';
+import '../screens/expense_details/expense_details.dart';
 
 class ListOfExpenses extends StatelessWidget {
   final Map<String, Expense> data;
   final Function? onDeletePressed;
   final Function? onEditPressed;
   final Function? onCopyPressed;
+  final Function? onViewPressed;
   final Function? onTap;
   const ListOfExpenses(
       {super.key,
       required this.data,
       this.onDeletePressed,
       this.onEditPressed,
+      this.onViewPressed,
       this.onTap,
       this.onCopyPressed});
 
@@ -41,6 +43,7 @@ class ListOfExpenses extends StatelessWidget {
                           onDeletePressed: onDeletePressed,
                           onEditPressed: onEditPressed,
                           onCopyPressed: onCopyPressed,
+                          
                         ));
               } else {}
             },
@@ -50,6 +53,7 @@ class ListOfExpenses extends StatelessWidget {
                 onDeletePressed: onDeletePressed,
                 onEditPressed: onEditPressed,
                 onCopyPressed: onCopyPressed,
+                onViewPressed: onViewPressed,
                 data: expenseDetails,
                 id: id,
               ),

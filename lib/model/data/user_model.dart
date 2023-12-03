@@ -69,12 +69,17 @@ class UserModel {
   Future<bool> signOut() async {
     try {
       await auth.signOut();
-      clearUserInfo(); // Clear user information
+      clearUserInfo();
       return true;
     } catch (e) {
       print("Error signing out: $e");
       return false;
     }
+  }
+
+  Future getUserInfo() async {
+    User? currentUser = auth.currentUser;
+    return currentUser?.providerData;
   }
 
   void clearUserInfo() {

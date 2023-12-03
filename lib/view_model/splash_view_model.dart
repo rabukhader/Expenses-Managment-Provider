@@ -1,12 +1,9 @@
-import 'package:camera/camera.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
 import 'package:uni_links/uni_links.dart' as unilink;
-
-late List<CameraDescription> cameras;
 
 class SplashViewModel with ChangeNotifier {
   final auth = FirebaseAuth.instance;
@@ -60,7 +57,6 @@ class SplashViewModel with ChangeNotifier {
   }
 
   void init(context) async {
-    cameras = await availableCameras();
     GeolocatorPlatform.instance;
     await checkDeepLink();
     await initDynamicLinks();

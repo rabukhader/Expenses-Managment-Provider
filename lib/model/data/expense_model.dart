@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dio/dio.dart';
 import '../../repositry/local_db/db_helper.dart';
 import '../entities/expense_entity.dart';
@@ -16,14 +18,6 @@ class ExpenseModel {
   Map<String, Expense> allExpenses = {};
   Map<String, Expense> searchResults = {};
 
-  Future postExpense(newExpense) async {
-    try {
-      await api.postExpense(newExpense);
-    } catch (e) {
-      rethrow;
-    }
-  }
-
   Future fetchExpense() async {
     try {
       final response = await api.fetchExpenses();
@@ -37,6 +31,14 @@ class ExpenseModel {
       allExpenses = data;
       searchResults = data;
       return data;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future postExpense(newExpense) async {
+    try {
+      await api.postExpense(newExpense);
     } catch (e) {
       rethrow;
     }

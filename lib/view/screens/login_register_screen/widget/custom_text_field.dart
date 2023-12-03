@@ -3,13 +3,15 @@ import 'package:google_fonts/google_fonts.dart';
 
 class CustomTextField extends StatelessWidget {
   final String label;
+  final bool? obscure;
   final TextEditingController controller;
   const CustomTextField(
-      {super.key, required this.controller, required this.label});
+      {super.key, required this.controller, required this.label, this.obscure});
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      obscureText: obscure ?? false,
       controller: controller,
       textInputAction: TextInputAction.next,
       style: GoogleFonts.poppins(

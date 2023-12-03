@@ -103,83 +103,95 @@ class ExpenseDetails extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    ElevatedButton.icon(
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: Theme.of(context).primaryColor),
-                      icon: Icon(
-                        Icons.delete,
-                        color: Theme.of(context).hintColor,
-                      ),
-                      onPressed: () {
-                        deleteDialog(context, data.name, id, onDeletePressed);
-                      },
-                      label: Text(
-                        "Delete",
-                        style: GoogleFonts.poppins(
-                            color: Theme.of(context).hintColor,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500),
-                      ),
-                    ),
-                    onEditPressed != null ? ElevatedButton.icon(
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: Theme.of(context).primaryColor),
-                      icon: Icon(
-                        Icons.edit,
-                        color: Theme.of(context).hintColor,
-                      ),
-                      onPressed: () async {
-                        final result = await Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => AddEditExpensesScreen(
-                                    processName: 'Edit',
-                                    expenseId: id,
-                                    data: data)));
-                        if (result != null) {
-                          await onEditPressed(result, id);
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => HomeScreen()));
-                        }
-                      },
-                      label: Text(
-                        "Edit",
-                        style: GoogleFonts.poppins(
-                            color: Theme.of(context).hintColor,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500),
-                      ),
-                    ): Container(),
-                    ElevatedButton.icon(
-                        style: ElevatedButton.styleFrom(
-                            backgroundColor: Theme.of(context).primaryColor),
-                        icon: Icon(
-                          Icons.copy,
-                          color: Theme.of(context).hintColor,
-                        ),
-                        onPressed: () async {
-                          final result = await Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => AddEditExpensesScreen(
-                                      processName: 'Clone',
-                                      expenseId: id,
-                                      data: data)));
-                          if (result != null) await onCopyPressed(result);
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => HomeScreen()));
-                        },
-                        label: Text(
-                          "Clone",
-                          style: GoogleFonts.poppins(
+                    onDeletePressed != null
+                        ? ElevatedButton.icon(
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor:
+                                    Theme.of(context).primaryColor),
+                            icon: Icon(
+                              Icons.delete,
                               color: Theme.of(context).hintColor,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500),
-                        )),
+                            ),
+                            onPressed: () {
+                              deleteDialog(
+                                  context, data.name, id, onDeletePressed);
+                            },
+                            label: Text(
+                              "Delete",
+                              style: GoogleFonts.poppins(
+                                  color: Theme.of(context).hintColor,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500),
+                            ),
+                          )
+                        : Container(),
+                    onEditPressed != null
+                        ? ElevatedButton.icon(
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor:
+                                    Theme.of(context).primaryColor),
+                            icon: Icon(
+                              Icons.edit,
+                              color: Theme.of(context).hintColor,
+                            ),
+                            onPressed: () async {
+                              final result = await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          AddEditExpensesScreen(
+                                              processName: 'Edit',
+                                              expenseId: id,
+                                              data: data)));
+                              if (result != null) {
+                                await onEditPressed(result, id);
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => HomeScreen()));
+                              }
+                            },
+                            label: Text(
+                              "Edit",
+                              style: GoogleFonts.poppins(
+                                  color: Theme.of(context).hintColor,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500),
+                            ),
+                          )
+                        : Container(),
+                    onCopyPressed != null
+                        ? ElevatedButton.icon(
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor:
+                                    Theme.of(context).primaryColor),
+                            icon: Icon(
+                              Icons.copy,
+                              color: Theme.of(context).hintColor,
+                            ),
+                            onPressed: () async {
+                              final result = await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          AddEditExpensesScreen(
+                                              processName: 'Clone',
+                                              expenseId: id,
+                                              data: data)));
+                              if (result != null) await onCopyPressed(result);
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => HomeScreen()));
+                            },
+                            label: Text(
+                              "Clone",
+                              style: GoogleFonts.poppins(
+                                  color: Theme.of(context).hintColor,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500),
+                            ))
+                        : Container(),
                   ],
                 ),
               )

@@ -1,4 +1,5 @@
 import 'package:expenses_managment_app_provider/view/widgets/custom_bottom_navigation_bar.dart';
+import 'package:expenses_managment_app_provider/view/widgets/loader.dart';
 import 'package:expenses_managment_app_provider/view_model/home_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -11,9 +12,22 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => HomeViewModel(),
-      child: const HomeScreenView(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => NavigationProvider()),
+        ChangeNotifierProvider(create: (_) => HomeViewModel()),
+      ],
+      child: Consumer<HomeViewModel>(
+        builder: (context, homeVM, child) => FutureBuilder(
+            future: homeVM.fetchExpenses(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Loader();
+              } else {
+                return const HomeScreenView();
+              }
+            }),
+      ),
     );
   }
 }
@@ -28,27 +42,35 @@ class HomeScreenView extends StatefulWidget {
 class _HomeScreenViewState extends State<HomeScreenView> {
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => NavigationProvider()),
-        ChangeNotifierProvider(create: (_) => HomeViewModel()),
-      ],
-      child: SafeArea(
-        child: Scaffold(
-          appBar: const PreferredSize(
-            preferredSize: Size.fromHeight(60),
-            child: CustomAppBar(),
+    return Consumer<HomeViewModel>(
+      builder: (context, homeVM, child) {
+        return SafeArea(
+          child: Scaffold(
+            appBar: const PreferredSize(
+              preferredSize: Size.fromHeight(60),
+              child: CustomAppBar(),
+            ),
+            body: Selector<NavigationProvider, Widget>(
+              selector: (_, navProvider) => navProvider.currentPage,
+              builder: (context, page, child) {
+                return page;
+              },
+            ),
+            bottomNavigationBar: const CustomBottomNavigationBar(),
+            drawer: FutureBuilder(
+                future: homeVM.loadUserInfo(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Loader();
+                  } else {
+                    return CustomDrawer(
+                      userInfo: snapshot.data?[0],
+                    );
+                  }
+                }),
           ),
-          body: Selector<NavigationProvider, Widget>(
-            selector: (_, navProvider) => navProvider.currentPage,
-            builder: (context, page, child) {
-              return page;
-            },
-          ),
-          bottomNavigationBar: const CustomBottomNavigationBar(),
-          drawer: const CustomDrawer(),
-        ),
-      ),
+        );
+      },
     );
   }
 }

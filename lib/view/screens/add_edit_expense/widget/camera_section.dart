@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously, avoid_print
+
 import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:connectivity/connectivity.dart';
@@ -6,13 +8,12 @@ import 'package:expenses_managment_app_provider/view/widgets/dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 // import 'package:photo_manager/photo_manager.dart';
-import '../../../../view_model/splash_view_model.dart';
 import '../../../widgets/loader.dart';
 import 'camera_view_photo.dart';
 
 class CameraSection extends StatefulWidget {
   final ImageService imageService;
-  const CameraSection({super.key, required this.imageService});
+  const CameraSection({super.key, required this.imageService,});
 
   @override
   State<CameraSection> createState() => _CameraSectionState();
@@ -29,7 +30,7 @@ class _CameraSectionState extends State<CameraSection> {
   void initState() {
     super.initState();
     camController = CameraController(
-      cameras[0],
+      widget.imageService.cam.cameras[0],
       ResolutionPreset.high,
       imageFormatGroup: ImageFormatGroup.yuv420,
     );
@@ -198,6 +199,7 @@ class _CameraSectionState extends State<CameraSection> {
     if (connectivityResult != ConnectivityResult.none) {
       try {
         var re = await camController.takePicture();
+        
         showDialog(
           barrierDismissible: false,
           context: context,

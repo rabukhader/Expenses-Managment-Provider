@@ -8,9 +8,15 @@ class Loader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         body: Center(
-      child: LoadingAnimationWidget.staggeredDotsWave(
-        color: Theme.of(context).colorScheme.onBackground,
-        size: 100,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          LoadingAnimationWidget.staggeredDotsWave(
+            color: Theme.of(context).colorScheme.onBackground,
+            size: 100,
+          ),
+          const Text('Loading')
+        ],
       ),
     ));
   }

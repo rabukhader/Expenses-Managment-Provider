@@ -1,5 +1,5 @@
 import 'package:expenses_managment_app_provider/model/entities/expense_entity.dart';
-import 'package:expenses_managment_app_provider/view/screens/manage_expenses/widget/list_of_expenses.dart';
+import 'package:expenses_managment_app_provider/view/widgets/list_of_expenses.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -24,6 +24,9 @@ class MonthExpenses extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 12.0),
         child: ListOfExpenses(
+          onViewPressed: (BuildContext context, WidgetBuilder builder) {
+            Navigator.push(context, MaterialPageRoute(builder: builder));
+          },
           data: data,
         ),
       ),

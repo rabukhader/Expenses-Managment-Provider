@@ -1,13 +1,12 @@
 import 'dart:async';
 import 'package:expenses_managment_app_provider/view/screens/add_edit_expense/add_edit_expense.dart';
-import 'package:expenses_managment_app_provider/view/screens/manage_expenses/widget/list_of_expenses.dart';
+import 'package:expenses_managment_app_provider/view/widgets/list_of_expenses.dart';
 import 'package:expenses_managment_app_provider/view/screens/manage_expenses/widget/search_input.dart';
 import 'package:expenses_managment_app_provider/view/widgets/custom_heading.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
 import '../../../view_model/manage_expense_view_model.dart';
-import '../../widgets/loader.dart';
 
 class ManageExpenses extends StatelessWidget {
   const ManageExpenses({super.key});
@@ -30,18 +29,6 @@ class ManageExpensesView extends StatefulWidget {
 
 class _ManageExpensesViewState extends State<ManageExpensesView> {
   late StreamSubscription<String> subscription;
-  final textController = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-    final exViewModel =
-        Provider.of<ManageExpensesViewModel>(context, listen: false);
-    exViewModel.fetchExpenses();
-    textController.addListener(() {
-      exViewModel.textStream.add(textController.text);
-    });
-  }
 
   @override
   void didChangeDependencies() {
@@ -58,62 +45,58 @@ class _ManageExpensesViewState extends State<ManageExpensesView> {
   }
 
   @override
+  void dispose() {
+    subscription.cancel();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final exViewModel =
-        Provider.of<ManageExpensesViewModel>(context, listen: false);
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: Column(
-        children: [
-          const CustomHeading(title: 'Expenses List'),
-          SearchInput(
-            textStream: exViewModel.textStream,
-            onSearch: (query) {
-              exViewModel.onSearch(query);
-            },
-            textController: textController,
+    return Consumer<ManageExpensesViewModel>(
+      builder: (context, exViewModel, child) => Scaffold(
+        resizeToAvoidBottomInset: false,
+        body: Column(
+          children: [
+            const CustomHeading(title: 'Expenses List'),
+            SearchInput(
+              textStream: exViewModel.textStream,
+              onSearch: (query) {
+                exViewModel.onSearch(query);
+              },
+              textController: exViewModel.textController,
+            ),
+            Expanded(
+                child: Selector<ManageExpensesViewModel, dynamic>(
+              selector: (_, ex) => ex.expenseModel.searchResults,
+              builder: (context, ex, child) => ListOfExpenses(
+                onDeletePressed: exViewModel.deleteExpense,
+                onCopyPressed: exViewModel.addExpense,
+                onEditPressed: exViewModel.editExpense,
+                data: ex,
+                onTap: (BuildContext context, WidgetBuilder builder) {
+                  Navigator.push(context, MaterialPageRoute(builder: builder));
+                },
+              ),
+            ))
+          ],
+        ),
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: Theme.of(context).hintColor,
+          splashColor: Theme.of(context).hintColor,
+          foregroundColor: Theme.of(context).primaryColor,
+          onPressed: () async {
+            final result = await Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const AddEditExpensesScreen(
+                          processName: 'Add',
+                        )));
+            if (result != null) await exViewModel.addExpense(result);
+          },
+          child: const Icon(
+            Icons.add,
+            size: 45,
           ),
-          Expanded(
-              child: StreamBuilder(
-                  stream: exViewModel.dataStream.stream,
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Loader();
-                    } else if (snapshot.hasError) {
-                      return Text('Error: ${snapshot.error}');
-                    } else if (snapshot.data!.isEmpty) {
-                      return const Text('Not Found');
-                    } else {
-                      return ListOfExpenses(
-                        onDeletePressed: exViewModel.deleteExpense,
-                        onCopyPressed: exViewModel.addExpense,
-                        onEditPressed: exViewModel.editExpense,
-                        data: exViewModel.expenseModel.searchResults,
-                        onTap: (BuildContext context, WidgetBuilder builder) {
-                          Navigator.push(
-                              context, MaterialPageRoute(builder: builder));
-                        },
-                      );
-                    }
-                  })),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Theme.of(context).hintColor,
-        splashColor: Theme.of(context).hintColor,
-        foregroundColor: Theme.of(context).primaryColor,
-        onPressed: () async {
-          final result = await Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => const AddEditExpensesScreen(
-                        processName: 'Add',
-                      )));
-          if (result != null) await exViewModel.addExpense(result);
-        },
-        child: const Icon(
-          Icons.add,
-          size: 45,
         ),
       ),
     );

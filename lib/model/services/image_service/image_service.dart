@@ -1,13 +1,19 @@
 import 'dart:io';
-// import 'dart:typed_data';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
+
+import '../../data/camera_model.dart';
 // import 'package:photo_manager/photo_manager.dart';
 
 class ImageService {
   TextEditingController imageController = TextEditingController();
+  CameraModel cam = CameraModel();
+
+  ImageService(){
+    cam.init();
+  }
 
   loadData(prevImage) {
     imageController.text = prevImage;

@@ -6,9 +6,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:sidebarx/sidebarx.dart';
 
-
 class CustomDrawer extends StatelessWidget {
-  const CustomDrawer({super.key});
+  final userInfo;
+  const CustomDrawer({super.key, this.userInfo});
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +31,7 @@ class CustomDrawer extends StatelessWidget {
               selectedItemTextPadding: const EdgeInsets.only(left: 10),
               padding: const EdgeInsets.all(10),
               itemMargin: const EdgeInsets.all(10),
-              width: 150,
+              width: 280,
               itemTextPadding: const EdgeInsets.only(left: 10),
               textStyle: GoogleFonts.poppins(
                 color: Theme.of(context).colorScheme.onBackground,
@@ -41,7 +41,7 @@ class CustomDrawer extends StatelessWidget {
           ),
           items: [
             SidebarXItem(
-                label: 'User',
+                label: userInfo.displayName ?? userInfo.email,
                 iconWidget: Center(
                   child: ClipRRect(
                       borderRadius: BorderRadius.circular(50),
@@ -50,8 +50,9 @@ class CustomDrawer extends StatelessWidget {
                           radius: 28,
                           child: Container(
                             decoration: BoxDecoration(
-                                image: const DecorationImage(
-                                    image: AssetImage('assets/user.png')),
+                                image: DecorationImage(
+                                    image: NetworkImage(userInfo.photoURL ??
+                                        'https://images.rawpixel.com/image_png_800/cHJpdmF0ZS9sci9pbWFnZXMvd2Vic2l0ZS8yMDIyLTA0L3BmLWljb240LWppcjIwNjItcG9yLWwtam9iNzg4LnBuZw.png')),
                                 borderRadius: BorderRadius.circular(10)),
                           ))),
                 )),
@@ -64,8 +65,7 @@ class CustomDrawer extends StatelessWidget {
               label: 'Log Out',
               icon: Icons.logout,
               onTap: () async {
-                await Provider.of<HomeViewModel>(context,
-                        listen: false)
+                await Provider.of<HomeViewModel>(context, listen: false)
                     .signOut();
                 GoRouter.of(context).go('/');
               },

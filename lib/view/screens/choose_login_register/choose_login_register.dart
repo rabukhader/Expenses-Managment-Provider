@@ -1,3 +1,4 @@
+import 'package:expenses_managment_app_provider/model/services/analytics/analytics.dart';
 import 'package:expenses_managment_app_provider/model/services/login_register_form/login_register_form.dart';
 import 'package:expenses_managment_app_provider/view/widgets/loader.dart';
 import 'package:expenses_managment_app_provider/view_model/login_register_view_model.dart';
@@ -13,22 +14,22 @@ class ChooseLoginRegister extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => LoginRegisterViewModel(),
-      child: const ChooseLoginRegisterView());
+        create: (_) => LoginRegisterViewModel(),
+        child: const ChooseLoginRegisterView());
   }
 }
-
 
 class ChooseLoginRegisterView extends StatefulWidget {
   const ChooseLoginRegisterView({super.key});
 
   @override
-  State<ChooseLoginRegisterView> createState() => _ChooseLoginRegisterViewState();
+  State<ChooseLoginRegisterView> createState() =>
+      _ChooseLoginRegisterViewState();
 }
 
 class _ChooseLoginRegisterViewState extends State<ChooseLoginRegisterView> {
-
   LoginRegisterForm loginRegisterForm = LoginRegisterForm();
+  Analytics analytics = Analytics();
   @override
   Widget build(BuildContext context) {
     final lgProvider =
@@ -128,6 +129,8 @@ class _ChooseLoginRegisterViewState extends State<ChooseLoginRegisterView> {
                                 children: [
                                   TextButton(
                                       onPressed: () {
+                                        analytics.sendLogEvent(
+                                            'go_to_sign_in');
                                         Navigator.push(
                                             context,
                                             MaterialPageRoute(
@@ -183,8 +186,10 @@ class _ChooseLoginRegisterViewState extends State<ChooseLoginRegisterView> {
                                                         .onBackground))),
                                       )),
                                   TextButton(
-                                      onPressed: () {
-                                        Navigator.push(
+                                      onPressed: () async{
+                                        analytics.sendLogEvent(
+                                            'go_to_sign_up');
+                                        await Navigator.push(
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) =>
@@ -292,7 +297,7 @@ class _ChooseLoginRegisterViewState extends State<ChooseLoginRegisterView> {
                                                   child: Loader()),
                                             ),
                                           );
-
+                                          analytics.sendLoginEvent('Google_login');
                                           try {
                                             var result = await Provider.of<
                                                 LoginRegisterViewModel>(
