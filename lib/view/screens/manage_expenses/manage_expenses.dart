@@ -1,12 +1,17 @@
 import 'dart:async';
+import 'package:expenses_managment_app_provider/model/entities/expense_entity.dart';
 import 'package:expenses_managment_app_provider/view/screens/add_edit_expense/add_edit_expense.dart';
-import 'package:expenses_managment_app_provider/view/widgets/list_of_expenses.dart';
+import 'package:expenses_managment_app_provider/view/screens/expense_details/expense_details.dart';
+import 'package:expenses_managment_app_provider/view/widgets/clone_button.dart';
+import 'package:expenses_managment_app_provider/view/widgets/delete_button.dart';
 import 'package:expenses_managment_app_provider/view/screens/manage_expenses/widget/search_input.dart';
 import 'package:expenses_managment_app_provider/view/widgets/custom_heading.dart';
+import 'package:expenses_managment_app_provider/view/widgets/edit_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
 import '../../../view_model/manage_expense_view_model.dart';
+import '../../widgets/custom_card.dart';
 
 class ManageExpenses extends StatelessWidget {
   const ManageExpenses({super.key});
@@ -68,15 +73,50 @@ class _ManageExpensesViewState extends State<ManageExpensesView> {
             Expanded(
                 child: Selector<ManageExpensesViewModel, dynamic>(
               selector: (_, ex) => ex.expenseModel.searchResults,
-              builder: (context, ex, child) => ListOfExpenses(
-                onDeletePressed: exViewModel.deleteExpense,
-                onCopyPressed: exViewModel.addExpense,
-                onEditPressed: exViewModel.editExpense,
-                data: ex,
-                onTap: (BuildContext context, WidgetBuilder builder) {
-                  Navigator.push(context, MaterialPageRoute(builder: builder));
-                },
-              ),
+              builder: (context, ex, child) {
+                if (ex.isEmpty) {
+                  return const Center(
+                    child: Text('No Expenses Here'),
+                  );
+                } else {
+                  return ListView.builder(
+                    itemCount: ex.length,
+                    itemBuilder: (context, index) {
+                      final entry = ex.entries.toList()[index];
+                      final id = entry.key;
+                      final Expense expenseDetails = entry.value;
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: CustomCard(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ExpenseDetails(
+                                        id: id, data: expenseDetails)));
+                          },
+                          buttons: [
+                            DeleteButton(
+                                data: expenseDetails,
+                                id: id,
+                                onPressed: exViewModel.deleteExpense),
+                            EditButton(
+                                data: expenseDetails,
+                                id: id,
+                                onPressed: exViewModel.editExpense),
+                            CloneButton(
+                                data: expenseDetails,
+                                id: id,
+                                onPressed: exViewModel.addExpense)
+                          ],
+                          data: expenseDetails,
+                          id: id,
+                        ),
+                      );
+                    },
+                  );
+                }
+              },
             ))
           ],
         ),
@@ -102,3 +142,16 @@ class _ManageExpensesViewState extends State<ManageExpensesView> {
     );
   }
 }
+
+
+
+
+// => ListOfExpenses(
+//                 onDeletePressed: exViewModel.deleteExpense,
+//                 onCopyPressed: exViewModel.addExpense,
+//                 onEditPressed: exViewModel.editExpense,
+//                 data: ex,
+//                 onTap: (BuildContext context, WidgetBuilder builder) {
+//                   Navigator.push(context, MaterialPageRoute(builder: builder));
+//                 },
+//               )

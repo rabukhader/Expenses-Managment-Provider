@@ -2,7 +2,7 @@ import 'package:expenses_managment_app_provider/view/screens/home/home_screen.da
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-deleteDialog(context, name, id, onDeletePressed) {
+deleteDialog(context, id, onDeletePressed) {
   showDialog(
       barrierColor: Theme.of(context).dialogBackgroundColor,
       context: context,
@@ -12,7 +12,7 @@ deleteDialog(context, name, id, onDeletePressed) {
           child: AlertDialog(
             backgroundColor: Theme.of(context).hintColor,
             title: Text(
-              'Are you sure you want to delete $name expense ?',
+              'Are you sure you want to delete expense ?',
               style: GoogleFonts.poppins(
                   color: Theme.of(context).colorScheme.background),
             ),

@@ -113,8 +113,7 @@ class ExpenseDetails extends StatelessWidget {
                               color: Theme.of(context).hintColor,
                             ),
                             onPressed: () {
-                              deleteDialog(
-                                  context, data.name, id, onDeletePressed);
+                              deleteDialog(context, id, onDeletePressed);
                             },
                             label: Text(
                               "Delete",
