@@ -1,5 +1,3 @@
-// import 'package:expenses_managment_app_provider/model/services/analytics/analytics.dart';
-import 'package:expenses_managment_app_provider/model/services/login_register_form/login_register_form.dart';
 import 'package:expenses_managment_app_provider/view/widgets/loader.dart';
 import 'package:expenses_managment_app_provider/view_model/login_register_view_model.dart';
 import 'package:flutter/material.dart';
@@ -28,8 +26,6 @@ class ChooseLoginRegisterView extends StatefulWidget {
 }
 
 class _ChooseLoginRegisterViewState extends State<ChooseLoginRegisterView> {
-  LoginRegisterForm loginRegisterForm = LoginRegisterForm();
-  // Analytics analytics = Analytics();
   @override
   Widget build(BuildContext context) {
     final lgProvider =
@@ -129,7 +125,7 @@ class _ChooseLoginRegisterViewState extends State<ChooseLoginRegisterView> {
                                 children: [
                                   TextButton(
                                       onPressed: () {
-                                        // analytics.sendLogEvent(
+                                        // lgProvider.analytics.sendLogEvent(
                                         //     'go_to_sign_in');
                                         Navigator.push(
                                             context,
@@ -138,7 +134,7 @@ class _ChooseLoginRegisterViewState extends State<ChooseLoginRegisterView> {
                                                     LoginRegisterScreen(
                                                         processName: 'Sign In',
                                                         loginRegisterForm:
-                                                            loginRegisterForm,
+                                                            lgProvider.loginRegisterForm,
                                                         onSubmit: lgProvider
                                                             .loginEmailPassword)));
                                       },
@@ -187,7 +183,7 @@ class _ChooseLoginRegisterViewState extends State<ChooseLoginRegisterView> {
                                       )),
                                   TextButton(
                                       onPressed: () async{
-                                        // analytics.sendLogEvent(
+                                        // lgProvider.analytics.sendLogEvent(
                                         //     'go_to_sign_up');
                                         await Navigator.push(
                                             context,
@@ -198,7 +194,7 @@ class _ChooseLoginRegisterViewState extends State<ChooseLoginRegisterView> {
                                                         onSubmit: lgProvider
                                                             .signUpEmailPassword,
                                                         loginRegisterForm:
-                                                            loginRegisterForm)));
+                                                            lgProvider.loginRegisterForm)));
                                       },
                                       style: ButtonStyle(
                                           shadowColor:

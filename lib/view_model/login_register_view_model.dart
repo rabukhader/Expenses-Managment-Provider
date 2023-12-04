@@ -1,8 +1,12 @@
 import 'package:expenses_managment_app_provider/model/data/user_model_supabase.dart';
 import 'package:flutter/material.dart';
 
+import '../model/services/login_register_form/login_register_form.dart';
+
 class LoginRegisterViewModel with ChangeNotifier {
   UserModelSupabase userModel = UserModelSupabase.instance;
+  // Analytics analytics = Analytics();
+  LoginRegisterForm loginRegisterForm = LoginRegisterForm();
 
   Future<bool> loginEmailPassword(email, password) async {
     try {
