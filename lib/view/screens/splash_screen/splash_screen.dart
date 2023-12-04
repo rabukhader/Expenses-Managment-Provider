@@ -48,7 +48,7 @@ class _SplashViewState extends State<SplashView> {
 
     final splashViewModel = Provider.of<SplashViewModel>(context, listen: false);
 
-    Future.delayed(const Duration(milliseconds: 200), () {
+    Future.delayed(const Duration(milliseconds: 400), () {
       splashViewModel.init(context);
     });
   }

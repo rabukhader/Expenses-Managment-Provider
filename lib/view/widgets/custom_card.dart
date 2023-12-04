@@ -79,111 +79,123 @@ class CustomCard extends StatelessWidget {
                 ],
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   onDeletePressed != null
-                      ? ElevatedButton.icon(
-                          style: ElevatedButton.styleFrom(
-                              backgroundColor: Theme.of(context).primaryColor),
-                          icon: Icon(
-                            Icons.delete,
-                            color: Theme.of(context).hintColor,
+                      ? Padding(
+                        padding: const EdgeInsets.all(2.0),
+                        child: ElevatedButton.icon(
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: Theme.of(context).primaryColor),
+                            icon: Icon(
+                              Icons.delete,
+                              color: Theme.of(context).hintColor,
+                            ),
+                            onPressed: () {
+                              deleteDialog(
+                                  context, data.name, id, onDeletePressed);
+                            },
+                            label: Text(
+                              "Delete",
+                              style: GoogleFonts.poppins(
+                                  color:
+                                      Theme.of(context).colorScheme.onBackground,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500),
+                            ),
                           ),
-                          onPressed: () {
-                            deleteDialog(
-                                context, data.name, id, onDeletePressed);
-                          },
-                          label: Text(
-                            "Delete",
-                            style: GoogleFonts.poppins(
-                                color:
-                                    Theme.of(context).colorScheme.onBackground,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500),
-                          ),
-                        )
+                      )
                       : Container(),
                   onEditPressed != null
-                      ? ElevatedButton.icon(
-                          style: ElevatedButton.styleFrom(
-                              backgroundColor: Theme.of(context).primaryColor),
-                          icon: Icon(
-                            Icons.edit,
-                            color: Theme.of(context).hintColor,
+                      ? Padding(
+                        padding: const EdgeInsets.all(2.0),
+                        child: ElevatedButton.icon(
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: Theme.of(context).primaryColor),
+                            icon: Icon(
+                              Icons.edit,
+                              color: Theme.of(context).hintColor,
+                            ),
+                            onPressed: () async {
+                              final result = await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => AddEditExpensesScreen(
+                                          processName: 'Edit',
+                                          expenseId: id,
+                                          data: data)));
+                              if (result != null) {
+                                await onEditPressed(result, id);
+                              }
+                            },
+                            label: Text(
+                              "Edit",
+                              style: GoogleFonts.poppins(
+                                  color:
+                                      Theme.of(context).colorScheme.onBackground,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500),
+                            ),
                           ),
-                          onPressed: () async {
-                            final result = await Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => AddEditExpensesScreen(
-                                        processName: 'Edit',
-                                        expenseId: id,
-                                        data: data)));
-                            if (result != null) {
-                              await onEditPressed(result, id);
-                            }
-                          },
-                          label: Text(
-                            "Edit",
-                            style: GoogleFonts.poppins(
-                                color:
-                                    Theme.of(context).colorScheme.onBackground,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500),
-                          ),
-                        )
+                      )
                       : Container(),
                   onDeletePressed != null
-                      ? ElevatedButton.icon(
-                          style: ElevatedButton.styleFrom(
-                              backgroundColor: Theme.of(context).primaryColor),
-                          icon: Icon(
-                            Icons.copy,
-                            color: Theme.of(context).hintColor,
-                          ),
-                          onPressed: () async {
-                            final result = await Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => AddEditExpensesScreen(
-                                        processName: 'Clone',
-                                        expenseId: id,
-                                        data: data)));
-                            if (result != null) await onCopyPressed(result);
-                          },
-                          label: Text(
-                            "Clone",
-                            style: GoogleFonts.poppins(
-                                color:
-                                    Theme.of(context).colorScheme.onBackground,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500),
-                          ))
+                      ? Padding(
+                        padding: const EdgeInsets.all(2.0),
+                        child: ElevatedButton.icon(
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: Theme.of(context).primaryColor),
+                            icon: Icon(
+                              Icons.copy,
+                              color: Theme.of(context).hintColor,
+                            ),
+                            onPressed: () async {
+                              final result = await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => AddEditExpensesScreen(
+                                          processName: 'Clone',
+                                          expenseId: id,
+                                          data: data)));
+                              if (result != null) await onCopyPressed(result);
+                            },
+                            label: Text(
+                              "Clone",
+                              style: GoogleFonts.poppins(
+                                  color:
+                                      Theme.of(context).colorScheme.onBackground,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500),
+                            )),
+                      )
                       : Container(),
                   onViewPressed != null
-                      ? ElevatedButton.icon(
-                          style: ElevatedButton.styleFrom(
-                              backgroundColor: Theme.of(context).primaryColor),
-                          icon: Icon(
-                            Icons.view_carousel,
-                            color: Theme.of(context).hintColor,
-                          ),
-                          onPressed: () {
-                            onViewPressed!(
-                                context,
-                                (context) => ExpenseDetails(
-                                      id: id!,
-                                      data: data,
-                                    ));
-                          },
-                          label: Text(
-                            "View",
-                            style: GoogleFonts.poppins(
-                                color:
-                                    Theme.of(context).colorScheme.onBackground,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500),
-                          ))
+                      ? Padding(
+                        padding: const EdgeInsets.all(2.0),
+                        child: ElevatedButton.icon(
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: Theme.of(context).primaryColor),
+                            icon: Icon(
+                              Icons.view_carousel,
+                              color: Theme.of(context).hintColor,
+                            ),
+                            onPressed: () {
+                              onViewPressed!(
+                                  context,
+                                  (context) => ExpenseDetails(
+                                        id: id!,
+                                        data: data,
+                                      ));
+                            },
+                            label: Text(
+                              "View",
+                              style: GoogleFonts.poppins(
+                                  color:
+                                      Theme.of(context).colorScheme.onBackground,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500),
+                            )),
+                      )
                       : Container()
                 ],
               )

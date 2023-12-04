@@ -1,17 +1,18 @@
 import 'dart:io';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../data/camera_model.dart';
 // import 'package:photo_manager/photo_manager.dart';
 
 class ImageService {
+  final supabase = Supabase.instance.client;
   TextEditingController imageController = TextEditingController();
   CameraModel cam = CameraModel();
 
-  ImageService(){
+  ImageService() {
     cam.init();
   }
 
@@ -59,13 +60,11 @@ class ImageService {
 
   Future<void> uploadImageToStorage(File imageFile) async {
     try {
-      final storageRef = FirebaseStorage.instance
-          .ref()
-          .child('expenses_images/${DateTime.now()}.png');
-      UploadTask uploadTask = storageRef.putFile(imageFile);
-      await uploadTask.whenComplete(() {});
-      final imageUrl = await storageRef.getDownloadURL();
-      imageController.text = imageUrl;
+      String filename = 'expensesImage/${DateTime.now()}.txt';
+      await supabase.storage
+          .from('expensesImages')
+          .upload(filename, imageFile);
+      imageController.text = 'https://ikvjrjghrjauwiywzjxc.supabase.co/storage/v1/object/public/expensesImages/$filename';
     } catch (e) {
       print(e);
       rethrow;

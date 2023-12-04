@@ -78,7 +78,7 @@ class ManageExpensesViewModel with ChangeNotifier {
     var connectivityResult = await Connectivity().checkConnectivity();
 
     if (connectivityResult != ConnectivityResult.none) {
-      expenseModel.editExpense(updatedData, id);
+      await expenseModel.editExpense(updatedData, id);
     } else {
       await editLocalExpense(updatedData, id);
     }
@@ -193,6 +193,7 @@ class ManageExpensesViewModel with ChangeNotifier {
     }
 
     localChanges.listOfLocalChanges.clear();
+    notifyListeners();
   }
 
   void onSearch(text) {

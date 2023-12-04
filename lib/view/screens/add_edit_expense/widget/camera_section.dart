@@ -198,7 +198,7 @@ class _CameraSectionState extends State<CameraSection> {
     var connectivityResult = await Connectivity().checkConnectivity();
     if (connectivityResult != ConnectivityResult.none) {
       try {
-        var re = await camController.takePicture();
+        var photo = await camController.takePicture();
         
         showDialog(
           barrierDismissible: false,
@@ -207,7 +207,7 @@ class _CameraSectionState extends State<CameraSection> {
             content: SizedBox(width: 30, height: 150, child: Loader()),
           ),
         );
-        final expenseImage = File(re.path);
+        final expenseImage = File(photo.path);
         await widget.imageService.uploadImageToStorage(expenseImage);
         Navigator.pop(context);
         var result = await Navigator.push(

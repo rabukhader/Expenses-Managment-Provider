@@ -32,12 +32,13 @@ class UserModelSupabase {
     }
   }
 
-  Future<bool> googleSignIn() async {
+  Future<bool> signInWithGoogle() async {
     try {
       final GoogleSignIn googleSignIn = GoogleSignIn(
         clientId: SupabaseConfig.iosClientId,
         serverClientId: SupabaseConfig.webClientId,
       );
+      googleSignIn.disconnect();
       final googleUser = await googleSignIn.signIn();
       final googleAuth = await googleUser!.authentication;
       final accessToken = googleAuth.accessToken;
@@ -75,8 +76,11 @@ class UserModelSupabase {
 
   getUserInfo() {
     User? currentUser = supabaseAuth.currentUser;
-    if (currentUser?.appMetadata['provider'] == 'google'){
-      return [currentUser?.userMetadata!['full_name'], currentUser?.userMetadata!['picture']];
+    if (currentUser?.appMetadata['provider'] == 'google') {
+      return [
+        currentUser?.userMetadata!['full_name'],
+        currentUser?.userMetadata!['picture']
+      ];
     }
     return [currentUser?.email, ''];
   }

@@ -30,7 +30,7 @@ class LoginRegisterViewModel with ChangeNotifier {
 
   Future<bool> signInWithGoogle() async {
     try {
-      bool success = await userModel.googleSignIn();
+      bool success = await userModel.signInWithGoogle();
       if (success) {
         notifyListeners();
       }
@@ -40,5 +40,4 @@ class LoginRegisterViewModel with ChangeNotifier {
       return false;
     }
   }
-
 }

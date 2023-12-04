@@ -93,17 +93,14 @@ class AnalyzeViewModel with ChangeNotifier {
 
     if (monthIndex >= 0 && monthIndex < classifiedExpenses.length) {
       var selectedMonth = classifiedExpenses.keys.toList()[monthIndex];
-      var expensesForMonth = expenseModel.allExpenses.values
-          .where((expense) =>
-              DateFormat('MMMM')
-                  .format(DateFormat('yyyy-MM-dd').parse(expense.dueDate)) ==
-              selectedMonth)
-          .toList();
-
-      Map<String, Expense> expenseMap = {};
-      for (var expense in expensesForMonth) {
-        expenseMap[expense.name] = expense;
-      }
+      Map<String, Expense> expenseMap = Map.fromEntries(
+        expenseModel.allExpenses.entries
+            .where((entry) =>
+                DateFormat('MMMM').format(
+                    DateFormat('yyyy-MM-dd').parse(entry.value.dueDate)) ==
+                selectedMonth)
+            .map((entry) => MapEntry(entry.key, entry.value)),
+      );
 
       return expenseMap;
     }
