@@ -1,7 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../view_model/splash_view_model.dart';
-
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
@@ -9,8 +10,7 @@ class SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create:(_) => SplashViewModel(),
-      child: const SplashView());
+        create: (_) => SplashViewModel(), child: const SplashView());
   }
 }
 
@@ -45,11 +45,11 @@ class _SplashViewState extends State<SplashView> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    final splashViewModel =
+        Provider.of<SplashViewModel>(context, listen: false);
 
-    final splashViewModel = Provider.of<SplashViewModel>(context, listen: false);
-
-    Future.delayed(const Duration(milliseconds: 400), () {
-      splashViewModel.init(context);
+    Future.delayed(const Duration(milliseconds: 2000), () async {
+      await splashViewModel.init();
     });
   }
 }

@@ -1,6 +1,7 @@
 import 'package:expenses_managment_app_provider/view/widgets/loader.dart';
 import 'package:expenses_managment_app_provider/view_model/login_register_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -109,7 +110,7 @@ class _ChooseLoginRegisterViewState extends State<ChooseLoginRegisterView> {
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 40)),
                                         TextSpan(
-                                            text: 'Expenses Managment App',
+                                            text: 'Expenses Management App',
                                             style: GoogleFonts.poppins(
                                                 fontSize: 15,
                                                 color: Colors.grey,
@@ -134,7 +135,8 @@ class _ChooseLoginRegisterViewState extends State<ChooseLoginRegisterView> {
                                                     LoginRegisterScreen(
                                                         processName: 'Sign In',
                                                         loginRegisterForm:
-                                                            lgProvider.loginRegisterForm,
+                                                            lgProvider
+                                                                .loginRegisterForm,
                                                         onSubmit: lgProvider
                                                             .loginEmailPassword)));
                                       },
@@ -182,7 +184,7 @@ class _ChooseLoginRegisterViewState extends State<ChooseLoginRegisterView> {
                                                         .onBackground))),
                                       )),
                                   TextButton(
-                                      onPressed: () async{
+                                      onPressed: () async {
                                         // lgProvider.analytics.sendLogEvent(
                                         //     'go_to_sign_up');
                                         await Navigator.push(
@@ -194,7 +196,8 @@ class _ChooseLoginRegisterViewState extends State<ChooseLoginRegisterView> {
                                                         onSubmit: lgProvider
                                                             .signUpEmailPassword,
                                                         loginRegisterForm:
-                                                            lgProvider.loginRegisterForm)));
+                                                            lgProvider
+                                                                .loginRegisterForm)));
                                       },
                                       style: ButtonStyle(
                                           shadowColor:
@@ -302,9 +305,9 @@ class _ChooseLoginRegisterViewState extends State<ChooseLoginRegisterView> {
                                             Navigator.pop(context);
 
                                             if (result) {
-                                              GoRouter.of(context).go('/home',
-                                                  extra: (state) =>
-                                                      state.isRoot);
+                                              Get.offAllNamed(
+                                                '/home'
+                                              );
                                             }
                                           } catch (error) {
                                             Navigator.pop(context);
@@ -328,7 +331,8 @@ class _ChooseLoginRegisterViewState extends State<ChooseLoginRegisterView> {
                                           ],
                                         )),
                                     ElevatedButton(
-                                        onPressed: (){} /* async {
+                                        onPressed:
+                                            () {} /* async {
                                           var result = await Provider.of<
                                                       LoginRegisterViewModel>(
                                                   context,
@@ -338,7 +342,8 @@ class _ChooseLoginRegisterViewState extends State<ChooseLoginRegisterView> {
                                             GoRouter.of(context).go('/home',
                                                 extra: (state) => state.isRoot);
                                           }
-                                        } */,
+                                        } */
+                                        ,
                                         style: ButtonStyle(
                                             backgroundColor:
                                                 MaterialStatePropertyAll(

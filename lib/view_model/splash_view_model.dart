@@ -1,49 +1,47 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_branch_sdk/flutter_branch_sdk.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:go_router/go_router.dart';
+import 'package:get/get.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:uni_links/uni_links.dart' as unilink;
 
 class SplashViewModel with ChangeNotifier {
   final supabaseAuth = Supabase.instance.client.auth;
+  StreamSubscription<Map>? streamSubscription;
+  StreamController<String> controllerData = StreamController<String>();
 
-  Future<void> checkDeepLink() async {
-    final res = await unilink.getInitialLink();
-    if (res != null) {
-      handleDeepLink(res);
+  Future<void> listenDynamicLinks() async {
+    try {
+      streamSubscription = FlutterBranchSdk.listSession().listen((data) async {
+        controllerData.sink.add(data.toString());
+        print('listening');
+        if (data.containsKey('+clicked_branch_link') &&
+            data['+clicked_branch_link'] == true) {
+          print(
+              '------------------------------------Link clicked----------------------------------------------');
+          print('Custom id: ${data['id']}');
+          print(
+              '------------------------------------------------------------------------------------------------');
+          String route = data['\$marketing_title'];
+          if (route == 'details') {
+            String id = data['id'];
+            _navigateTo(
+              '/details',
+              id: id,
+            );
+          } else {
+            _navigateTo('/$route');
+          }
+        } else if (data['+non_branch_link'] != null) {
+          _navigateTo('/error');
+        }
+      }, onError: (error) {
+        print('listSesseion error: ${error.toString()}');
+      });
+    } catch (e) {
+      print('Listening Error : $e');
     }
-
-    unilink.linkStream.listen((String? link) {
-      if (link != null) {
-        handleDeepLink(link);
-      }
-    });
   }
-
-  void handleDeepLink(String link) {
-    print('Received deep link: $link');
-  }
-
-  // Future<void> initDynamicLinks() async {
-  //   final PendingDynamicLinkData? data =
-  //       await FirebaseDynamicLinks.instance.getInitialLink();
-  //   handleLinkData(data);
-
-  //   FirebaseDynamicLinks.instance.onLink.listen(
-  //     (PendingDynamicLinkData? dynamicLink) async {
-  //       handleLinkData(dynamicLink);
-  //     },
-  //   );
-  // }
-
-  // void handleLinkData(PendingDynamicLinkData? data) {
-  //   if (data == null) {
-  //     return;
-  //   }
-
-  //   final Uri deepLink = data.link;
-  //   print(deepLink);
-  // }
 
   Future<User?> getCurrentUser() async {
     try {
@@ -55,24 +53,30 @@ class SplashViewModel with ChangeNotifier {
     }
   }
 
-  void init(context) async {
-    GeolocatorPlatform.instance;
-    await checkDeepLink();
-    // await initDynamicLinks();
+  Future<void> init() async {
     try {
+      GeolocatorPlatform.instance;
+      await listenDynamicLinks();
       User? user = await getCurrentUser();
       if (user != null) {
-        _navigateTo(context, '/home');
+        _navigateTo('/home');
       } else {
-        _navigateTo(context, '/');
+        _navigateTo('/');
       }
-      ;
     } catch (e) {
-      _navigateTo(context, '/error');
+      _navigateTo('/error');
     }
   }
 
-  void _navigateTo(BuildContext context, String route) {
-    GoRouter.of(context).go(route);
+  Future<void> _navigateTo(String route, {String? id}) async {
+    try {
+      if (id != null) {
+        await Get.toNamed(route, arguments: id);
+      } else {
+        await Get.toNamed(route);
+      }
+    } catch (e) {
+      print('Navigation Error: $e');
+    }
   }
 }

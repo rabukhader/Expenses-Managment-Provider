@@ -10,7 +10,7 @@ import '../manage_expenses/widget/dialogs/delete_dialog.dart';
 
 class ExpenseDetails extends StatelessWidget {
   final String id;
-  final Expense data;
+  final Expense? data;
   final ManageExpensesViewModel? exProvider;
   final onDeletePressed;
   final onEditPressed;
@@ -18,7 +18,7 @@ class ExpenseDetails extends StatelessWidget {
   const ExpenseDetails(
       {super.key,
       required this.id,
-      required this.data,
+      this.data,
       this.exProvider,
       this.onDeletePressed,
       this.onEditPressed,
@@ -50,7 +50,7 @@ class ExpenseDetails extends StatelessWidget {
                 width: MediaQuery.of(context).size.width,
                 child: CachedNetworkImage(
                   fit: BoxFit.cover,
-                  imageUrl: data.imageUrl,
+                  imageUrl: data!.imageUrl,
                   placeholder: (context, url) => const Loader(),
                   errorWidget: (context, url, error) => const Icon(
                     Icons.error,
@@ -62,7 +62,7 @@ class ExpenseDetails extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    data.name,
+                    data!.name,
                     style: GoogleFonts.poppins(
                         color: Theme.of(context).colorScheme.onBackground,
                         fontSize: 30),
@@ -70,12 +70,12 @@ class ExpenseDetails extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
-                      data.address == ''
+                      data!.address == ''
                           ? 'Your Location is not added'
-                          : data.address,
+                          : data!.address,
                       textAlign: TextAlign.center,
                       style: GoogleFonts.poppins(
-                          color: data.address == ''
+                          color: data!.address == ''
                               ? Theme.of(context).colorScheme.onError
                               : Theme.of(context).colorScheme.onBackground,
                           fontSize: 16,
@@ -83,14 +83,14 @@ class ExpenseDetails extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    'Total : ${data.total.toString()}\$',
+                    'Total : ${data!.total.toString()}\$',
                     style: GoogleFonts.poppins(
                       fontSize: 20,
                       color: Theme.of(context).colorScheme.onBackground,
                     ),
                   ),
                   Text(
-                    'Due Date : ${data.dueDate}',
+                    'Due Date : ${data!.dueDate}',
                     style: GoogleFonts.poppins(
                       fontSize: 20,
                       color: Theme.of(context).colorScheme.onBackground,

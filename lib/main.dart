@@ -3,12 +3,14 @@ import 'package:expenses_managment_app_provider/theme/app_theme.dart';
 import 'package:expenses_managment_app_provider/theme/theme_provider.dart';
 import 'package:expenses_managment_app_provider/utils/supabase_config.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:flutter_branch_sdk/flutter_branch_sdk.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:get/get.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await FlutterBranchSdk.init();
   await Supabase.initialize(
       url: SupabaseConfig.projectURL, anonKey: SupabaseConfig.apiKey);
   runApp(MultiProvider(providers: [
@@ -21,13 +23,14 @@ class ExpensesApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<ThemeProvider>(
-        builder: (context, theme, child) => MaterialApp.router(
-              debugShowCheckedModeBanner: false,
-              theme: theme.getCurrentTheme(context),
-              darkTheme: AppTheme.darkTheme(context),
-              routerConfig: GoRouter(
-                  initialLocation: '/splash', routes: AppRoutes.routes()),
-            ));
+    return Consumer<ThemeProvider>(builder: (context, theme, child) {
+      return GetMaterialApp(
+        initialRoute: '/splash',
+        debugShowCheckedModeBanner: false,
+        theme: theme.getCurrentTheme(context),
+        darkTheme: AppTheme.darkTheme(context),
+        getPages: AppRoutes.routes(),
+      );
+    });
   }
 }
