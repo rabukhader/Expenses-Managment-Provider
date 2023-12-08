@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:connectivity/connectivity.dart';
 import 'package:dio/dio.dart';
 import 'package:expenses_managment_app_provider/model/data/local_changes.dart';
+import 'package:expenses_managment_app_provider/model/services/analytics/analytics.dart';
 import 'package:flutter/material.dart';
 import '../model/data/expense_model_supabase.dart';
 import '../model/entities/expense_entity.dart';
@@ -15,6 +16,7 @@ class ManageExpensesViewModel with ChangeNotifier {
   CancelToken? cancelToken;
   ExpenseModelSupabase expenseModel = ExpenseModelSupabase.instance;
   LocalChangesModel localChanges = LocalChangesModel.instance;
+  Analytics analytics = Analytics();
 
   ManageExpensesViewModel() {
     expenseModel.searchResults = expenseModel.allExpenses;
@@ -95,6 +97,8 @@ class ManageExpensesViewModel with ChangeNotifier {
       await addLocalExpense(newExpense);
     }
     await fetchExpenses();
+    analytics.createPurchaseEvent();
+    await analytics.purchaseEventGoogle();
     notifyListeners();
   }
 

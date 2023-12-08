@@ -1,16 +1,17 @@
+import 'package:expenses_managment_app_provider/firebase_options.dart';
 import 'package:expenses_managment_app_provider/routes/app_routes.dart';
 import 'package:expenses_managment_app_provider/theme/app_theme.dart';
 import 'package:expenses_managment_app_provider/theme/theme_provider.dart';
 import 'package:expenses_managment_app_provider/utils/supabase_config.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_branch_sdk/flutter_branch_sdk.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:get/get.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await FlutterBranchSdk.init();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await Supabase.initialize(
       url: SupabaseConfig.projectURL, anonKey: SupabaseConfig.apiKey);
   runApp(MultiProvider(providers: [

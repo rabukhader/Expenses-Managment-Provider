@@ -142,16 +142,3 @@ class _ManageExpensesViewState extends State<ManageExpensesView> {
     );
   }
 }
-
-
-
-
-// => ListOfExpenses(
-//                 onDeletePressed: exViewModel.deleteExpense,
-//                 onCopyPressed: exViewModel.addExpense,
-//                 onEditPressed: exViewModel.editExpense,
-//                 data: ex,
-//                 onTap: (BuildContext context, WidgetBuilder builder) {
-//                   Navigator.push(context, MaterialPageRoute(builder: builder));
-//                 },
-//               )

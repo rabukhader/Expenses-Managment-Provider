@@ -4,9 +4,13 @@ import 'package:flutter_branch_sdk/flutter_branch_sdk.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:uuid/uuid.dart';
+
+import '../model/services/analytics/analytics.dart';
 
 class SplashViewModel with ChangeNotifier {
   final supabaseAuth = Supabase.instance.client.auth;
+  Analytics analytics = Analytics();
   StreamSubscription<Map>? streamSubscription;
   StreamController<String> controllerData = StreamController<String>();
 
@@ -14,14 +18,9 @@ class SplashViewModel with ChangeNotifier {
     try {
       streamSubscription = FlutterBranchSdk.listSession().listen((data) async {
         controllerData.sink.add(data.toString());
-        print('listening');
         if (data.containsKey('+clicked_branch_link') &&
             data['+clicked_branch_link'] == true) {
-          print(
-              '------------------------------------Link clicked----------------------------------------------');
-          print('Custom id: ${data['id']}');
-          print(
-              '------------------------------------------------------------------------------------------------');
+          analytics.sendLogEvent('splashing');
           String route = data['\$marketing_title'];
           if (route == 'details') {
             String id = data['id'];
@@ -53,8 +52,16 @@ class SplashViewModel with ChangeNotifier {
     }
   }
 
+  generateId() {
+    String uuid = const Uuid().v4();
+    return uuid;
+  }
+
   Future<void> init() async {
     try {
+      FlutterBranchSdk.setRequestMetadata(
+          "\$google_analytics_client_id", generateId());
+      await FlutterBranchSdk.init();
       GeolocatorPlatform.instance;
       await listenDynamicLinks();
       User? user = await getCurrentUser();
@@ -70,7 +77,11 @@ class SplashViewModel with ChangeNotifier {
 
   Future<void> _navigateTo(String route, {String? id}) async {
     try {
-      if (id != null) {
+      User? user = await getCurrentUser();
+      if (user == null && route == '/home' ||
+          user == null && route == '/details') {
+            Get.toNamed('/');
+      } else if (id != null) {
         await Get.toNamed(route, arguments: id);
       } else {
         await Get.toNamed(route);

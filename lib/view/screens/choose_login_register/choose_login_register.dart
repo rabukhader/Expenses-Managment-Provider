@@ -2,7 +2,6 @@ import 'package:expenses_managment_app_provider/view/widgets/loader.dart';
 import 'package:expenses_managment_app_provider/view_model/login_register_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import '../login_register_screen/login_register_screen.dart';
