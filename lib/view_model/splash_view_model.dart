@@ -6,11 +6,9 @@ import 'package:get/get.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:uuid/uuid.dart';
 
-import '../model/services/analytics/analytics.dart';
 
 class SplashViewModel with ChangeNotifier {
   final supabaseAuth = Supabase.instance.client.auth;
-  Analytics analytics = Analytics();
   StreamSubscription<Map>? streamSubscription;
   StreamController<String> controllerData = StreamController<String>();
 
@@ -20,7 +18,6 @@ class SplashViewModel with ChangeNotifier {
         controllerData.sink.add(data.toString());
         if (data.containsKey('+clicked_branch_link') &&
             data['+clicked_branch_link'] == true) {
-          analytics.sendLogEvent('splashing');
           String route = data['\$marketing_title'];
           if (route == 'details') {
             String id = data['id'];

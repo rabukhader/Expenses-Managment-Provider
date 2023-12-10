@@ -1,15 +1,12 @@
 import 'package:expenses_managment_app_provider/model/entities/expense_entity.dart';
-import 'package:expenses_managment_app_provider/model/services/login_register_form/login_register_form.dart';
 import 'package:expenses_managment_app_provider/view/screens/analyze_expenses/analyze_expenses.dart';
 import 'package:expenses_managment_app_provider/view/screens/choose_login_register/choose_login_register.dart';
 import 'package:expenses_managment_app_provider/view/screens/error_screen/error_screen.dart';
 import 'package:expenses_managment_app_provider/view/screens/expense_details/expense_details.dart';
 import 'package:expenses_managment_app_provider/view/screens/home/home_screen.dart';
-import 'package:expenses_managment_app_provider/view/screens/login_register_screen/login_register_screen.dart';
 import 'package:expenses_managment_app_provider/view/widgets/loader.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-// import 'package:go_router/go_router.dart';
 import '../view/screens/splash_screen/splash_screen.dart';
 import 'package:get/get.dart';
 

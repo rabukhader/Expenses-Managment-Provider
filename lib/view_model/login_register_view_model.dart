@@ -1,18 +1,18 @@
 import 'package:expenses_managment_app_provider/model/data/user_model_supabase.dart';
 import 'package:flutter/material.dart';
-import '../model/services/analytics/analytics.dart';
+import '../model/services/analytics/all_analytics.dart';
 import '../model/services/login_register_form/login_register_form.dart';
 
 class LoginRegisterViewModel with ChangeNotifier {
   UserModelSupabase userModel = UserModelSupabase.instance;
-  Analytics analytics = Analytics();
+  AllAnalytics analytics = AllAnalytics();
   LoginRegisterForm loginRegisterForm = LoginRegisterForm();
 
   Future<bool> loginEmailPassword(email, password) async {
     try {
       bool success = await userModel.loginEmailPassword(email, password);
       if (success) {
-        analytics.sendLoginEvent('emailPasswordLogin');
+        await analytics.loginAnalytics('emailPasswordLogin');
         notifyListeners();
       }
       return success;
@@ -37,7 +37,7 @@ class LoginRegisterViewModel with ChangeNotifier {
     try {
       bool success = await userModel.signInWithGoogle();
       if (success) {
-        analytics.sendLoginEvent('GoogleLogin');
+        analytics.loginAnalytics('GoogleLogin');
         notifyListeners();
       }
       return success;

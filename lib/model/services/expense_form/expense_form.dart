@@ -29,9 +29,9 @@ class ExpenseForm {
             data: ThemeData.light().copyWith(
               primaryColor: Theme.of(context).primaryColor,
               colorScheme: ColorScheme.light(
-                  primary: Theme.of(context).hintColor), // Header text color
+                  primary: Theme.of(context).hintColor),
               buttonTheme: const ButtonThemeData(
-                  textTheme: ButtonTextTheme.primary), // Button text color
+                  textTheme: ButtonTextTheme.primary),
             ),
             child: child!,
           );

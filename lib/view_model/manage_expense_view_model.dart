@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:connectivity/connectivity.dart';
 import 'package:dio/dio.dart';
 import 'package:expenses_managment_app_provider/model/data/local_changes.dart';
-import 'package:expenses_managment_app_provider/model/services/analytics/analytics.dart';
+import 'package:expenses_managment_app_provider/model/services/analytics/all_analytics.dart';
 import 'package:flutter/material.dart';
 import '../model/data/expense_model_supabase.dart';
 import '../model/entities/expense_entity.dart';
@@ -16,7 +16,7 @@ class ManageExpensesViewModel with ChangeNotifier {
   CancelToken? cancelToken;
   ExpenseModelSupabase expenseModel = ExpenseModelSupabase.instance;
   LocalChangesModel localChanges = LocalChangesModel.instance;
-  Analytics analytics = Analytics();
+  AllAnalytics analytics = AllAnalytics();
 
   ManageExpensesViewModel() {
     expenseModel.searchResults = expenseModel.allExpenses;
@@ -97,8 +97,7 @@ class ManageExpensesViewModel with ChangeNotifier {
       await addLocalExpense(newExpense);
     }
     await fetchExpenses();
-    analytics.createPurchaseEvent();
-    await analytics.purchaseEventGoogle();
+    await analytics.purchaseAnalytics(newExpense.total.toDouble());
     notifyListeners();
   }
 
@@ -183,7 +182,6 @@ class ManageExpensesViewModel with ChangeNotifier {
           if (localChange.changes.containsKey('deleted')) {
             await expenseModel.deleteExpense(localChange.id);
           } else if (localChange.changes.containsKey('edited')) {
-            print(localChange.changes['edited']);
             await expenseModel.editExpense(
                 localChange.changes['edited'], localChange.id);
           } else {
